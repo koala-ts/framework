@@ -3,7 +3,11 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "author": "",
+  "author": {
+    "name": "Dhemy",
+    "email": "imdhemy@gmail.com",
+    "url": "https://imdhemy.com"
+  },
   "license": "MIT",
   "scripts": {
     "test": "vitest run --coverage",
