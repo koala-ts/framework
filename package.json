@@ -6,7 +6,8 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "build": "tsc"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^2.1.8",
