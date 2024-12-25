@@ -29,8 +29,6 @@
   "dependencies": {
     "@koa/router": "^13.1.0",
     "@types/koa": "^2.15.0",
-    "koa": "^2.15.3",
-    "reflect-metadata": "^0.2.2",
-    "stack-trace": "^1.0.0-pre2"
+    "koa": "^2.15.3"
   }
 }
