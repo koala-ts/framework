@@ -1,5 +1,9 @@
 import { Server } from 'http';
 
+export interface IApplicationOptions {
+    controllers: Function[];
+}
+
 export interface IApplication {
     listen(port?: number): Server;
 }
