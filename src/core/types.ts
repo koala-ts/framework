@@ -1,4 +1,5 @@
 import { Server } from 'http';
+import { Middleware } from '@koa/router';
 
 export interface IApplicationOptions {
     controllers: Function[];
@@ -8,18 +9,31 @@ export interface IApplication {
     listen(port?: number): Server;
 }
 
-export interface IModel {
+export interface Handler extends Middleware {
 }
 
-export interface IMessage<Payload> {
-    type: string;
-    payload?: Payload;
-}
+export type THttpMethod =
+    'get'
+    | 'post'
+    | 'put'
+    | 'patch'
+    | 'delete'
+    | 'options'
+    | 'head'
+    | 'any'
+    | 'GET'
+    | 'POST'
+    | 'PUT'
+    | 'PATCH'
+    | 'DELETE'
+    | 'OPTIONS'
+    | 'HEAD'
+    | 'ANY';
 
-export interface IUpdate<M extends IModel, Msg extends IMessage<unknown>> {
-    (model: M, message: Msg): M;
-}
+export type TRouterMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options' | 'head';
 
-export interface IView<M extends IModel, Msg extends IMessage<unknown>> {
-    (model: M): Msg;
+export interface IRouteMetadata {
+    path: string;
+    methods: TRouterMethod[];
+    middleware: Handler;
 }
