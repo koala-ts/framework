@@ -1,10 +1,6 @@
 import { Server } from 'http';
 import { Middleware } from '@koa/router';
 
-export interface IApplicationOptions {
-    controllers: Function[];
-}
-
 export interface IApplication {
     listen(port?: number): Server;
 }

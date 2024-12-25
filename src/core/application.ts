@@ -1,10 +1,10 @@
-import { IApplication, IApplicationOptions, IRouteMetadata, TRouterMethod } from './types';
+import { IApplication, IRouteMetadata, TRouterMethod } from './types';
 import Koa from 'koa';
 import Router from '@koa/router';
 import '../../playground/HomeController';
 import { getRoutes } from './route';
 
-export function create(_: IApplicationOptions = { controllers: [] }): IApplication {
+export function create(): IApplication {
     const app = new Koa();
     const router = new Router();
 
