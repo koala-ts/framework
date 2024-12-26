@@ -10,8 +10,8 @@ describe('Application', () => {
         }
     }
 
-    test('it creates application instance', () => {
-        const app = create();
+    test('it creates application instance', async () => {
+        const app = await create();
 
         expect(app).toBeInstanceOf(Koa);
     });
