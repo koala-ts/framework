@@ -6,7 +6,7 @@
     "target": "ES2022",
     "noImplicitAny": true,
     "outDir": "./dist",
-    "sourceMap": true,
+    "sourceMap": false,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
