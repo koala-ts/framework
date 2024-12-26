@@ -4,9 +4,13 @@ import { Handler, IRouteMetadata, THttpMethod, TRouterMethod } from './types';
 const key = Symbol('Route');
 
 export function Route(method: THttpMethod, path: string): MethodDecorator {
-    return function (middleware: Object): void {
+    return function (target: Object, propertyKey: string | symbol): void {
         const routes: IRouteMetadata[] = Reflect.getMetadata(key, Reflect) || [];
-        routes.push({ path, methods: qualifyMethod(method), middleware: middleware as Handler });
+        routes.push({
+            path,
+            methods: qualifyMethod(method),
+            middleware: qualifyMiddleware(target, propertyKey),
+        });
         Reflect.defineMetadata(key, routes, Reflect);
     };
 }
@@ -23,4 +27,12 @@ function qualifyMethod(method: THttpMethod): TRouterMethod[] {
     }
 
     return [lowerMethod as TRouterMethod];
+}
+
+function qualifyMiddleware(target: unknown, propertyKey: string | symbol): Handler {
+    if (typeof target === 'function') {
+        return target as Handler;
+    }
+    
+    return (target as any)[propertyKey] as Handler;
 }
