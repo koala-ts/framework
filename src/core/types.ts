@@ -1,9 +1,12 @@
-import { Server } from 'http';
+import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Middleware } from '@koa/router';
 import { Response } from 'koa';
+import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 export interface IApplication {
     listen(port?: number): Server;
+
+    callback(): (req: IncomingMessage | Http2ServerRequest, res: ServerResponse | Http2ServerResponse) => Promise<void>;
 }
 
 export interface View {
