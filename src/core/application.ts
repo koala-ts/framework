@@ -3,11 +3,12 @@ import Koa from 'koa';
 import Router from '@koa/router';
 import { getRoutes } from './route';
 import { viewMiddleware } from './view-middleware';
+import { IKoalaConfig } from '../config/types';
 
-export function create(): IApplication {
+export function create(_: IKoalaConfig): IApplication {
     const app = new Koa();
     app.use(viewMiddleware);
-    
+
     const router = new Router();
 
     getRoutes().forEach((route: IRouteMetadata) => {
