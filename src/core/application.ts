@@ -2,9 +2,12 @@ import { IApplication, IRouteMetadata, TRouterMethod } from './types';
 import Koa from 'koa';
 import Router from '@koa/router';
 import { getRoutes } from './route';
+import { viewMiddleware } from './view-middleware';
 
 export function create(): IApplication {
     const app = new Koa();
+    app.use(viewMiddleware);
+    
     const router = new Router();
 
     getRoutes().forEach((route: IRouteMetadata) => {

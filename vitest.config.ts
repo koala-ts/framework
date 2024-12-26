@@ -6,6 +6,8 @@ export default defineConfig({
             exclude: [
                 ...configDefaults.exclude,
                 '**/playground/**',
+                '**/tests/**',
+                '**/types.ts',
             ],
         },
     },
