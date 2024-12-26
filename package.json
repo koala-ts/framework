@@ -11,21 +11,26 @@
   "license": "MIT",
   "scripts": {
     "test": "vitest run --coverage",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "tsx watch playground/main.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/koa__router": "^12.0.4",
+    "@types/stack-trace": "^0.0.33",
     "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
+    "tsc-alias": "^1.8.10",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2",
     "vitest": "^2.1.8"
   },
   "dependencies": {
+    "@koa/router": "^13.1.0",
     "@types/koa": "^2.15.0",
-    "koa": "^2.15.3"
+    "koa": "^2.15.3",
+    "reflect-metadata": "^0.2.2"
   }
 }
