@@ -11,7 +11,7 @@ describe('Route', () => {
     test('it should track registered routes', () => {
         expect(getRoutes()).toEqual([{
             methods: ['get'],
-            middleware: Foo.prototype.bar,
+            handler: Foo.prototype.bar,
             path: '/foo',
         }]);
     });

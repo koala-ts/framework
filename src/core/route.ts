@@ -9,7 +9,7 @@ export function Route(method: THttpMethod, path: string): MethodDecorator {
         routes.push({
             path,
             methods: qualifyMethod(method),
-            middleware: qualifyMiddleware(target, propertyKey),
+            handler: qualifyMiddleware(target, propertyKey),
         });
         Reflect.defineMetadata(key, routes, Reflect);
     };
@@ -33,6 +33,6 @@ function qualifyMiddleware(target: unknown, propertyKey: string | symbol): Handl
     if (typeof target === 'function') {
         return target as Handler;
     }
-    
+
     return (target as any)[propertyKey] as Handler;
 }

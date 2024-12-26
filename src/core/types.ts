@@ -31,5 +31,5 @@ export type TRouterMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'optio
 export interface IRouteMetadata {
     path: string;
     methods: TRouterMethod[];
-    middleware: Handler;
+    handler: Handler;
 }

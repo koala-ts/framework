@@ -9,7 +9,7 @@ export function create(): IApplication {
 
     getRoutes().forEach((route: IRouteMetadata) => {
         route.methods.forEach((method: TRouterMethod) => {
-            router[method](route.path, route.middleware);
+            router[method](route.path, route.handler);
         });
     });
 
