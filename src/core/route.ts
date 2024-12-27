@@ -3,7 +3,7 @@ import { Handler, IRouteMetadata, IRouteOptions, THttpMethod, TRouterMethod } fr
 
 const key = Symbol('Route');
 
-export function Route({ method, path, parseBody = true }: IRouteOptions): MethodDecorator {
+export function Route({ method, path, parseBody = true, middleware = [] }: IRouteOptions): MethodDecorator {
     return function (target: Object, propertyKey: string | symbol): void {
         const routes: IRouteMetadata[] = Reflect.getMetadata(key, Reflect) || [];
         routes.push({
@@ -11,6 +11,7 @@ export function Route({ method, path, parseBody = true }: IRouteOptions): Method
             methods: qualifyMethod(method),
             handler: qualifyMiddleware(target, propertyKey),
             parseBody: parseBody,
+            middleware: middleware
         });
         Reflect.defineMetadata(key, routes, Reflect);
     };
