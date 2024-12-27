@@ -3,7 +3,7 @@ import { getRoutes, Route } from '../../src/core/route';
 
 describe('Route', () => {
     class Foo {
-        @Route('get', '/foo')
+        @Route({ method: 'get', path: '/foo', parseBody: false })
         bar() {
         }
     }
@@ -13,6 +13,7 @@ describe('Route', () => {
             methods: ['get'],
             handler: Foo.prototype.bar,
             path: '/foo',
+            parseBody: false,
         }]);
     });
 });
