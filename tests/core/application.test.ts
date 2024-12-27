@@ -1,15 +1,15 @@
 import { describe, expect, test } from 'vitest';
 import { create } from '../../src/core/application';
-import Koa, { type Context } from 'koa';
+import Koa from 'koa';
 import { Route } from '../../src/core/route';
 import { koalaDefaultConfig } from '../../src/config';
-import { type View } from '../../src/core/types';
+import { type IContext, type View } from '../../src/core/types';
 import { testAgent } from '../../src/testing';
 
 describe('Application', () => {
     class FooController {
         @Route({ method: 'any', path: '/bar', parseBody: false })
-        bar(ctx: Context): View {
+        bar(ctx: IContext): View {
             return {
                 status: 200,
                 body: {
@@ -19,7 +19,7 @@ describe('Application', () => {
         }
 
         @Route({ method: 'post', path: '/qux' })
-        qux(ctx: Context): View {
+        qux(ctx: IContext): View {
             return {
                 status: 200,
                 body: ctx.request.body,

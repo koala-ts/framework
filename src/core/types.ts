@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Middleware } from '@koa/router';
-import { Request, Response } from 'koa';
+import { Context, Request, Response } from 'koa';
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 export interface IApplication {
@@ -9,12 +9,16 @@ export interface IApplication {
     callback(): (req: IncomingMessage | Http2ServerRequest, res: ServerResponse | Http2ServerResponse) => Promise<void>;
 }
 
-export interface IHttpRequest extends Request {
+export interface IRequest extends Request {
+    body?: { [key: string]: any };
+}
+
+export interface IHttpRequest extends IRequest {
     body: { [key: string]: any };
 }
 
-export interface IRequest extends Request {
-    body?: { [key: string]: any };
+export interface IContext extends Context {
+    request: IRequest | IHttpRequest;
 }
 
 export interface View {
