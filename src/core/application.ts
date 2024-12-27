@@ -13,12 +13,13 @@ export function create(_: IKoalaConfig): IApplication {
     const router = new Router();
 
     getRoutes().forEach((route: IRouteMetadata) => {
+        const middlewareStack = [...route.middleware, route.handler];
         for (const method of route.methods) {
             if (route.parseBody) {
-                router[method](route.path, koaBody(), route.handler);
+                router[method](route.path, koaBody(), ...middlewareStack);
                 continue;
             }
-            router[method](route.path, route.handler);
+            router[method](route.path, ...middlewareStack);
         }
     });
 

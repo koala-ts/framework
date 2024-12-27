@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Middleware } from '@koa/router';
-import { Context, Request, Response } from 'koa';
+import { Context, Next, Request, Response, } from 'koa';
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 export interface IApplication {
@@ -19,6 +19,13 @@ export interface IHttpRequest extends IRequest {
 
 export interface IScope extends Context {
     request: IRequest | IHttpRequest;
+}
+
+export interface IMiddleware extends Middleware {
+    (scope: IScope, next: INext): Promise<INext>;
+}
+
+export interface INext extends Next {
 }
 
 export interface View {
@@ -59,10 +66,12 @@ export interface IRouteMetadata {
     methods: TRouterMethod[];
     handler: Handler;
     parseBody: boolean;
+    middleware: Middleware[];
 }
 
 export interface IRouteOptions {
     path: string;
     method: THttpMethod;
     parseBody?: boolean;
+    middleware?: Middleware[];
 }

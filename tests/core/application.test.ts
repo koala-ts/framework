@@ -1,14 +1,25 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { create } from '../../src/core/application';
 import Koa from 'koa';
 import { Route } from '../../src/core/route';
 import { koalaDefaultConfig } from '../../src/config';
-import { type IScope, type View } from '../../src/core/types';
+import { INext, type IScope, type View } from '../../src/core/types';
 import { testAgent } from '../../src/testing';
 
 describe('Application', () => {
+    const middleware1 = function (_: IScope, next: INext) {
+        return next();
+    };
+    const service = vi.fn();
+
+    const middleware2 = function (_: IScope, next: INext) {
+        service();
+        return next();
+    };
+
+
     class FooController {
-        @Route({ method: 'any', path: '/bar', parseBody: false })
+        @Route({ method: 'any', path: '/bar', parseBody: false, middleware: [middleware1, middleware2] })
         bar(scope: IScope): View {
             return {
                 status: 200,
@@ -49,5 +60,13 @@ describe('Application', () => {
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ name: 'Koala' });
+    });
+
+    test('it should call middleware', async () => {
+        const agent = testAgent(koalaDefaultConfig);
+
+        await agent.get('/bar');
+
+        expect(service).toHaveBeenCalled();
     });
 });
