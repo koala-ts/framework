@@ -14,7 +14,9 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
   "include": [
     "src",
