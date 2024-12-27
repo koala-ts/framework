@@ -17,7 +17,7 @@ export interface IHttpRequest extends IRequest {
     body: { [key: string]: any };
 }
 
-export interface IContext extends Context {
+export interface IScope extends Context {
     request: IRequest | IHttpRequest;
 }
 

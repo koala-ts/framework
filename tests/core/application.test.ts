@@ -3,26 +3,26 @@ import { create } from '../../src/core/application';
 import Koa from 'koa';
 import { Route } from '../../src/core/route';
 import { koalaDefaultConfig } from '../../src/config';
-import { type IContext, type View } from '../../src/core/types';
+import { type IScope, type View } from '../../src/core/types';
 import { testAgent } from '../../src/testing';
 
 describe('Application', () => {
     class FooController {
         @Route({ method: 'any', path: '/bar', parseBody: false })
-        bar(ctx: IContext): View {
+        bar(scope: IScope): View {
             return {
                 status: 200,
                 body: {
-                    name: ctx.request.body?.name || 'Koala'
+                    name: scope.request.body?.name || 'Koala'
                 },
             };
         }
 
         @Route({ method: 'post', path: '/qux' })
-        qux(ctx: IContext): View {
+        qux(scope: IScope): View {
             return {
                 status: 200,
-                body: ctx.request.body,
+                body: scope.request.body,
             };
         }
     }
