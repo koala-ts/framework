@@ -10,7 +10,7 @@
 - [ ] Handlers
     + [x] Register handlers
     + [x] Create responses from views
-    + [ ] Access request data
+    + [x] Access request data
 - [ ] Configuration
 - [ ] Database
 - [ ] Caching
