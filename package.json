@@ -9,6 +9,17 @@
     "nodejs",
     "typescript"
   ],
+  "homepage": "https://koala-ts.github.io/docs/",
+  "bugs": {
+    "url": "https://github.com/koala-ts/framework/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koala-ts/framework.git"
+  },
+  "files": [
+    "dist"
+  ],
   "author": {
     "name": "Dhemy",
     "email": "imdhemy@gmail.com",
