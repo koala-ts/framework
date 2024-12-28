@@ -2,7 +2,13 @@
   "name": "koala",
   "type": "module",
   "version": "0.0.1",
-  "description": "",
+  "description": "A NodeJS framework for lazy developers",
+  "keywords": [
+    "koala",
+    "framework",
+    "nodejs",
+    "typescript"
+  ],
   "author": {
     "name": "Dhemy",
     "email": "imdhemy@gmail.com",
