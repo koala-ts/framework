@@ -1,13 +1,13 @@
 # Framework
 
-## Todo
+## 🛤️ Roadmap
 
 - [ ] Routing & Middleware
     + [x] Routing
     + [ ] Middleware
     + [ ] Request validation
     + [ ] Guards and Authorization
-- [ ] Handlers
+- [x] Handlers
     + [x] Register handlers
     + [x] Create responses from views
     + [x] Access request data
@@ -26,4 +26,4 @@
     + [ ] CORS
     + [ ] Rate limiting
 - [ ] Console commands
-- [ ] Testing
+- [x] Testing

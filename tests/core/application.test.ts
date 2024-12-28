@@ -1,9 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
-import { create } from '../../src/core/application';
+import { create, INext, type IScope, Route } from '../../src/core';
 import Koa from 'koa';
-import { Route } from '../../src/core/route';
 import { koalaDefaultConfig } from '../../src/config';
-import { INext, type IScope } from '../../src/core/types';
 import { testAgent } from '../../src/testing';
 
 describe('Application', () => {

@@ -1,26 +1,31 @@
 {
   "compilerOptions": {
-    "module": "Preserve",
-    "moduleResolution": "Node",
     "esModuleInterop": true,
-    "target": "ES2022",
-    "noImplicitAny": true,
-    "outDir": "./dist",
-    "sourceMap": false,
-    "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,
+    "target": "ESNext",
+    "allowJs": false,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
+    "module": "Preserve",
+    "moduleResolution": "Node",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    "emitDeclarationOnly": true
+    "declarationMap": true,
+    "emitDeclarationOnly": false
   },
   "include": [
-    "src",
-    "playground"
+    "src/**/*.ts",
+    "src/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",

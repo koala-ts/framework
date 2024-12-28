@@ -1,8 +1,26 @@
 {
-  "name": "koala",
+  "name": "@koala-ts/framework",
+  "main": "dist/index.js",
   "type": "module",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "A NodeJS framework for lazy developers",
+  "keywords": [
+    "koala",
+    "framework",
+    "nodejs",
+    "typescript"
+  ],
+  "homepage": "https://koala-ts.github.io/docs/",
+  "bugs": {
+    "url": "https://github.com/koala-ts/framework/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koala-ts/framework.git"
+  },
+  "files": [
+    "dist"
+  ],
   "author": {
     "name": "Dhemy",
     "email": "imdhemy@gmail.com",
@@ -12,17 +30,14 @@
   "scripts": {
     "test": "vitest run --coverage",
     "build": "tsc && tsc-alias",
-    "start": "tsx watch playground/main.ts"
+    "start": "tsx watch playground/main.ts",
+    "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.2",
     "@eslint/js": "^9.17.0",
-    "@types/koa__router": "^12.0.4",
-    "@types/stack-trace": "^0.0.33",
-    "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
-    "supertest": "^7.0.0",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
@@ -34,6 +49,11 @@
     "@types/koa": "^2.15.0",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "supertest": "^7.0.0",
+    "@types/koa__router": "^12.0.4",
+    "@types/stack-trace": "^0.0.33",
+    "@types/supertest": "^6.0.2",
+    "@vitest/coverage-v8": "^2.1.8"
   }
 }
