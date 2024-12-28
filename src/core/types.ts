@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Middleware } from '@koa/router';
-import { Context, Next, Request, Response, } from 'koa';
+import { Context, Next, Request, } from 'koa';
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 export interface IApplication {
@@ -28,17 +28,8 @@ export interface IMiddleware extends Middleware {
 export interface INext extends Next {
 }
 
-export interface View {
-    status?: Response['status'];
-    headers?: Response['headers'];
-    body?: Response['body'];
-    socket?: Response['socket'];
-    redirect?: Response['redirect'];
-    attachment?: Response['attachment'];
-}
 
 export interface Handler extends Middleware {
-    (): Promise<View> | View;
 }
 
 export type THttpMethod =

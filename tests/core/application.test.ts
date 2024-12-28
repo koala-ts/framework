@@ -3,7 +3,7 @@ import { create } from '../../src/core/application';
 import Koa from 'koa';
 import { Route } from '../../src/core/route';
 import { koalaDefaultConfig } from '../../src/config';
-import { INext, type IScope, type View } from '../../src/core/types';
+import { INext, type IScope } from '../../src/core/types';
 import { testAgent } from '../../src/testing';
 
 describe('Application', () => {
@@ -20,21 +20,15 @@ describe('Application', () => {
 
     class FooController {
         @Route({ method: 'any', path: '/bar', parseBody: false, middleware: [middleware1, middleware2] })
-        bar(scope: IScope): View {
-            return {
-                status: 200,
-                body: {
-                    name: scope.request.body?.name || 'Koala'
-                },
+        bar(scope: IScope): void {
+            scope.response.body = {
+                name: scope.request.body?.name || 'Koala'
             };
         }
 
         @Route({ method: 'post', path: '/qux' })
-        qux(scope: IScope): View {
-            return {
-                status: 200,
-                body: scope.request.body,
-            };
+        qux(scope: IScope): void {
+            scope.response.body = scope.request.body;
         }
     }
 
