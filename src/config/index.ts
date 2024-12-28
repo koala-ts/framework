@@ -1,5 +1,1 @@
-import { IKoalaConfig } from './types';
-
-export const koalaDefaultConfig: IKoalaConfig = {
-    controllers: [],
-};
+export * from './config-defaults';
