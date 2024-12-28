@@ -1,5 +1,5 @@
 {
-  "name": "@koala/framework",
+  "name": "@koala-ts/framework",
   "main": "dist/index.js",
   "type": "module",
   "version": "0.1.0",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/koala-ts/framework.git"
+    "url": "git+https://github.com/koala-ts/framework.git"
   },
   "files": [
     "dist"
