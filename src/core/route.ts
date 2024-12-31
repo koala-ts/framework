@@ -9,7 +9,7 @@ export function Route({ method, path, parseBody = true, middleware = [] }: IRout
         routes.push({
             path,
             methods: qualifyMethod(method),
-            handler: qualifyMiddleware(target, propertyKey),
+            handler: qualifyHandler(target, propertyKey),
             parseBody: parseBody,
             middleware: middleware
         });
@@ -18,20 +18,27 @@ export function Route({ method, path, parseBody = true, middleware = [] }: IRout
 }
 
 export function getRoutes(): IRouteMetadata[] {
-    return Reflect.getMetadata(key, Reflect) || [];
+    return Reflect.getMetadata(key, Reflect);
 }
 
-function qualifyMethod(method: THttpMethod): TRouterMethod[] {
+function qualifyMethod(method: THttpMethod | THttpMethod[]): TRouterMethod[] {
+    const result: TRouterMethod[] = [];
+
+    if (Array.isArray(method)) {
+        method.forEach((m) => result.push(...qualifyMethod(m)));
+        return result;
+    }
+
     const lowerMethod = method.toLowerCase();
 
-    if (lowerMethod === 'any') {
-        return ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'];
+    if (['any', 'all'].includes(lowerMethod)) {
+        return ['all'];
     }
 
     return [lowerMethod as TRouterMethod];
 }
 
-function qualifyMiddleware(target: unknown, propertyKey: string | symbol): Handler {
+function qualifyHandler(target: unknown, propertyKey: string | symbol): Handler {
     if (typeof target === 'function') {
         return target as Handler;
     }

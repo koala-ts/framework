@@ -2,7 +2,7 @@ import { IApplication, IRouteMetadata } from './types';
 import Koa from 'koa';
 import Router from '@koa/router';
 import { getRoutes } from './route';
-import { IKoalaConfig } from '../config/types';
+import { IKoalaConfig } from '../config';
 import { koaBody } from 'koa-body';
 
 export function create(_: IKoalaConfig): IApplication {
