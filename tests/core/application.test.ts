@@ -1,10 +1,14 @@
-import { describe, expect, test, vi } from 'vitest';
-import { create, INext, type IScope, Route } from '../../src/core';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { create, INext, type IScope, koalaDefaultConfig, Route, testAgent } from '../../src';
 import Koa from 'koa';
-import { koalaDefaultConfig } from '../../src/config';
-import { testAgent } from '../../src/testing';
+import TestAgent from 'supertest/lib/agent';
 
 describe('Application', () => {
+    let agent: TestAgent;
+    beforeEach(() => {
+        agent = testAgent(koalaDefaultConfig);
+    });
+
     const middleware1 = function (_: IScope, next: INext) {
         return next();
     };
@@ -28,6 +32,11 @@ describe('Application', () => {
         qux(scope: IScope): void {
             scope.response.body = scope.request.body;
         }
+
+        @Route({ method: ['get', 'post'], path: '/handle-multiple-methods' })
+        handleMultipleMethods(scope: IScope): void {
+            scope.response.body = { method: scope.request.method };
+        }
     }
 
     test('it creates application instance', () => {
@@ -37,8 +46,6 @@ describe('Application', () => {
     });
 
     test('e2e with body', async () => {
-        const agent = testAgent(koalaDefaultConfig);
-
         const response = await agent.post('/qux').send({ name: 'Koala' });
 
         expect(response.status).toBe(200);
@@ -46,8 +53,6 @@ describe('Application', () => {
     });
 
     test('e2e without body', async () => {
-        const agent = testAgent(koalaDefaultConfig);
-
         const response = await agent.get('/bar').send({ name: 'Not Koala' });
 
         expect(response.status).toBe(200);
@@ -55,10 +60,13 @@ describe('Application', () => {
     });
 
     test('it should call middleware', async () => {
-        const agent = testAgent(koalaDefaultConfig);
-
         await agent.get('/bar');
 
         expect(service).toHaveBeenCalled();
+    });
+
+    test('it should handle multiple methods', async () => {
+        agent.get('/handle-multiple-methods').expect(200, { method: 'GET' });
+        agent.post('/handle-multiple-methods').expect(200, { method: 'POST' });
     });
 });

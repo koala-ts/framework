@@ -41,6 +41,7 @@ export type THttpMethod =
     | 'options'
     | 'head'
     | 'any'
+    | 'all'
     | 'GET'
     | 'POST'
     | 'PUT'
@@ -48,9 +49,10 @@ export type THttpMethod =
     | 'DELETE'
     | 'OPTIONS'
     | 'HEAD'
-    | 'ANY';
+    | 'ANY'
+    | 'ALL';
 
-export type TRouterMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options' | 'head';
+export type TRouterMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options' | 'head' | 'all';
 
 export interface IRouteMetadata {
     path: string;
@@ -62,7 +64,7 @@ export interface IRouteMetadata {
 
 export interface IRouteOptions {
     path: string;
-    method: THttpMethod;
+    method: THttpMethod | THttpMethod[];
     parseBody?: boolean;
     middleware?: Middleware[];
 }
