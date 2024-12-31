@@ -22,20 +22,8 @@ export function getRoutes(): IRouteMetadata[] {
 }
 
 function qualifyMethod(method: THttpMethod | THttpMethod[]): TRouterMethod[] {
-    const result: TRouterMethod[] = [];
-
-    if (Array.isArray(method)) {
-        method.forEach((m) => result.push(...qualifyMethod(m)));
-        return result;
-    }
-
-    const lowerMethod = method.toLowerCase();
-
-    if (['any', 'all'].includes(lowerMethod)) {
-        return ['all'];
-    }
-
-    return [lowerMethod as TRouterMethod];
+    const methods = Array.isArray(method) ? method : [method];
+    return methods.flatMap(m => ['any', 'all'].includes(m.toLowerCase()) ? ['all'] : [m.toLowerCase() as TRouterMethod]);
 }
 
 function qualifyHandler(target: unknown, propertyKey: string | symbol): Handler {
