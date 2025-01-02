@@ -1,12 +1,14 @@
-import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Middleware } from '@koa/router';
-import { Context, Next, Request, Response, } from 'koa';
-import { Http2ServerRequest, Http2ServerResponse } from 'http2';
+import Koa, { Context, DefaultState, Next, Request, Response, } from 'koa';
 
-export interface IApplication {
-    listen(port?: number): Server;
+export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT>;
 
-    callback(): (req: IncomingMessage | Http2ServerRequest, res: ServerResponse | Http2ServerResponse) => Promise<void>;
+export interface IState extends DefaultState {
+}
+
+export interface IScope extends Context {
+    request: IRequest | IHttpRequest;
+    response: IResponse;
 }
 
 export interface IRequest extends Request {
@@ -17,14 +19,9 @@ export interface IHttpRequest extends IRequest {
     body: { [key: string]: any };
 }
 
-
 export interface IResponse extends Response {
 }
 
-export interface IScope extends Context {
-    request: IRequest | IHttpRequest;
-    response: IResponse;
-}
 
 export interface IMiddleware extends Middleware {
     (scope: IScope, next: INext): Promise<INext>;
@@ -64,12 +61,12 @@ export interface IRouteMetadata {
     methods: TRouterMethod[];
     handler: Handler;
     parseBody: boolean;
-    middleware: Middleware[];
+    middleware: IMiddleware[];
 }
 
 export interface IRouteOptions {
     path: string;
     method: THttpMethod | THttpMethod[];
     parseBody?: boolean;
-    middleware?: Middleware[];
+    middleware?: IMiddleware[];
 }

@@ -6,7 +6,7 @@ import { IKoalaConfig } from '../config';
 import { koaBody } from 'koa-body';
 
 export function create(_: IKoalaConfig): IApplication {
-    const app = new Koa();
+    const app: IApplication = new Koa();
     const router = new Router();
 
     getRoutes().forEach(({ methods, path, middleware, handler, parseBody }: IRouteMetadata) => {
