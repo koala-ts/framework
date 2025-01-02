@@ -1,5 +1,4 @@
-import { Middleware } from '@koa/router';
-import Koa, { Context, DefaultState, Next, Request, Response, } from 'koa';
+import Koa, { Context, DefaultState, Next, Request, Response } from 'koa';
 
 export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT>;
 
@@ -12,49 +11,37 @@ export interface IScope extends Context {
 }
 
 export interface IRequest extends Request {
-    body?: { [key: string]: any };
+    body?: Record<string, any>;
+    params: IScope['params'];
 }
 
 export interface IHttpRequest extends IRequest {
-    body: { [key: string]: any };
+    body: Record<string, any>;
 }
 
 export interface IResponse extends Response {
 }
 
-
-export interface IMiddleware extends Middleware {
+export interface IMiddleware {
     (scope: IScope, next: INext): Promise<INext>;
 }
 
 export interface INext extends Next {
 }
 
-
-export interface Handler extends Middleware {
+export interface Handler extends IMiddleware {
 }
 
 export type THttpMethod =
-    'get'
-    | 'post'
-    | 'put'
-    | 'patch'
-    | 'delete'
-    | 'options'
-    | 'head'
-    | 'any'
-    | 'all'
-    | 'GET'
-    | 'POST'
-    | 'PUT'
-    | 'PATCH'
-    | 'DELETE'
-    | 'OPTIONS'
-    | 'HEAD'
-    | 'ANY'
-    | 'ALL';
+    | 'get' | 'post' | 'put' | 'patch' | 'delete'
+    | 'options' | 'head' | 'any' | 'all'
+    | 'GET' | 'POST' | 'PUT' | 'PATCH'
+    | 'DELETE' | 'OPTIONS' | 'HEAD'
+    | 'ANY' | 'ALL';
 
-export type TRouterMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options' | 'head' | 'all';
+export type TRouterMethod =
+    | 'get' | 'post' | 'put' | 'patch'
+    | 'delete' | 'options' | 'head' | 'all';
 
 export interface IRouteMetadata {
     path: string;
