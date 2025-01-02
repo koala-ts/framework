@@ -21,10 +21,6 @@ export interface IScope extends Context {
     request: IRequest | IHttpRequest;
 }
 
-export interface IMiddleware extends Middleware {
-    (scope: IScope, next: INext): Promise<INext>;
-}
-
 export interface INext extends Next {
 }
 
