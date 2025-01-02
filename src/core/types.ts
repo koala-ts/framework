@@ -26,6 +26,10 @@ export interface IScope extends Context {
     response: IResponse;
 }
 
+export interface IMiddleware extends Middleware {
+    (scope: IScope, next: INext): Promise<INext>;
+}
+
 export interface INext extends Next {
 }
 
