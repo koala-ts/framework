@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Middleware } from '@koa/router';
-import { Context, Next, Request, } from 'koa';
+import { Context, Next, Request, Response, } from 'koa';
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 export interface IApplication {
@@ -17,8 +17,13 @@ export interface IHttpRequest extends IRequest {
     body: { [key: string]: any };
 }
 
+
+export interface IResponse extends Response {
+}
+
 export interface IScope extends Context {
     request: IRequest | IHttpRequest;
+    response: IResponse;
 }
 
 export interface INext extends Next {
