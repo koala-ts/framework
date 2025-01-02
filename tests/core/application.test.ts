@@ -37,6 +37,11 @@ describe('Application', () => {
         handleMultipleMethods(scope: IScope): void {
             scope.response.body = { method: scope.request.method };
         }
+
+        @Route({ method: 'get', path: '/access-route-params/:id' })
+        accessRouteParams(scope: IScope): void {
+            scope.response.body = { id: scope.request.params.id };
+        }
     }
 
     test('it creates application instance', () => {
@@ -66,7 +71,20 @@ describe('Application', () => {
     });
 
     test('it should handle multiple methods', async () => {
-        agent.get('/handle-multiple-methods').expect(200, { method: 'GET' });
-        agent.post('/handle-multiple-methods').expect(200, { method: 'POST' });
+        const response1 = await agent.get('/handle-multiple-methods');
+        const response2 = await agent.post('/handle-multiple-methods');
+
+        expect(response1.status).toBe(200);
+        expect(response2.status).toBe(200);
+        expect(response1.body).toEqual({ method: 'GET' });
+        expect(response2.body).toEqual({ method: 'POST' });
+    });
+
+    test('it should access route params', async () => {
+        const id = '123';
+        const response = await agent.get(`/access-route-params/${id}`);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({ id });
     });
 });
