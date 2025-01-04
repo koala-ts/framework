@@ -1,24 +1,28 @@
 import 'reflect-metadata';
-import { Handler, IRouteMetadata, IRouteOptions, THttpMethod, TRouterMethod } from './types';
+import { Handler, IRoute, IRouteMetadata, THttpMethod, TRouterMethod } from './types';
 
 const key = Symbol('Route');
 
-export function Route({ method, path, parseBody = true, middleware = [] }: IRouteOptions): MethodDecorator {
+export function Route({ method, path, middleware = [], options = {} }: IRoute): MethodDecorator {
     return function (target: Object, propertyKey: string | symbol): void {
         const routes: IRouteMetadata[] = Reflect.getMetadata(key, Reflect) || [];
+        const { parseBody, ...bodyOptions } = options;
+
         routes.push({
             path,
             methods: qualifyMethod(method),
             handler: qualifyHandler(target, propertyKey),
-            parseBody: parseBody,
-            middleware: middleware
+            parseBody: options.parseBody ?? true,
+            middleware: middleware,
+            bodyOptions: bodyOptions,
         });
+
         Reflect.defineMetadata(key, routes, Reflect);
     };
 }
 
 export function getRoutes(): IRouteMetadata[] {
-    return Reflect.getMetadata(key, Reflect);
+    return Reflect.getMetadata(key, Reflect) ?? [];
 }
 
 function qualifyMethod(method: THttpMethod | THttpMethod[]): TRouterMethod[] {

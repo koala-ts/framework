@@ -9,10 +9,17 @@ export function create(_: IKoalaConfig): IApplication {
     const app: IApplication = new Koa();
     const router = new Router();
 
-    getRoutes().forEach(({ methods, path, middleware, handler, parseBody }: IRouteMetadata) => {
+    getRoutes().forEach(({
+        methods,
+        path,
+        middleware,
+        handler,
+        parseBody,
+        bodyOptions,
+    }: IRouteMetadata) => {
         const middlewareStack = [...middleware, handler];
         methods.forEach(method => {
-            const routeMiddleware = parseBody ? [koaBody(), ...middlewareStack] : middlewareStack;
+            const routeMiddleware = parseBody ? [koaBody(bodyOptions), ...middlewareStack] : middlewareStack;
             router[method](path, ...routeMiddleware);
         });
     });
