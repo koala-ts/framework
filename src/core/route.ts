@@ -18,7 +18,7 @@ export function Route({ method, path, parseBody = true, middleware = [] }: IRout
 }
 
 export function getRoutes(): IRouteMetadata[] {
-    return Reflect.getMetadata(key, Reflect);
+    return Reflect.getMetadata(key, Reflect) ?? [];
 }
 
 function qualifyMethod(method: THttpMethod | THttpMethod[]): TRouterMethod[] {
