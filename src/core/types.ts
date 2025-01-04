@@ -51,7 +51,7 @@ export interface IRouteMetadata {
     middleware: IMiddleware[];
 }
 
-export interface IRouteOptions {
+export interface IRoute {
     path: string;
     method: THttpMethod | THttpMethod[];
     parseBody?: boolean;
