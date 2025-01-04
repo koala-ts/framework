@@ -8,8 +8,8 @@ describe('Route', () => {
         @Route({
             method: 'get',
             path: '/foo',
-            parseBody: false,
             middleware: [exampleMiddleware],
+            options: { parseBody: false },
         })
         bar() {
         }
@@ -17,6 +17,7 @@ describe('Route', () => {
         @Route({
             method: ['get', 'post'],
             path: '/route-with-multiple-methods',
+            options: { multipart: true },
         })
         routeWithMultipleMethods() {
         }
@@ -44,6 +45,7 @@ describe('Route', () => {
                 path: '/foo',
                 parseBody: false,
                 middleware: [exampleMiddleware],
+                bodyOptions: {},
             },
             {
                 methods: ['get', 'post'],
@@ -51,6 +53,7 @@ describe('Route', () => {
                 path: '/route-with-multiple-methods',
                 parseBody: true,
                 middleware: [],
+                bodyOptions: { multipart: true },
             },
             {
                 methods: ['all'],
@@ -58,6 +61,7 @@ describe('Route', () => {
                 path: '/route-with-any-method',
                 parseBody: true,
                 middleware: [],
+                bodyOptions: {},
             },
             {
                 methods: ['all'],
@@ -65,6 +69,7 @@ describe('Route', () => {
                 path: '/route-with-all-method',
                 parseBody: true,
                 middleware: [],
+                bodyOptions: {},
             }
         ]);
     });
@@ -81,6 +86,13 @@ describe('Route', () => {
             middleware: [],
             parseBody: true,
             path: '/fn-path',
+            bodyOptions: {},
         });
+    });
+
+    test('empty routes', () => {
+        Reflect.getMetadata = vi.fn(() => undefined);
+        
+        expect(getRoutes()).toEqual([]);
     });
 });

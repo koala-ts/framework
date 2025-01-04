@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { create, INext, type IScope, koalaDefaultConfig, Route, testAgent } from '../../src';
+import { create, INext, type IScope, IUploadedFile, koalaDefaultConfig, Route, testAgent } from '../../src';
 import Koa from 'koa';
 import TestAgent from 'supertest/lib/agent';
 
@@ -21,7 +21,7 @@ describe('Application', () => {
 
 
     class FooController {
-        @Route({ method: 'any', path: '/bar', parseBody: false, middleware: [middleware1, middleware2] })
+        @Route({ method: 'any', path: '/bar', options: { parseBody: false }, middleware: [middleware1, middleware2] })
         bar(scope: IScope): void {
             scope.response.body = {
                 name: scope.request.body?.name || 'Koala'
@@ -41,6 +41,12 @@ describe('Application', () => {
         @Route({ method: 'get', path: '/access-route-params/:id' })
         accessRouteParams(scope: IScope): void {
             scope.response.body = { id: scope.request.params.id };
+        }
+
+        @Route({ method: 'post', path: '/upload', options: { multipart: true } })
+        upload(scope: IScope): void {
+            const avatar = scope.request.files?.avatar as unknown as IUploadedFile;
+            scope.response.body = avatar.originalFilename;
         }
     }
 
@@ -86,5 +92,11 @@ describe('Application', () => {
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ id });
+    });
+
+    test('upload file', async () => {
+        const response = await agent.post('/upload').attach('avatar', 'tests/fixtures/avatar.png');
+
+        expect(response.text).toBe('avatar.png');
     });
 });

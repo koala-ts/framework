@@ -1,4 +1,6 @@
 import Koa, { Context, DefaultState, Next, Request, Response } from 'koa';
+import { KoaBodyMiddlewareOptions } from 'koa-body';
+import { File } from 'formidable';
 
 export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT>;
 
@@ -10,8 +12,16 @@ export interface IScope extends Context {
     response: IResponse;
 }
 
+export interface IUploadedFile extends File {
+}
+
+export interface IFilesMap {
+    [file: string]: IUploadedFile | IUploadedFile[];
+}
+
 export interface IRequest extends Request {
     body?: Record<string, any>;
+    files?: IFilesMap;
     params: IScope['params'];
 }
 
@@ -49,11 +59,16 @@ export interface IRouteMetadata {
     handler: Handler;
     parseBody: boolean;
     middleware: IMiddleware[];
+    bodyOptions: Partial<KoaBodyMiddlewareOptions>;
 }
+
+export type IRouteOptions = Partial<KoaBodyMiddlewareOptions & {
+    parseBody?: boolean;
+}>;
 
 export interface IRoute {
     path: string;
     method: THttpMethod | THttpMethod[];
-    parseBody?: boolean;
     middleware?: IMiddleware[];
+    options?: IRouteOptions;
 }
