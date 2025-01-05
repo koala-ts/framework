@@ -48,6 +48,23 @@ describe('Application', () => {
             const avatar = scope.request.files?.avatar as unknown as IUploadedFile;
             scope.response.body = avatar.originalFilename;
         }
+
+        @Route({ method: 'get', path: '/set-header' })
+        setHeader(scope: IScope): void {
+            scope
+                .response
+                .setHeader('X-Foo', 'Bar')
+                .setHeader('X-Bar', 'Foo')
+                .body = 'Header set';
+        }
+
+        @Route({ method: 'get', path: '/with-headers' })
+        withHeaders(scope: IScope): void {
+            scope.response.withHeaders({
+                'X-Foo': 'Bar',
+                'X-Bar': 'Foo',
+            }).body = 'Headers set';
+        }
     }
 
     test('it creates application instance', () => {
@@ -60,6 +77,20 @@ describe('Application', () => {
         const app = create(koalaDefaultConfig);
 
         expect(app.scope).toBe(app.context);
+    });
+
+    test('e2e set header', async () => {
+        const response = await agent.get('/set-header');
+
+        expect(response.header['x-foo']).toBe('Bar');
+        expect(response.header['x-bar']).toBe('Foo');
+    });
+
+    test('e2e with headers', async () => {
+        const response = await agent.get('/with-headers');
+
+        expect(response.header['x-foo']).toBe('Bar');
+        expect(response.header['x-bar']).toBe('Foo');
     });
 
     test('e2e with body', async () => {

@@ -27,9 +27,8 @@ export function create(_: IKoalaConfig): IApplication {
         });
     });
 
+    app.use(extendResponse);
     app.use(router.routes());
-
-    extendResponse(app.scope.response);
 
     return app;
 }
