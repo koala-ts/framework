@@ -1,6 +1,7 @@
 import Koa, { Context, DefaultState, Next, Request, Response } from 'koa';
 import { KoaBodyMiddlewareOptions } from 'koa-body';
 import { File } from 'formidable';
+import { OutgoingHttpHeader, OutgoingHttpHeaders } from 'http';
 
 export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT>;
 
@@ -30,6 +31,9 @@ export interface IHttpRequest extends IRequest {
 }
 
 export interface IResponse extends Response {
+    setHeader(name: string, value: OutgoingHttpHeader): IResponse;
+
+    withHeaders(headers: OutgoingHttpHeaders): IResponse;
 }
 
 export interface IMiddleware {
