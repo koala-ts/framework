@@ -3,7 +3,9 @@ import { KoaBodyMiddlewareOptions } from 'koa-body';
 import { File } from 'formidable';
 import { OutgoingHttpHeader, OutgoingHttpHeaders } from 'http';
 
-export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT>;
+export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT> & {
+    scope: IScope;
+};
 
 export interface IState extends DefaultState {
 }

@@ -56,6 +56,12 @@ describe('Application', () => {
         expect(app).toBeInstanceOf(Koa);
     });
 
+    test('app provides access to scope', () => {
+        const app = create(koalaDefaultConfig);
+
+        expect(app.scope).toBe(app.context);
+    });
+
     test('e2e with body', async () => {
         const response = await agent.post('/qux').send({ name: 'Koala' });
 
