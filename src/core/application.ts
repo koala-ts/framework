@@ -4,9 +4,12 @@ import Router from '@koa/router';
 import { getRoutes } from './route';
 import { IKoalaConfig } from '../config';
 import { koaBody } from 'koa-body';
+import { extendResponse } from './response';
 
 export function create(_: IKoalaConfig): IApplication {
-    const app: IApplication = new Koa();
+    const app = new Koa() as IApplication;
+    app.scope = app.context;
+
     const router = new Router();
 
     getRoutes().forEach(({
@@ -24,6 +27,8 @@ export function create(_: IKoalaConfig): IApplication {
         });
     });
 
+    app.use(extendResponse);
     app.use(router.routes());
+
     return app;
 }

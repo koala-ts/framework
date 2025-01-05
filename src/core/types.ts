@@ -2,7 +2,9 @@ import Koa, { Context, DefaultState, Next, Request, Response } from 'koa';
 import { KoaBodyMiddlewareOptions } from 'koa-body';
 import { File } from 'formidable';
 
-export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT>;
+export type IApplication<StateT = IState, ScopeT = IScope> = Koa<StateT, ScopeT> & {
+    scope: IScope;
+};
 
 export interface IState extends DefaultState {
 }
@@ -30,6 +32,9 @@ export interface IHttpRequest extends IRequest {
 }
 
 export interface IResponse extends Response {
+    setHeader(name: string, value: string | string[]): IResponse;
+
+    withHeaders(headers: Record<string, string | string[]>): IResponse;
 }
 
 export interface IMiddleware {
@@ -51,7 +56,8 @@ export type THttpMethod =
 
 export type TRouterMethod =
     | 'get' | 'post' | 'put' | 'patch'
-    | 'delete' | 'options' | 'head' | 'all';
+    | 'delete' | 'options' | 'head'
+    | 'all';
 
 export interface IRouteMetadata {
     path: string;
