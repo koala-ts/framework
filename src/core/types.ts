@@ -38,7 +38,7 @@ export interface IResponse extends Response {
 }
 
 export interface IMiddleware {
-    (scope: IScope, next: INext): Promise<INext>;
+    (scope: IScope, next: INext): Promise<any>;
 }
 
 export interface INext extends Next {
