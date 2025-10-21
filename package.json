@@ -1,15 +1,8 @@
 {
   "name": "@koala-ts/framework",
-  "version": "1.1.2",
-  "type": "module",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
+  "type": "module",
+  "version": "1.1.2",
   "description": "A NodeJS framework for lazy developers",
   "keywords": [
     "koala",

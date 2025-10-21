@@ -1,13 +1,21 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@Tests/*": [
+        "tests/*"
+      ]
+    },
     "esModuleInterop": true,
     "target": "ESNext",
     "allowJs": false,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-    "module": "ESNext",
+    "module": "Preserve",
     "moduleResolution": "Bundler",
     "strict": true,
     "noUncheckedIndexedAccess": true,
