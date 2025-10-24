@@ -173,12 +173,6 @@ export default [
       '@stylistic/array-bracket-spacing': ['error', 'never'],
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/eol-last': ['error', 'always'],
-      '@stylistic/object-curly-newline': [
-        'error',
-        {
-          'multiline': true,
-          'consistent': true,
-        }],
       '@stylistic/max-len': [
         'error', {
           code: 120,
