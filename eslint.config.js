@@ -163,13 +163,6 @@ export default [
       'no-lonely-if': 'error',
       'no-unneeded-ternary': 'error',
       'prefer-exponentiation-operator': 'error',
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: 'ArrowFunctionExpression',
-          message: 'Arrow functions are discouraged; use function declarations or named function expressions instead.',
-        },
-      ],
 
       // Stylistic rules
       '@stylistic/indent': ['error', 2],
@@ -216,7 +209,6 @@ export default [
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       'sonarjs/no-duplicate-string': 'off',
-      'no-restricted-syntax': 'off',
     },
   },
 ];
