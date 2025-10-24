@@ -156,7 +156,6 @@ export default [
       'prefer-arrow-callback': 'off',
       'prefer-template': 'error',
       'object-shorthand': ['error', 'always'],
-      'no-duplicate-imports': 'error',
       'no-useless-rename': 'error',
       'eqeqeq': ['error', 'always'],
       'curly': ['error', 'multi-line'],
