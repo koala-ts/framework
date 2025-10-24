@@ -3,7 +3,6 @@ import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import stylistic from '@stylistic/eslint-plugin';
 import pluginImport from 'eslint-plugin-import';
-import pluginN from 'eslint-plugin-n';
 import pluginPromise from 'eslint-plugin-promise';
 import pluginSonarjs from 'eslint-plugin-sonarjs';
 import path from 'node:path';
@@ -59,7 +58,6 @@ export default [
     plugins: {
       '@stylistic': stylistic,
       'import': pluginImport,
-      'n': pluginN,
     },
     rules: {
       // TypeScript strict rules
