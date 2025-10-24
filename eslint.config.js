@@ -3,9 +3,26 @@ import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import stylistic from '@stylistic/eslint-plugin';
 import pluginImport from 'eslint-plugin-import';
-import pluginN from 'eslint-plugin-n';
 import pluginPromise from 'eslint-plugin-promise';
 import pluginSonarjs from 'eslint-plugin-sonarjs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
+
+const applyTypeCheckedConfig = (configs) =>
+    configs.map((cfg) => ({
+      ...cfg,
+      files: ['**/*.{ts,tsx}'],
+      languageOptions: {
+        ...(cfg.languageOptions ?? {}),
+        parserOptions: {
+          ...(cfg.languageOptions?.parserOptions ?? {}),
+          project: ['./tsconfig.eslint.json'],
+          tsconfigRootDir,
+        },
+      },
+    }));
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -19,7 +36,7 @@ export default [
     ],
   },
   {
-    files: ['**/*.{js,mjs,cjs,ts}'],
+    files: ['**/*.{js,mjs,cjs}'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -28,13 +45,12 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: './tsconfig.eslint.json',
       },
     },
   },
   pluginJs.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  ...applyTypeCheckedConfig(tseslint.configs.strictTypeChecked),
+  ...applyTypeCheckedConfig(tseslint.configs.stylisticTypeChecked),
   pluginPromise.configs['flat/recommended'],
   pluginSonarjs.configs.recommended,
   {
@@ -42,7 +58,6 @@ export default [
     plugins: {
       '@stylistic': stylistic,
       'import': pluginImport,
-      'n': pluginN,
     },
     rules: {
       // TypeScript strict rules
@@ -139,7 +154,6 @@ export default [
       'prefer-arrow-callback': 'off',
       'prefer-template': 'error',
       'object-shorthand': ['error', 'always'],
-      'no-duplicate-imports': 'error',
       'no-useless-rename': 'error',
       'eqeqeq': ['error', 'always'],
       'curly': ['error', 'multi-line'],
@@ -147,13 +161,6 @@ export default [
       'no-lonely-if': 'error',
       'no-unneeded-ternary': 'error',
       'prefer-exponentiation-operator': 'error',
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: 'ArrowFunctionExpression',
-          message: 'Arrow functions are discouraged; use function declarations or named function expressions instead.',
-        },
-      ],
 
       // Stylistic rules
       '@stylistic/indent': ['error', 2],
@@ -164,12 +171,6 @@ export default [
       '@stylistic/array-bracket-spacing': ['error', 'never'],
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/eol-last': ['error', 'always'],
-      '@stylistic/object-curly-newline': [
-        'error',
-        {
-          'multiline': true,
-          'consistent': true,
-        }],
       '@stylistic/max-len': [
         'error', {
           code: 120,
@@ -200,7 +201,6 @@ export default [
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       'sonarjs/no-duplicate-string': 'off',
-      'no-restricted-syntax': 'off',
     },
   },
 ];
