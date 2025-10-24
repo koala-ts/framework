@@ -6,6 +6,24 @@ import pluginImport from 'eslint-plugin-import';
 import pluginN from 'eslint-plugin-n';
 import pluginPromise from 'eslint-plugin-promise';
 import pluginSonarjs from 'eslint-plugin-sonarjs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
+
+const applyTypeCheckedConfig = (configs) =>
+    configs.map((cfg) => ({
+      ...cfg,
+      files: ['**/*.{ts,tsx}'],
+      languageOptions: {
+        ...(cfg.languageOptions ?? {}),
+        parserOptions: {
+          ...(cfg.languageOptions?.parserOptions ?? {}),
+          project: ['./tsconfig.eslint.json'],
+          tsconfigRootDir,
+        },
+      },
+    }));
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -19,7 +37,7 @@ export default [
     ],
   },
   {
-    files: ['**/*.{js,mjs,cjs,ts}'],
+    files: ['**/*.{js,mjs,cjs}'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -28,13 +46,12 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: './tsconfig.eslint.json',
       },
     },
   },
   pluginJs.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  ...applyTypeCheckedConfig(tseslint.configs.strictTypeChecked),
+  ...applyTypeCheckedConfig(tseslint.configs.stylisticTypeChecked),
   pluginPromise.configs['flat/recommended'],
   pluginSonarjs.configs.recommended,
   {
