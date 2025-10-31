@@ -1,5 +1,6 @@
 import type { Context, DefaultState, Next } from 'koa';
-import { type HttpRequest, type HttpResponse } from '@/Http';
+import { type HttpRequest } from '../Request';
+import { type HttpResponse } from '../Response';
 
 export interface HttpScope extends Context {
   request: HttpRequest;

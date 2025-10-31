@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { type ScopeState, type ScopeStore } from '@/Http';
+import { type ScopeState, type ScopeStore } from './types';
 
 export function createStore<TState extends ScopeState>(): ScopeStore<TState> {
   const asyncLocalStorage = new AsyncLocalStorage<TState>();
