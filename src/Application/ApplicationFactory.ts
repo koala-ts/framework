@@ -4,13 +4,21 @@ import { koaBody } from 'koa-body';
 import { type Application } from './types';
 import { extendResponse } from '@/Application/Response';
 import { type KoalaConfig } from '@/Config';
-import { type HttpScope } from '@/Http';
+import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { getRoutes } from '@/Routing';
 
-export function create(_: KoalaConfig): Application {
+export function create(config: KoalaConfig): Application {
   const app = new Koa() as Application;
   app.scope = app.context;
 
+  app.use(extendResponse);
+  if (undefined !== config.globalMiddleware) registerGlobalMiddleware(app, config.globalMiddleware);
+  app.use(createRouter().routes());
+
+  return app;
+}
+
+function createRouter(): Router {
   const router = new Router();
 
   for (const route of getRoutes()) {
@@ -22,8 +30,11 @@ export function create(_: KoalaConfig): Application {
     }
   }
 
-  app.use(extendResponse);
-  app.use(router.routes());
+  return router;
+}
 
-  return app;
+function registerGlobalMiddleware(app: Application, middleware: HttpMiddleware[]): void {
+  for (const mw of middleware) {
+    app.use(mw);
+  }
 }
