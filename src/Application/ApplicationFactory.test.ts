@@ -140,11 +140,11 @@ describe('Application', () => {
 describe('Global Middleware', () => {
   test('it should register configured global middleware', () => {
     const middlewareFn = vi.fn();
-    const config: KoalaConfig = {
+    const config = {
       controllers: [],
       globalMiddleware: [middlewareFn],
     };
-    const testAgent = createTestAgent(config);
+    const testAgent = createTestAgent(config as KoalaConfig);
 
     testAgent.get('/');
 
