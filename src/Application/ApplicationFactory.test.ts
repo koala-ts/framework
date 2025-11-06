@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { create } from '@/Application/ApplicationFactory';
-import { koalaDefaultConfig } from '@/Config';
+import { KoalaConfig, koalaDefaultConfig } from '@/Config';
 import type { HttpScope, NextMiddleware, UploadedFile } from '@/Http';
 import { Route } from '@/Routing';
 import { createTestAgent, TestAgent } from '@/Testing';
@@ -134,5 +134,20 @@ describe('Application', () => {
     const response = await agent.post('/upload').attach('avatar', 'tests/fixtures/avatar.png');
 
     expect(response.text).toBe('avatar.png');
+  });
+});
+
+describe('Global Middleware', () => {
+  test('it should register configured global middleware', () => {
+    const middlewareFn = vi.fn();
+    const config: KoalaConfig = {
+      controllers: [],
+      globalMiddleware: [middlewareFn],
+    };
+    const testAgent = createTestAgent(config);
+
+    testAgent.get('/');
+
+    expect(middlewareFn).toHaveBeenCalled();
   });
 });
