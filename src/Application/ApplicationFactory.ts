@@ -11,6 +11,13 @@ export function create(_: KoalaConfig): Application {
   const app = new Koa() as Application;
   app.scope = app.context;
 
+  app.use(extendResponse);
+  app.use(createRouter().routes());
+
+  return app;
+}
+
+function createRouter(): Router {
   const router = new Router();
 
   for (const route of getRoutes()) {
@@ -22,8 +29,5 @@ export function create(_: KoalaConfig): Application {
     }
   }
 
-  app.use(extendResponse);
-  app.use(router.routes());
-
-  return app;
+  return router;
 }
