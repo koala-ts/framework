@@ -138,7 +138,7 @@ describe('Application', () => {
 });
 
 describe('Global Middleware', () => {
-  test('it should register configured global middleware', () => {
+  test('it should register configured global middleware', async () => {
     const middlewareFn = vi.fn();
     const config = {
       controllers: [],
@@ -146,7 +146,7 @@ describe('Global Middleware', () => {
     };
     const testAgent = createTestAgent(config as KoalaConfig);
 
-    testAgent.get('/');
+    await testAgent.get('/');
 
     expect(middlewareFn).toHaveBeenCalled();
   });
