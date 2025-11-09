@@ -24,6 +24,6 @@ jobs:
         run: npm install
 
       - name: publish
-        run: ./.github/bin/publish ${{ github.event.release.tag_name }} ${{ github.ref_name }}
+        run: ./.github/bin/publish ${{ github.event.release.tag_name }} ${{ github.event.repository.default_branch }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
