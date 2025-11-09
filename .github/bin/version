@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+VERSION=$1
+BRANCH=$2
+
+git config user.name "koala[bot]"
+git config user.email "koala[bot]@users.noreply.github.com"
+
+npm version "$VERSION" --no-git-tag-version
+
+if [[ -n $(git status --porcelain) ]]; then
+  git add package.json package-lock.json
+  git commit -m "chore: bump version to $VERSION"
+  git push origin HEAD:"$BRANCH"
+fi
