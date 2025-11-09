@@ -16,3 +16,6 @@ if [[ -n $(git status --porcelain) ]]; then
   git commit -m "chore: bump version to $VERSION"
   git push origin HEAD:"$BRANCH"
 fi
+
+npm run build
+npm publish
