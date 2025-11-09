@@ -11,11 +11,31 @@ git config user.email "koala[bot]@users.noreply.github.com"
 
 npm version "$VERSION" --no-git-tag-version
 
+COMMIT_CREATED=false
+
 if [[ -n $(git status --porcelain) ]]; then
   git add package.json package-lock.json
   git commit -m "chore: bump version to $VERSION"
   git push origin HEAD:"$BRANCH"
+  COMMIT_CREATED=true
 fi
 
 npm run build
-npm publish
+
+if ! npm publish; then
+  echo "npm publish failed. Rolling back changes..."
+
+  if [ "$COMMIT_CREATED" = true ]; then
+    echo "Reverting commit..."
+    git reset --hard HEAD~1
+    git push origin HEAD:"$BRANCH" --force
+  fi
+
+  echo "Deleting release $VERSION..."
+  gh release delete "$VERSION" --yes --cleanup-tag || echo "Failed to delete release or release does not exist"
+
+  echo "Deleting tag $VERSION..."
+  git push origin --delete "$VERSION" || echo "Failed to delete tag or tag does not exist"
+
+  exit 1
+fi
