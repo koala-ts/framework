@@ -151,3 +151,19 @@ describe('Global Middleware', () => {
     expect(middlewareFn).toHaveBeenCalled();
   });
 });
+
+describe('Serving Static Files', () => {
+  test('it should serve public static files', async () => {
+    const config = {
+      staticFiles: {
+        root: 'tests/fixtures',
+      },
+    };
+    const testAgent = createTestAgent(config as KoalaConfig);
+
+    const response = await testAgent.get('/sample.txt');
+
+    expect(response.status).toBe(200);
+    expect(response.text).toBe('Howdy!\n');
+  });
+});

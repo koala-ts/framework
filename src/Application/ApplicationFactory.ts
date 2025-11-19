@@ -5,6 +5,7 @@ import { type Application } from './types';
 import { extendResponse } from '@/Application/Response';
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
+import { serveStaticFiles } from '@/Http/Files';
 import { getRoutes } from '@/Routing';
 
 export function create(config: KoalaConfig): Application {
@@ -17,6 +18,8 @@ export function create(config: KoalaConfig): Application {
   const router = createRouter();
   app.use(router.routes());
   app.use(router.allowedMethods());
+
+  app.use(serveStaticFiles(config.staticFiles));
 
   return app;
 }
