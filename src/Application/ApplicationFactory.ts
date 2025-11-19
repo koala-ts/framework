@@ -15,11 +15,11 @@ export function create(config: KoalaConfig): Application {
   app.use(extendResponse);
   if (undefined !== config.globalMiddleware) registerGlobalMiddleware(app, config.globalMiddleware);
 
+  app.use(serveStaticFiles(config.staticFiles));
+
   const router = createRouter();
   app.use(router.routes());
   app.use(router.allowedMethods());
-
-  app.use(serveStaticFiles(config.staticFiles));
 
   return app;
 }
