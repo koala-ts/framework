@@ -94,7 +94,6 @@ export default [
           prefer: 'type-imports',
           fixStyle: 'inline-type-imports',
         }],
-      '@typescript-eslint/consistent-type-exports': 'error',
       '@typescript-eslint/naming-convention': [
         'error',
         {

@@ -5,6 +5,7 @@ import { type Application } from './types';
 import { extendResponse } from '@/Application/Response';
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
+import { serveStaticFiles } from '@/Http/Files';
 import { getRoutes } from '@/Routing';
 
 export function create(config: KoalaConfig): Application {
@@ -13,7 +14,12 @@ export function create(config: KoalaConfig): Application {
 
   app.use(extendResponse);
   if (undefined !== config.globalMiddleware) registerGlobalMiddleware(app, config.globalMiddleware);
-  app.use(createRouter().routes());
+
+  app.use(serveStaticFiles(config.staticFiles));
+
+  const router = createRouter();
+  app.use(router.routes());
+  app.use(router.allowedMethods());
 
   return app;
 }
