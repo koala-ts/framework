@@ -9,4 +9,4 @@ export interface EventBusStorage {
   scope: HttpScope;
 }
 
-export type EventSubscriber = (...args: unknown[]) => void;
+export type EventSubscriber<T extends unknown[] = unknown[]> = (...args: T) => void;
