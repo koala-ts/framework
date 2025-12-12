@@ -10,4 +10,4 @@ export interface EventBusStorage {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type EventSubscriber = (...args: any[]) => void;
+export type EventSubscriber = (...args: any[]) => void | Promise<void>;
