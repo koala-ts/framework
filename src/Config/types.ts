@@ -1,3 +1,4 @@
+import { type EventSubscriber } from '@/Event';
 import { type HttpMiddleware } from '@/Http';
 import { type StaticFilesOptions } from '@/Http/Files';
 
@@ -7,4 +8,5 @@ export interface KoalaConfig {
   controllers: Controller[];
   globalMiddleware?: HttpMiddleware[];
   staticFiles?: StaticFilesOptions;
+  eventSubscribers?: Record<string, EventSubscriber | EventSubscriber[]>;
 }
