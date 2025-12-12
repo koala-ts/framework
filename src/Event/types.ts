@@ -8,3 +8,5 @@ export interface EventBusStorage {
   eventEmitter: EventEmitter;
   scope: HttpScope;
 }
+
+export type EventSubscriber = (...args: unknown[]) => void;

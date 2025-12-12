@@ -17,9 +17,12 @@ export function create(config: KoalaConfig): Application {
 
   app.use(serveStaticFiles(config.staticFiles));
 
+  // Register routes
   const router = createRouter();
   app.use(router.routes());
   app.use(router.allowedMethods());
+
+  registerEventSubscribers(app, config.eventSubscribers);
 
   return app;
 }
@@ -42,5 +45,18 @@ function createRouter(): Router {
 function registerGlobalMiddleware(app: Application, middleware: HttpMiddleware[]): void {
   for (const mw of middleware) {
     app.use(mw);
+  }
+}
+
+function registerEventSubscribers(app: Application, map: KoalaConfig['eventSubscribers']): void {
+  if (undefined === map) return;
+
+  for (const [event, subscribers] of Object.entries(map)) {
+    if (Array.isArray(subscribers)) {
+      for (const subscriber of subscribers) app.on(event, subscriber);
+      continue;
+    }
+
+    app.on(event, subscribers);
   }
 }
