@@ -9,4 +9,5 @@ export interface EventBusStorage {
   scope: HttpScope;
 }
 
-export type EventSubscriber<T extends unknown[] = unknown[]> = (...args: T) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type EventSubscriber = (...args: any[]) => void;
