@@ -53,10 +53,10 @@ function registerEventSubscribers(app: Application, map: KoalaConfig['eventSubsc
 
   for (const [event, subscribers] of Object.entries(map)) {
     if (Array.isArray(subscribers)) {
-      for (const subscriber of subscribers) app.on(event, subscriber);
+      for (const subscriber of subscribers) app.on(event, subscriber as unknown as (...args: unknown[]) => void);
       continue;
     }
 
-    app.on(event, subscribers);
+    app.on(event, subscribers as unknown as (...args: unknown[]) => void);
   }
 }

@@ -32,4 +32,22 @@ describe('Register Event Subscribers', () => {
     expect(firstSubscriber).toHaveBeenCalledWith('data2');
     expect(secondSubscriber).toHaveBeenCalledWith('data2');
   });
+
+  test('Register async subscriber for an event', () => {
+    const internalFn = vi.fn();
+    const asyncSubscriber = async (data: string): Promise<void> => {
+      await internalFn(data);
+    };
+    const config = {
+      ...koalaDefaultConfig,
+      eventSubscribers: {
+        asyncEvent: asyncSubscriber,
+      },
+    };
+    const app = create(config as unknown as KoalaConfig);
+
+    app.emit('asyncEvent', 'data3');
+
+    expect(internalFn).toHaveBeenCalledWith('data3');
+  });
 });
