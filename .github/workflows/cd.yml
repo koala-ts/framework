@@ -23,7 +23,12 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm ci
+      - name: Set version
+        run: |
+          echo "Setting version to $GITHUB_REF_NAME"
+          npm version "$GITHUB_REF_NAME" --no-git-tag-version
+          npm install
+
       - run: npm run build
       - run: npm publish --provenance --access public
         env:
