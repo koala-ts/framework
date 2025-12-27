@@ -2,7 +2,7 @@ import Koa from 'koa';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { create } from '@/Application/ApplicationFactory';
 import { KoalaConfig, koalaDefaultConfig } from '@/Config';
-import type { HttpScope, NextMiddleware, UploadedFile } from '@/Http';
+import type { HttpRequest, HttpScope, NextMiddleware, UploadedFile } from '@/Http';
 import { Route } from '@/Routing';
 import { createTestAgent, TestAgent } from '@/Testing';
 
@@ -25,7 +25,7 @@ describe('Application', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   class FooController {
     @Route({ method: 'any', path: '/bar', options: { parseBody: false }, middleware: [middleware1, middleware2] })
-    bar(scope: HttpScope): void {
+    bar(scope: HttpScope<{ body?: { name: string } } & HttpRequest>): void {
       scope.response.body = {
         name: scope.request.body?.name ?? 'Koala',
       };
