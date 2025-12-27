@@ -8,8 +8,10 @@ export interface HttpScope<TRequest extends Request = HttpRequest> extends Conte
 }
 
 export type NextMiddleware = Next;
+
 export type HttpMiddleware<TRequest extends Request = HttpRequest> = (
   scope: HttpScope<TRequest>,
   next: NextMiddleware,
 ) => Promise<unknown>;
+
 export type AppState = DefaultState;
