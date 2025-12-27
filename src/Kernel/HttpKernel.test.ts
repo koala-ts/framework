@@ -1,15 +1,15 @@
 import { describe, expect, test, vi } from 'vitest';
-import { eventBusMiddleware, useEmit, useRequest, useResponse } from '@/Event/EventBus';
-import { type EventBusStorage } from '@/Event/types';
 import { type HttpScope, type ScopeStore } from '@/Http';
+import { httpKernel, useEmit, useRequest, useResponse } from '@/Kernel/HttpKernel';
+import { type KernelStorage } from '@/Kernel/types';
 
-describe('Event bus', () => {
+describe('Http Kernel', () => {
   test('middleware should init storage', async () => {
     const scope = { app: vi.fn() };
     const next = vi.fn();
     const storage = { run: vi.fn() };
 
-    await eventBusMiddleware(scope as unknown as HttpScope, next, storage as unknown as ScopeStore<EventBusStorage>);
+    await httpKernel(scope as unknown as HttpScope, next, storage as unknown as ScopeStore<KernelStorage>);
 
     expect(storage.run).toHaveBeenCalledWith({ eventEmitter: scope.app, scope }, next);
   });
@@ -17,7 +17,7 @@ describe('Event bus', () => {
   test('useEmit should return emitter from storage', () => {
     const storage = { get: vi.fn().mockReturnValue('eventEmitter') };
 
-    const emitter = useEmit(storage as unknown as ScopeStore<EventBusStorage>);
+    const emitter = useEmit(storage as unknown as ScopeStore<KernelStorage>);
 
     expect(storage.get).toHaveBeenCalledWith('eventEmitter');
     expect(emitter).toBe('eventEmitter');
@@ -27,7 +27,7 @@ describe('Event bus', () => {
     const request = { headers: { host: 'localhost' } };
     const storage = { get: vi.fn().mockReturnValue({ request }) };
 
-    const req = useRequest(storage as unknown as ScopeStore<EventBusStorage>);
+    const req = useRequest(storage as unknown as ScopeStore<KernelStorage>);
 
     expect(storage.get).toHaveBeenCalledWith('scope');
     expect(req).toBe(request);
@@ -37,7 +37,7 @@ describe('Event bus', () => {
     const response = { status: 200, body: 'OK' };
     const storage = { get: vi.fn().mockReturnValue({ response }) };
 
-    const res = useResponse(storage as unknown as ScopeStore<EventBusStorage>);
+    const res = useResponse(storage as unknown as ScopeStore<KernelStorage>);
 
     expect(storage.get).toHaveBeenCalledWith('scope');
     expect(res).toBe(response);

@@ -4,7 +4,7 @@ export interface EventEmitter {
   emit(event: string, ...args: unknown[]): void;
 }
 
-export interface EventBusStorage {
+export interface KernelStorage {
   eventEmitter: EventEmitter;
   scope: HttpScope;
 }
