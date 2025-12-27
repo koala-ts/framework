@@ -22,10 +22,16 @@ describe('Application', () => {
     return next();
   };
 
+  interface BarRequest extends HttpRequest {
+    body?: {
+      name: string;
+    };
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   class FooController {
     @Route({ method: 'any', path: '/bar', options: { parseBody: false }, middleware: [middleware1, middleware2] })
-    bar(scope: HttpScope<{ body?: { name: string } } & HttpRequest>): void {
+    bar(scope: HttpScope<BarRequest>): void {
       scope.response.body = {
         name: scope.request.body?.name ?? 'Koala',
       };
