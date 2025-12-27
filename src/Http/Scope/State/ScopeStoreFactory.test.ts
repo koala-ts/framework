@@ -20,9 +20,7 @@ describe('createStore', () => {
     }).toThrowError(ScopeStoreError);
     expect(() => {
       store.set('id', 2);
-    }).toThrowError(
-      'No active scope store found. Make sure to call set() within a run() context.',
-    );
+    }).toThrowError('No active scope store found. Make sure to call set() within a run() context.');
   });
 
   test('get should fail if no active store found', () => {
