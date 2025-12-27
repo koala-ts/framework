@@ -1,5 +1,12 @@
 import { type EventBusStorage, type EventEmitter } from '@/Event/types';
-import { createStore, type HttpRequest, type HttpResponse, type HttpScope, type NextMiddleware, type ScopeStore } from '@/Http';
+import {
+  createStore,
+  type HttpRequest,
+  type HttpResponse,
+  type HttpScope,
+  type NextMiddleware,
+  type ScopeStore,
+} from '@/Http';
 
 const eventBusStorage = createStore<EventBusStorage>();
 

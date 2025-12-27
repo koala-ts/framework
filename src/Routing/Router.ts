@@ -4,13 +4,8 @@ import type { HttpMiddleware } from '@/Http';
 
 const key = Symbol('Route');
 
-export function Route({
-  method,
-  path,
-  middleware = [],
-  options = {},
-}: Route): MethodDecorator {
-  return function(target: object, propertyKey: string | symbol): void {
+export function Route({ method, path, middleware = [], options = {} }: Route): MethodDecorator {
+  return function (target: object, propertyKey: string | symbol): void {
     const routes: RouteMetadata[] = getRoutes();
 
     routes.push({
@@ -52,9 +47,6 @@ function qualifyHandler(target: unknown, propertyKey: string | symbol): HttpMidd
 }
 
 function extractBodyOptions(options: RouteOptions): RouteMetadata['bodyOptions'] {
-  const {
-    parseBody: _parseBody,
-    ...bodyOptions
-  } = options;
+  const { parseBody: _parseBody, ...bodyOptions } = options;
   return bodyOptions as RouteMetadata['bodyOptions'];
 }

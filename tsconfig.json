@@ -2,12 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@Tests/*": [
-        "tests/*"
-      ]
+      "@/*": ["src/*"],
+      "@Tests/*": ["tests/*"]
     },
     "esModuleInterop": true,
     "target": "ESNext",
@@ -32,19 +28,11 @@
     "emitDeclarationOnly": false,
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["node_modules", "dist"],
   "tsc-alias": {
     "resolveFullPaths": true,
     "verbose": false
   },
-  "types": [
-    "@types/jest"
-  ]
+  "types": ["@types/jest"]
 }

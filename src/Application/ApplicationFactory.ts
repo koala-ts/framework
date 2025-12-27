@@ -31,7 +31,7 @@ function createRouter(): Router {
   const router = new Router();
 
   for (const route of getRoutes()) {
-    const middlewareStack = [...(route.middleware), route.handler];
+    const middlewareStack = [...route.middleware, route.handler];
 
     for (const method of route.methods) {
       const routeMiddleware = route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;

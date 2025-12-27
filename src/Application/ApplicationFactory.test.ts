@@ -12,12 +12,12 @@ describe('Application', () => {
     agent = createTestAgent(koalaDefaultConfig);
   });
 
-  const middleware1 = function(_: HttpScope, next: NextMiddleware): Promise<void> {
+  const middleware1 = function (_: HttpScope, next: NextMiddleware): Promise<void> {
     return next();
   };
   const service = vi.fn();
 
-  const middleware2 = function(_: HttpScope, next: NextMiddleware): Promise<void> {
+  const middleware2 = function (_: HttpScope, next: NextMiddleware): Promise<void> {
     service();
     return next();
   };

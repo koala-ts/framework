@@ -10,12 +10,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: [
-        '**/playground/**',
-        '**/tests/**',
-        '**/types.*',
-        '**/index.*',
-      ],
+      exclude: ['**/playground/**', '**/tests/**', '**/types.*', '**/index.*'],
     },
   },
 });

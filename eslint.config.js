@@ -6,34 +6,29 @@ import pluginImport from 'eslint-plugin-import';
 import pluginPromise from 'eslint-plugin-promise';
 import pluginSonarjs from 'eslint-plugin-sonarjs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import { fileURLToPath } from 'node:url';
+import prettier from 'eslint-plugin-prettier/recommended';
 
 const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
 
-const applyTypeCheckedConfig = (configs) =>
-    configs.map((cfg) => ({
-      ...cfg,
-      files: ['**/*.{ts,tsx}'],
-      languageOptions: {
-        ...(cfg.languageOptions ?? {}),
-        parserOptions: {
-          ...(cfg.languageOptions?.parserOptions ?? {}),
-          project: ['./tsconfig.eslint.json'],
-          tsconfigRootDir,
-        },
+const applyTypeCheckedConfig = configs =>
+  configs.map(cfg => ({
+    ...cfg,
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ...(cfg.languageOptions ?? {}),
+      parserOptions: {
+        ...(cfg.languageOptions?.parserOptions ?? {}),
+        project: ['./tsconfig.eslint.json'],
+        tsconfigRootDir,
       },
-    }));
+    },
+  }));
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {
-    ignores: [
-      'dist/**',
-      'node_modules/**',
-      'coverage/**',
-      '*.config.js',
-      '*.config.ts',
-    ],
+    ignores: ['dist/**', 'node_modules/**', 'coverage/**', '*.config.js', '*.config.ts'],
   },
   {
     files: ['**/*.{js,mjs,cjs}'],
@@ -57,16 +52,18 @@ export default [
     ignores: ['node_modules/**'],
     plugins: {
       '@stylistic': stylistic,
-      'import': pluginImport,
+      import: pluginImport,
     },
     rules: {
       // TypeScript strict rules
       '@typescript-eslint/explicit-function-return-type': [
-        'error', {
+        'error',
+        {
           allowExpressions: false,
           allowTypedFunctionExpressions: true,
           allowHigherOrderFunctions: true,
-        }],
+        },
+      ],
       '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unsafe-assignment': 'error',
@@ -78,22 +75,28 @@ export default [
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/restrict-template-expressions': [
-        'error', {
+        'error',
+        {
           allowNumber: true,
           allowBoolean: true,
           allowNullish: false,
-        }],
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
-        'error', {
+        'error',
+        {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
-        }],
+        },
+      ],
       '@typescript-eslint/consistent-type-imports': [
-        'error', {
+        'error',
+        {
           prefer: 'type-imports',
           fixStyle: 'inline-type-imports',
-        }],
+        },
+      ],
       '@typescript-eslint/naming-convention': [
         'error',
         {
@@ -117,29 +120,26 @@ export default [
       '@typescript-eslint/prefer-nullish-coalescing': 'error',
       '@typescript-eslint/prefer-optional-chain': 'error',
       '@typescript-eslint/strict-boolean-expressions': [
-        'error', {
+        'error',
+        {
           allowString: false,
           allowNumber: false,
           allowNullableObject: false,
-        }],
+        },
+      ],
 
       // Import rules
       'import/order': [
-        'error', {
-          'groups': [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index',
-          ],
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           'newlines-between': 'never',
-          'alphabetize': {
-            'order': 'asc',
-            'caseInsensitive': true,
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
           },
-        }],
+        },
+      ],
       'import/no-duplicates': 'error',
       'import/no-cycle': 'error',
       'import/no-self-import': 'error',
@@ -154,8 +154,8 @@ export default [
       'prefer-template': 'error',
       'object-shorthand': ['error', 'always'],
       'no-useless-rename': 'error',
-      'eqeqeq': ['error', 'always'],
-      'curly': ['error', 'multi-line'],
+      eqeqeq: ['error', 'always'],
+      curly: ['error', 'multi-line'],
       'no-else-return': 'error',
       'no-lonely-if': 'error',
       'no-unneeded-ternary': 'error',
@@ -163,7 +163,7 @@ export default [
 
       // Stylistic rules
       '@stylistic/indent': ['error', 2],
-      '@stylistic/quotes': ['error', 'single', {avoidEscape: true}],
+      '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
       '@stylistic/object-curly-spacing': ['error', 'always'],
@@ -171,17 +171,19 @@ export default [
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/eol-last': ['error', 'always'],
       '@stylistic/max-len': [
-        'error', {
+        'error',
+        {
           code: 120,
           ignoreUrls: true,
           ignoreStrings: true,
           ignoreTemplateLiterals: true,
           ignoreRegExpLiterals: true,
-        }],
+        },
+      ],
 
       // SonarJS rules for complexity
       'sonarjs/cognitive-complexity': ['error', 15],
-      'sonarjs/no-duplicate-string': ['error', {threshold: 3}],
+      'sonarjs/no-duplicate-string': ['error', { threshold: 3 }],
       'sonarjs/no-identical-functions': 'error',
       'sonarjs/prefer-immediate-return': 'error',
       'sonarjs/no-unused-vars': 'off',
@@ -202,4 +204,5 @@ export default [
       'sonarjs/no-duplicate-string': 'off',
     },
   },
+  prettier,
 ];
