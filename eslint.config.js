@@ -7,6 +7,7 @@ import pluginPromise from 'eslint-plugin-promise';
 import pluginSonarjs from 'eslint-plugin-sonarjs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import prettier from 'eslint-plugin-prettier/recommended';
 
 const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -202,4 +203,5 @@ export default [
       'sonarjs/no-duplicate-string': 'off',
     },
   },
+  prettier,
 ];
