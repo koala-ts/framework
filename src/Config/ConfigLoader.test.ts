@@ -10,14 +10,18 @@ describe('Load env config', () => {
   test('it should load .env file', () => {
     loadEnvConfig('development');
 
-    expect(configSpy).toHaveBeenCalledWith({ path: expect.stringContaining('.env'), override: true });
+    expect(configSpy).toHaveBeenCalledWith({ path: expect.stringContaining('.env'), override: true, quiet: true });
     expect(expandSpy).toHaveBeenCalled();
   });
 
   test('it should load .env.local file', () => {
     loadEnvConfig('development');
 
-    expect(configSpy).toHaveBeenCalledWith({ path: expect.stringContaining('.env.local'), override: true });
+    expect(configSpy).toHaveBeenCalledWith({
+      path: expect.stringContaining('.env.local'),
+      override: true,
+      quiet: true,
+    });
     expect(expandSpy).toHaveBeenCalled();
   });
 
@@ -30,14 +34,22 @@ describe('Load env config', () => {
   test('it should load .env.<env> file', () => {
     loadEnvConfig('development');
 
-    expect(configSpy).toHaveBeenCalledWith({ path: expect.stringContaining('.env.development'), override: true });
+    expect(configSpy).toHaveBeenCalledWith({
+      path: expect.stringContaining('.env.development'),
+      override: true,
+      quiet: true,
+    });
     expect(expandSpy).toHaveBeenCalled();
   });
 
   test('it should load .env.<env>.local file', () => {
     loadEnvConfig('test');
 
-    expect(configSpy).toHaveBeenCalledWith({ path: expect.stringContaining('.env.test.local'), override: true });
+    expect(configSpy).toHaveBeenCalledWith({
+      path: expect.stringContaining('.env.test.local'),
+      override: true,
+      quiet: true,
+    });
     expect(expandSpy).toHaveBeenCalled();
   });
 });

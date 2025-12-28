@@ -17,6 +17,7 @@ function loadEnvFile(fileName: string): void {
   const expandedOptions = dotenv.config({
     path: path.resolve(rootDir, fileName),
     override: true,
+    quiet: true,
   });
 
   dotenvExpand.expand(expandedOptions);
