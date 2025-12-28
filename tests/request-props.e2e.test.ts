@@ -1,3 +1,4 @@
+import getRawBody from 'raw-body';
 import { describe, expect, test } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, Route, UploadedFile } from '../src';
 
@@ -26,6 +27,12 @@ class MyController {
       uploadedFileName: scope.request.files.avatar.originalFilename,
     };
   }
+
+  @Route({ method: 'POST', path: '/non-parsed-body', options: { parseBody: false } })
+  async nonParsedBody(scope: HttpScope<MyRequest>): Promise<void> {
+    const rawBody = await getRawBody(scope.request.req, { encoding: 'utf8' });
+    scope.response.body = { rawBody };
+  }
 }
 
 describe('Request Properties E2E Test', () => {
@@ -48,6 +55,17 @@ describe('Request Properties E2E Test', () => {
 
     expect(response.body).toEqual({
       uploadedFileName: 'avatar.png',
+    });
+  });
+
+  test('non-parsed body', async () => {
+    const agent = createTestAgent({ controllers: [MyController] });
+    const rawBody = 'raw body content';
+
+    const response = await agent.post('/non-parsed-body').set('Content-Type', 'text/plain').send(rawBody);
+
+    expect(response.body).toEqual({
+      rawBody,
     });
   });
 });
