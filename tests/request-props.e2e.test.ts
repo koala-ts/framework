@@ -28,7 +28,7 @@ class MyController {
   }
 }
 
-describe('Request Body E2E Test', () => {
+describe('Request Properties E2E Test', () => {
   test('access request props', async () => {
     const agent = createTestAgent({ controllers: [MyController] });
 
