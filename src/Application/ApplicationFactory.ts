@@ -6,7 +6,7 @@ import { extendResponse } from '@/Application/Response';
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files';
-import { httpKernel } from '@/Kernel';
+import { type EventSubscriber, httpKernel } from '@/Kernel';
 import { getRoutes } from '@/Routing';
 
 export function create(config: KoalaConfig): Application {
@@ -16,7 +16,9 @@ export function create(config: KoalaConfig): Application {
   app.use(extendResponse);
   app.use(httpKernel);
 
-  if (undefined !== config.globalMiddleware) registerGlobalMiddleware(app, config.globalMiddleware);
+  if (undefined !== config.globalMiddleware) {
+    registerGlobalMiddleware(app, config.globalMiddleware);
+  }
 
   app.use(serveStaticFiles(config.staticFiles));
 
@@ -25,7 +27,9 @@ export function create(config: KoalaConfig): Application {
   app.use(router.routes());
   app.use(router.allowedMethods());
 
-  registerEventSubscribers(app, config.eventSubscribers);
+  if (undefined !== config.eventSubscribers) {
+    registerEventSubscribers(app, config.eventSubscribers);
+  }
 
   return app;
 }
@@ -51,9 +55,7 @@ function registerGlobalMiddleware(app: Application, middleware: HttpMiddleware[]
   }
 }
 
-function registerEventSubscribers(app: Application, map: KoalaConfig['eventSubscribers']): void {
-  if (undefined === map) return;
-
+function registerEventSubscribers(app: Application, map: Record<string, EventSubscriber | EventSubscriber[]>): void {
   for (const [event, subscribers] of Object.entries(map)) {
     if (Array.isArray(subscribers)) {
       for (const subscriber of subscribers) app.on(event, subscriber as unknown as (...args: unknown[]) => void);
