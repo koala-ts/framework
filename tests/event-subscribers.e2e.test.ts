@@ -10,8 +10,8 @@ class MyController {
   }
 }
 
-describe('Event subscribers e2e Test', () => {
-  test('subscribe to and event', async () => {
+describe('Event subscribers E2E Test', () => {
+  test('subscribe to an event', async () => {
     const handler = vi.fn();
     const agent = createTestAgent({
       controllers: [MyController],
@@ -35,5 +35,20 @@ describe('Event subscribers e2e Test', () => {
 
     expect(handler1).toHaveBeenCalledWith({ data: 'event-data' });
     expect(handler2).toHaveBeenCalledWith({ data: 'event-data' });
+  });
+
+  test('register async event subscriber', async () => {
+    const internalFn = vi.fn();
+    const asyncSubscriber = async (data: string): Promise<void> => {
+      await internalFn(data);
+    };
+    const agent = createTestAgent({
+      controllers: [MyController],
+      eventSubscribers: { myEvent: asyncSubscriber },
+    } as unknown as KoalaConfig);
+
+    await agent.get('/publish-event');
+
+    expect(internalFn).toHaveBeenCalledWith({ data: 'event-data' });
   });
 });
