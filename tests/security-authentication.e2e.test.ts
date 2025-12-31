@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
 import { createTestAgent, type HttpScope, Route } from '../src';
-import { firewall } from '../src/Security/firewall-middleware';
+import { firewall } from '../src/Security/firewall/firewall-middleware';
 
 class MyController {
   @Route({ path: '/public', method: 'get' })

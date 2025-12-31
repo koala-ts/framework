@@ -1,2 +1,2 @@
 export * from './types';
-export * from './firewall-middleware';
+export * from './firewall/firewall-middleware';

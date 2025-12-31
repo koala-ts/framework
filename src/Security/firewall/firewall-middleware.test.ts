@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
 import { type HttpScope } from '@/Http';
-import { firewall } from '@/Security/firewall-middleware';
+import { firewall } from '@/Security/firewall/firewall-middleware';
 
 describe('Firewall Middleware', () => {
   test('it should skip unmatched firewalls', async () => {
