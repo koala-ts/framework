@@ -1,7 +1,6 @@
 import { type HttpRequest } from '@/Http';
 
 export interface User {
-  identifier: string;
   roles?: string[];
 }
 
