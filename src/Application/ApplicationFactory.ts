@@ -1,4 +1,4 @@
-import Router from '@koa/router';
+import Router, { type RouterInstance } from '@koa/router';
 import Koa, { type DefaultContext, type DefaultState, type Middleware } from 'koa';
 import { koaBody } from 'koa-body';
 import { type Application } from './types';
@@ -34,7 +34,7 @@ export function create(config: KoalaConfig): Application {
   return app;
 }
 
-function createRouter(): Router {
+function createRouter(): RouterInstance {
   const router = new Router();
 
   for (const route of getRoutes()) {
