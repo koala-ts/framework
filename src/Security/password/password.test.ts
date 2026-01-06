@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { createPasswordHasher } from './password';
 
 describe('createPasswordHasher', () => {
-  test('hash and verify non password', async () => {
+  test('hash and verify password', async () => {
     const hasher = createPasswordHasher({ timeCost: 1, memoryCost: 1024 });
 
     const hashedPassword = await hasher.hash('mySecretPassword123');
