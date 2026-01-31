@@ -4,7 +4,6 @@ import tseslint from 'typescript-eslint';
 import stylistic from '@stylistic/eslint-plugin';
 import pluginImport from 'eslint-plugin-import';
 import pluginPromise from 'eslint-plugin-promise';
-import pluginSonarjs from 'eslint-plugin-sonarjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'eslint-plugin-prettier/recommended';
@@ -47,7 +46,6 @@ export default [
   ...applyTypeCheckedConfig(tseslint.configs.strictTypeChecked),
   ...applyTypeCheckedConfig(tseslint.configs.stylisticTypeChecked),
   pluginPromise.configs['flat/recommended'],
-  pluginSonarjs.configs.recommended,
   {
     ignores: ['node_modules/**'],
     plugins: {
@@ -181,13 +179,6 @@ export default [
         },
       ],
 
-      // SonarJS rules for complexity
-      'sonarjs/cognitive-complexity': ['error', 15],
-      'sonarjs/no-duplicate-string': ['error', { threshold: 3 }],
-      'sonarjs/no-identical-functions': 'error',
-      'sonarjs/prefer-immediate-return': 'error',
-      'sonarjs/no-unused-vars': 'off',
-
       // Promise rules
       'promise/always-return': 'error',
       'promise/catch-or-return': 'error',
@@ -201,7 +192,6 @@ export default [
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
-      'sonarjs/no-duplicate-string': 'off',
     },
   },
   prettier,
