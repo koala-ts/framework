@@ -4,7 +4,7 @@ export interface NormalizedRecord {
 
 export type NormalizedArray = NormalizedValue[];
 
-export type NormalizedValue = string | number | boolean | null | NormalizedRecord | NormalizedArray | object | [];
+export type NormalizedValue = string | number | boolean | null | NormalizedRecord | NormalizedArray;
 
 export interface PropertyMetadata {
   ignore?: boolean;
