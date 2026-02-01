@@ -4,9 +4,9 @@ import { createNormalizer } from '@/serializer/normalizer/normalizer';
 describe('Normalizer', () => {
   it('should normalize plain objects with context', () => {
     const input = { id: 1, username: 'admin', c: true, age: undefined, roles: ['admin', 'user'] };
-    const normalizer = createNormalizer();
+    const normalize = createNormalizer();
 
-    const result = normalizer(input, { metadata: { id: { ignore: true } } });
+    const result = normalize(input, { metadata: { id: { ignore: true } } });
 
     const expected = { username: 'admin', c: true, age: null, roles: ['admin', 'user'] };
     expect(result).toEqual(expected);
@@ -18,9 +18,9 @@ describe('Normalizer', () => {
       if (value instanceof Date) return value.toISOString();
       return undefined;
     };
-    const normalizer = createNormalizer([customDateNormalizer]);
+    const normalize = createNormalizer([customDateNormalizer]);
 
-    const result = normalizer(input);
+    const result = normalize(input);
 
     const expected = { id: 1, createdAt: '2024-01-01T00:00:00.000Z' };
     expect(result).toEqual(expected);

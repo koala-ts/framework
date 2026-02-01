@@ -7,5 +7,5 @@ export const dateNormalizer: Normalizer<unknown, Result> = (date: unknown): Resu
     return undefined;
   }
 
-  return date.getTime();
+  return date.toISOString();
 };
