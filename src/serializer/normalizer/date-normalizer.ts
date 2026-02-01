@@ -1,8 +1,8 @@
 import { type NormalizedValue, type Normalizer } from '@/serializer/normalizer/types';
 
-export const dateNormalizer: Normalizer<unknown, NormalizedValue | undefined> = (
-  date: unknown,
-): NormalizedValue | undefined => {
+type Result = NormalizedValue | undefined;
+
+export const dateNormalizer: Normalizer<unknown, Result> = (date: unknown): Result => {
   if (!(date instanceof Date) || isNaN(date.getTime())) {
     return undefined;
   }
