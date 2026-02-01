@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { createNormalizer } from '@/serializer/normalizer/normalizer';
 
 describe('Normalizer', () => {
-  it('should normalize plain objects', () => {
+  it('should normalize plain objects with context', () => {
     const input = { id: 1, username: 'admin', c: true, age: undefined, roles: ['admin', 'user'] };
     const normalizer = createNormalizer();
 
-    const result = normalizer(input);
+    const result = normalizer(input, { metadata: { id: { ignore: true } } });
 
-    const expected = { id: 1, username: 'admin', c: true, age: null, roles: ['admin', 'user'] };
+    const expected = { username: 'admin', c: true, age: null, roles: ['admin', 'user'] };
     expect(result).toEqual(expected);
   });
 

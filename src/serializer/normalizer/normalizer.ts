@@ -2,12 +2,12 @@ import { createArrayNormalizer } from '@/serializer/normalizer/array-normalizer'
 import { dateNormalizer } from '@/serializer/normalizer/date-normalizer';
 import { nullNormalizer } from '@/serializer/normalizer/null-normalizer';
 import { createRecordNormalizer } from '@/serializer/normalizer/record-normalizer';
-import { type NormalizedValue, type Normalizer } from '@/serializer/normalizer/types';
+import { type NormalizedValue, type Normalizer, type NormalizerContext } from '@/serializer/normalizer/types';
 
 type CustomNormalizer = Normalizer<unknown, NormalizedValue | undefined>;
 
 export function createNormalizer(customNormalizer?: CustomNormalizer[]): Normalizer {
-  return function normalize(value: unknown): NormalizedValue {
+  return function normalize(value: unknown, context?: NormalizerContext): NormalizedValue {
     const buildInNormalizers = [
       nullNormalizer,
       dateNormalizer,
@@ -18,7 +18,7 @@ export function createNormalizer(customNormalizer?: CustomNormalizer[]): Normali
     const normalizers = new Set<CustomNormalizer>([...(customNormalizer ?? []), ...buildInNormalizers]);
 
     for (const normalizer of normalizers) {
-      const result = normalizer(value);
+      const result = normalizer(value, context);
 
       if (undefined !== result) return result;
     }
