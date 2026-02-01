@@ -8,14 +8,14 @@ type CustomNormalizer = Normalizer<unknown, NormalizedValue | undefined>;
 
 export function createNormalizer(customNormalizer?: CustomNormalizer[]): Normalizer {
   return function normalize(value: unknown, context?: NormalizerContext): NormalizedValue {
-    const buildInNormalizers = [
+    const builtInNormalizers = [
       nullNormalizer,
       dateNormalizer,
       createArrayNormalizer(normalize),
       createRecordNormalizer(normalize),
     ];
 
-    const normalizers = new Set<CustomNormalizer>([...(customNormalizer ?? []), ...buildInNormalizers]);
+    const normalizers = new Set<CustomNormalizer>([...(customNormalizer ?? []), ...builtInNormalizers]);
 
     for (const normalizer of normalizers) {
       const result = normalizer(value, context);
