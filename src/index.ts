@@ -5,3 +5,4 @@ export * from '@/Kernel';
 export * from '@/Routing';
 export * from '@/Security';
 export * from '@/Testing';
+export * from '@/serializer';
