@@ -1,6 +1,6 @@
-import { type Normalizer, type NormalizerContext } from '@/serializer/normalizer/types';
+import { type NormalizedRecord, type Normalizer, type NormalizerContext } from '@/serializer/normalizer/types';
 
-type Result = Record<string, unknown> | undefined;
+type Result = NormalizedRecord | undefined;
 
 export function createRecordNormalizer(normalize: Normalizer): Normalizer<unknown, Result> {
   return function recordNormalizer(value: unknown, context?: NormalizerContext): Result {
@@ -9,7 +9,7 @@ export function createRecordNormalizer(normalize: Normalizer): Normalizer<unknow
     }
 
     const obj = value as Record<string, unknown>;
-    const normalizedRecord: Record<string, unknown> = {};
+    const normalizedRecord: NormalizedRecord = {};
 
     const shouldHandleGroups = undefined !== context?.groups && context.groups.length > 0;
     const activeGroups = new Set(context?.groups ?? []);
