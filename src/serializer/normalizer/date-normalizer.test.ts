@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { dateNormalizer } from '@/serializer/normalizer/date-normalizer';
 
 describe('Date normalizer', () => {
-  it('should normalize date to Iso string', () => {
+  it('should normalize date to ISO string', () => {
     const now = new Date();
 
     const actual = dateNormalizer(now);
