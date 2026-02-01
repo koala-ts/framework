@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { dateNormalizer } from '@/serializer/normalizer/date-normalizer';
 
 describe('Date normalizer', () => {
-  it('should normalize date to Unix Epoch time', () => {
+  it('should normalize date to Iso string', () => {
     const now = new Date();
 
     const actual = dateNormalizer(now);
 
-    expect(actual).toBe(now.getTime());
+    expect(actual).toBe(now.toISOString());
   });
 
   it('should return undefined for invalid date', () => {
