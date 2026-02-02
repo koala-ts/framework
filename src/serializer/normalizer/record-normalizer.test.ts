@@ -63,7 +63,7 @@ describe('Record normalizer', () => {
   it('should return only props of target groups', () => {
     const normalizer = vi.fn().mockImplementation((value: unknown) => value);
     const input = { id: 1, firstName: 'John', lastName: 'Doe', password: 'secret' };
-    const props = {
+    const metadata = {
       id: { groups: ['read'] },
       firstName: { groups: ['public'] },
       lastName: { groups: ['public'] },
@@ -71,7 +71,7 @@ describe('Record normalizer', () => {
     };
     const recordNormalizer = createRecordNormalizer(normalizer);
 
-    const result = recordNormalizer(input, { groups: ['public', 'read'], metadata: props });
+    const result = recordNormalizer(input, { groups: ['public', 'read'], metadata });
 
     expect(result).toEqual({ id: 1, firstName: 'John', lastName: 'Doe' });
   });
@@ -79,13 +79,13 @@ describe('Record normalizer', () => {
   it('should prioritize ignore over groups', () => {
     const normalizer = vi.fn().mockImplementation((value: unknown) => value);
     const input = { id: 1, firstName: 'John', lastName: 'Doe', password: 'secret' };
-    const props = {
+    const metadata = {
       id: { groups: ['public'] },
       password: { groups: ['private'], ignore: true },
     };
     const recordNormalizer = createRecordNormalizer(normalizer);
 
-    const result = recordNormalizer(input, { groups: ['public', 'private'], metadata: props });
+    const result = recordNormalizer(input, { groups: ['public', 'private'], metadata });
 
     expect(result).toEqual({ id: 1 });
   });
