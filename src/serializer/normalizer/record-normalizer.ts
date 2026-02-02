@@ -53,7 +53,7 @@ function requiresNestedContext(value: unknown): boolean {
 
 function createNestedContext(key: string, parentContext?: NormalizerContext): NormalizerContext | undefined {
   const metadata = parentContext?.metadata?.[key]?.metadata;
-  if (undefined === metadata) return parentContext;
+  if (undefined === metadata) return undefined;
 
   return {
     ...parentContext,
