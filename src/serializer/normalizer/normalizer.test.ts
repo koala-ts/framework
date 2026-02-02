@@ -58,4 +58,37 @@ describe('Normalizer', () => {
       post: { id: 'p1', title: 'Hello world!' },
     });
   });
+
+  it('should handle nested metadata with arrays', () => {
+    const normalize = createNormalizer();
+    const input = {
+      user: { id: 'u1', name: 'John' },
+      posts: [
+        { id: 'p1', title: 'Hello world!' },
+        { id: 'p2', title: 'Another post' },
+      ],
+    };
+    const metadata: Metadata = {
+      user: {
+        groups: ['post:delete'],
+        metadata: {
+          id: { groups: ['post:read'] },
+          name: { groups: ['post:read'] },
+        },
+      },
+      posts: {
+        groups: ['post:delete'],
+        metadata: {
+          id: { groups: ['post:delete'] },
+          title: { groups: ['post:read'] },
+        },
+      },
+    };
+    const result = normalize(input, { metadata, groups: ['post:delete'] });
+
+    expect(result).toEqual({
+      user: {},
+      posts: [{ id: 'p1' }, { id: 'p2' }],
+    });
+  });
 });
