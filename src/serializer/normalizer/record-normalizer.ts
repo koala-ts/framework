@@ -26,7 +26,7 @@ export function createRecordNormalizer(normalize: Normalizer): Normalizer<unknow
 
       normalizedRecord[rule?.serializedName ?? key] = isRecord(val)
         ? normalize(val, createNestedContext(key, context))
-        : normalize(val);
+        : normalize(val, context);
     }
 
     return normalizedRecord;
