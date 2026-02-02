@@ -4,17 +4,16 @@ type Result = NormalizedRecord | undefined;
 
 export function createRecordNormalizer(normalize: Normalizer): Normalizer<unknown, Result> {
   return function recordNormalizer(value: unknown, context?: NormalizerContext): Result {
-    if (typeof value !== 'object' || value === null || value instanceof Date || Array.isArray(value)) {
+    if (!isRecord(value)) {
       return undefined;
     }
 
-    const obj = value as Record<string, unknown>;
     const normalizedRecord: NormalizedRecord = {};
 
     const shouldHandleGroups = undefined !== context?.groups && context.groups.length > 0;
     const activeGroups = new Set(context?.groups ?? []);
 
-    for (const [key, val] of Object.entries(obj)) {
+    for (const [key, val] of Object.entries(value)) {
       const rule = context?.metadata?.[key];
 
       if (rule?.ignore === true) continue;
@@ -25,9 +24,27 @@ export function createRecordNormalizer(normalize: Normalizer): Normalizer<unknow
         if (!hasMatchingGroup) continue;
       }
 
-      normalizedRecord[rule?.serializedName ?? key] = normalize(val, context);
+      normalizedRecord[rule?.serializedName ?? key] = isRecord(val)
+        ? normalize(val, createNestedContext(key, context))
+        : normalize(val);
     }
 
     return normalizedRecord;
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date);
+}
+
+function createNestedContext(key: string, parentContext?: NormalizerContext): NormalizerContext | undefined {
+  if (undefined === parentContext) return undefined;
+
+  const metadata = parentContext.metadata?.[key]?.metadata;
+  if (undefined === metadata) return parentContext;
+
+  return {
+    ...parentContext,
+    metadata,
   };
 }
