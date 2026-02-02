@@ -24,9 +24,7 @@ export function createRecordNormalizer(normalize: Normalizer): Normalizer<unknow
         if (!hasMatchingGroup) continue;
       }
 
-      normalizedRecord[rule?.serializedName ?? key] = isRecord(val)
-        ? normalize(val, createNestedContext(key, context))
-        : normalize(val, context);
+      normalizedRecord[rule?.serializedName ?? key] = normalize(val, resolveContextForProperty(val, key, context));
     }
 
     return normalizedRecord;
@@ -37,10 +35,24 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date);
 }
 
-function createNestedContext(key: string, parentContext?: NormalizerContext): NormalizerContext | undefined {
+function resolveContextForProperty(
+  value: unknown,
+  key: string,
+  parentContext?: NormalizerContext,
+): NormalizerContext | undefined {
   if (undefined === parentContext) return undefined;
 
-  const metadata = parentContext.metadata?.[key]?.metadata;
+  if (requiresNestedContext(value)) return createNestedContext(key, parentContext);
+
+  return parentContext;
+}
+
+function requiresNestedContext(value: unknown): boolean {
+  return isRecord(value) || Array.isArray(value);
+}
+
+function createNestedContext(key: string, parentContext?: NormalizerContext): NormalizerContext | undefined {
+  const metadata = parentContext?.metadata?.[key]?.metadata;
   if (undefined === metadata) return parentContext;
 
   return {
