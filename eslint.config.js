@@ -1,7 +1,6 @@
 import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import stylistic from '@stylistic/eslint-plugin';
 import pluginImport from 'eslint-plugin-import';
 import pluginPromise from 'eslint-plugin-promise';
 import path from 'node:path';
@@ -34,7 +33,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.es2025,
+        ...globals.es2026,
       },
       parserOptions: {
         ecmaVersion: 'latest',
@@ -44,12 +43,10 @@ export default [
   },
   pluginJs.configs.recommended,
   ...applyTypeCheckedConfig(tseslint.configs.strictTypeChecked),
-  ...applyTypeCheckedConfig(tseslint.configs.stylisticTypeChecked),
   pluginPromise.configs['flat/recommended'],
   {
     ignores: ['node_modules/**'],
     plugins: {
-      '@stylistic': stylistic,
       import: pluginImport,
     },
     rules: {
@@ -158,26 +155,6 @@ export default [
       'no-lonely-if': 'error',
       'no-unneeded-ternary': 'error',
       'prefer-exponentiation-operator': 'error',
-
-      // Stylistic rules
-      '@stylistic/indent': ['error', 2],
-      '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
-      '@stylistic/semi': ['error', 'always'],
-      '@stylistic/comma-dangle': ['error', 'always-multiline'],
-      '@stylistic/object-curly-spacing': ['error', 'always'],
-      '@stylistic/array-bracket-spacing': ['error', 'never'],
-      '@stylistic/no-trailing-spaces': 'error',
-      '@stylistic/eol-last': ['error', 'always'],
-      '@stylistic/max-len': [
-        'error',
-        {
-          code: 120,
-          ignoreUrls: true,
-          ignoreStrings: true,
-          ignoreTemplateLiterals: true,
-          ignoreRegExpLiterals: true,
-        },
-      ],
 
       // Promise rules
       'promise/always-return': 'error',
