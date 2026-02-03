@@ -1,7 +1,7 @@
-import { type Next } from 'koa';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { extendResponse } from '@/Application/Response';
 import { type HttpScope } from '@/Http';
+import { type Next } from 'koa';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 describe('Response', () => {
   describe('Extend response', () => {
@@ -18,7 +18,6 @@ describe('Response', () => {
 
       scope.response.setHeader('Content-Type', 'application/json');
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(scope.set).toHaveBeenCalledWith('Content-Type', 'application/json');
     });
 
@@ -38,9 +37,7 @@ describe('Response', () => {
         'X-Custom-Header': 'value',
       });
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(scope.set).toHaveBeenCalledWith('Content-Type', 'application/json');
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(scope.set).toHaveBeenCalledWith('X-Custom-Header', 'value');
     });
 

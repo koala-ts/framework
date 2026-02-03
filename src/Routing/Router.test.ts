@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'vitest';
 import { getRoutes, Route } from '@/Routing/Router';
+import { describe, expect, test, vi } from 'vitest';
 
 describe('Route', () => {
   const exampleMiddleware = vi.fn();
@@ -45,7 +45,6 @@ describe('Route', () => {
     expect(getRoutes()).toEqual([
       {
         methods: ['get'],
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         handler: Foo.prototype.bar,
         path: '/foo',
         parseBody: false,
@@ -54,7 +53,6 @@ describe('Route', () => {
       },
       {
         methods: ['get', 'post'],
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         handler: Foo.prototype.routeWithMultipleMethods,
         path: '/route-with-multiple-methods',
         parseBody: true,
@@ -63,7 +61,6 @@ describe('Route', () => {
       },
       {
         methods: ['all'],
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         handler: Foo.prototype.routeWithAnyMethod,
         path: '/route-with-any-method',
         parseBody: true,
@@ -72,7 +69,6 @@ describe('Route', () => {
       },
       {
         methods: ['all'],
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         handler: Foo.prototype.routeWithAllMethod,
         path: '/route-with-all-method',
         parseBody: true,
