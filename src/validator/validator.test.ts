@@ -115,6 +115,30 @@ describe('Validator', () => {
       });
     });
 
+    it('should accept object rule definitions', () => {
+      const validate = createValidator({
+        constraints: {
+          customConstraint,
+        },
+      });
+
+      const rules = {
+        name: {
+          customConstraint: {},
+        },
+      };
+
+      const violations = validate({ name: '' }, rules);
+
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toEqual({
+        path: 'name',
+        constraint: 'customConstraint',
+        message: 'Custom constraint validation failed',
+        value: '',
+      });
+    });
+
     it('should accept mixed rule definitions as arrays of strings and option objects', () => {
       const validate = createValidator({
         constraints: {

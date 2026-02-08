@@ -85,7 +85,7 @@ function normalizeFieldRules(fieldRules: FieldRules): Array<[string, ConstraintO
     return fieldRules.flatMap(entry => normalizeFieldRuleEntry(entry));
   }
 
-  return Object.entries(fieldRules).map(([constraintName, options]) => [constraintName, options ?? {}]);
+  return Object.entries(fieldRules).map(([constraintName, options]) => [constraintName, options]);
 }
 
 function normalizeFieldRuleEntry(entry: FieldRuleEntry): Array<[string, ConstraintOptions]> {
@@ -93,5 +93,5 @@ function normalizeFieldRuleEntry(entry: FieldRuleEntry): Array<[string, Constrai
     return [[entry, {}]];
   }
 
-  return Object.entries(entry).map(([constraintName, options]) => [constraintName, options ?? {}]);
+  return Object.entries(entry).map(([constraintName, options]) => [constraintName, options]);
 }
