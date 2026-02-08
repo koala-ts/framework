@@ -4,6 +4,7 @@ import {
   ConstraintOptions,
   ConstraintsMap,
   ConstraintValidator,
+  FieldRuleEntry,
   FieldRules,
   Payload,
   ValidateOptions,
@@ -65,16 +66,32 @@ function applyFieldRules(
   activeGroups: string[],
 ): ReturnType<ConstraintValidator> {
   const value = payload[field];
+  const normalizedRules = normalizeFieldRules(fieldRules);
 
-  return Object.keys(fieldRules).flatMap(constraintName => {
+  return normalizedRules.flatMap(([constraintName, options]) => {
     const constraintValidator = resolveConstraint(constraintValidatorMap, field, constraintName);
-    const options = fieldRules[constraintName];
     const constraintGroups = options?.groups ?? [];
 
     if (constraintGroups.length > 0 && !constraintGroups.some(group => activeGroups.includes(group))) {
       return [];
     }
 
-    return applyConstraint(constraintValidator, payload, field, constraintName, value, options as ConstraintOptions);
+    return applyConstraint(constraintValidator, payload, field, constraintName, value, options);
   });
+}
+
+function normalizeFieldRules(fieldRules: FieldRules): Array<[string, ConstraintOptions]> {
+  if (Array.isArray(fieldRules)) {
+    return fieldRules.flatMap(entry => normalizeFieldRuleEntry(entry));
+  }
+
+  return Object.entries(fieldRules).map(([constraintName, options]) => [constraintName, options ?? {}]);
+}
+
+function normalizeFieldRuleEntry(entry: FieldRuleEntry): Array<[string, ConstraintOptions]> {
+  if (typeof entry === 'string') {
+    return [[entry, {}]];
+  }
+
+  return Object.entries(entry).map(([constraintName, options]) => [constraintName, options ?? {}]);
 }

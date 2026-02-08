@@ -18,7 +18,9 @@ export type ConstraintValidator = (value: unknown, context: ConstraintContext) =
 
 export type ConstraintsMap = Record<string, ConstraintValidator>;
 
-export type FieldRules = Record<string, ConstraintOptions>;
+export type FieldRuleEntry = string | Record<string, ConstraintOptions>;
+
+export type FieldRules = Record<string, ConstraintOptions> | FieldRuleEntry[];
 
 export type ValidationRules = Record<string, FieldRules>;
 

@@ -9,9 +9,7 @@ describe('Validator', () => {
       const validate = createValidator({ constraints: {} });
 
       const rules = {
-        name: {
-          required: {},
-        },
+        name: ['required'],
       };
 
       expect(() => validate({ name: 'John' }, rules)).toThrowError(UnknownConstraintError);
@@ -30,9 +28,7 @@ describe('Validator', () => {
       });
 
       const rules = {
-        name: {
-          customConstraint: {},
-        },
+        name: ['customConstraint'],
       };
 
       const violations = validate({ name: '' }, rules);
@@ -53,12 +49,8 @@ describe('Validator', () => {
         },
       });
       const rules = {
-        name: {
-          customConstraint: {},
-        },
-        age: {
-          customConstraint: {},
-        },
+        name: ['customConstraint'],
+        age: ['customConstraint'],
       };
 
       const violations = validate({ name: '', age: 30 }, rules);
@@ -86,9 +78,7 @@ describe('Validator', () => {
       });
 
       const rules = {
-        name: {
-          passedConstraint: {},
-        },
+        name: ['passedConstraint'],
       };
 
       const violations = validate({ name: 'John' }, rules);
@@ -105,10 +95,7 @@ describe('Validator', () => {
       });
 
       const rules = {
-        name: {
-          customConstraint: {},
-          anotherCustomConstraint: {},
-        },
+        name: ['customConstraint', 'anotherCustomConstraint'],
       };
 
       const violations = validate({ name: '' }, rules);
@@ -127,6 +114,35 @@ describe('Validator', () => {
         value: '',
       });
     });
+
+    it('should accept mixed rule definitions as arrays of strings and option objects', () => {
+      const validate = createValidator({
+        constraints: {
+          customConstraint,
+          minLengthConstraint,
+        },
+      });
+
+      const rules = {
+        name: ['customConstraint', { minLengthConstraint: { min: 3 } }],
+      };
+
+      const violations = validate({ name: 'ab' }, rules);
+
+      expect(violations).toHaveLength(2);
+      expect(violations[0]).toEqual({
+        path: 'name',
+        constraint: 'customConstraint',
+        message: 'Custom constraint validation failed',
+        value: 'ab',
+      });
+      expect(violations[1]).toEqual({
+        path: 'name',
+        constraint: 'minLengthConstraint',
+        message: 'Must be at least 3 characters',
+        value: 'ab',
+      });
+    });
   });
 
   describe('Constraint options', () => {
@@ -138,9 +154,7 @@ describe('Validator', () => {
       });
 
       const rules = {
-        name: {
-          minLengthConstraint: { min: 3 },
-        },
+        name: [{ minLengthConstraint: { min: 3 } }],
       };
 
       const violations = validate({ name: 'ab' }, rules);
@@ -164,9 +178,7 @@ describe('Validator', () => {
       });
 
       const rules = {
-        email: {
-          groupedConstraint: { groups: ['create'] },
-        },
+        email: [{ groupedConstraint: { groups: ['create'] } }],
       };
 
       const violations = validate({ email: '' }, rules, { groups: ['update'] });
@@ -182,9 +194,7 @@ describe('Validator', () => {
       });
 
       const rules = {
-        email: {
-          groupedConstraint: {},
-        },
+        email: ['groupedConstraint'],
       };
 
       const violations = validate({ email: '' }, rules);
@@ -206,9 +216,7 @@ describe('Validator', () => {
       });
 
       const rules = {
-        email: {
-          groupedConstraint: { groups: ['Default'] },
-        },
+        email: [{ groupedConstraint: { groups: ['Default'] } }],
       };
 
       const violations = validate({ email: '' }, rules);
