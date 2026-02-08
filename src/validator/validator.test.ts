@@ -154,6 +154,26 @@ describe('Validator', () => {
       });
     });
   });
+
+  describe('Groups', () => {
+    it('should skip constraints when groups do not intersect', () => {
+      const validate = createValidator({
+        constraints: {
+          groupedConstraint,
+        },
+      });
+
+      const rules = {
+        email: {
+          groupedConstraint: { groups: ['create'] },
+        },
+      };
+
+      const violations = validate({ email: '' }, rules, { groups: ['update'] });
+
+      expect(violations).toHaveLength(0);
+    });
+  });
 });
 
 function customConstraint(value: unknown, context: ConstraintContext): Violation[] {
@@ -190,6 +210,21 @@ function minLengthConstraint(value: unknown, context: ConstraintContext): Violat
       {
         path: context.path,
         message: `Must be at least ${min} characters`,
+        constraint: context.constraint,
+        value,
+      },
+    ];
+  }
+
+  return [];
+}
+
+function groupedConstraint(value: unknown, context: ConstraintContext): Violation[] {
+  if (value === '' || value === null || value === undefined) {
+    return [
+      {
+        path: context.path,
+        message: 'Grouped constraint failed',
         constraint: context.constraint,
         value,
       },

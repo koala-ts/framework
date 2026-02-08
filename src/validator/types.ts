@@ -5,7 +5,7 @@ export type Violation = {
   value: unknown;
 };
 
-export type ConstraintOptions = Record<string, unknown>;
+export type ConstraintOptions = { groups?: string[] } & Record<string, unknown>;
 export type ConstraintContext = {
   path: string;
   root: unknown;
@@ -18,12 +18,14 @@ export type ConstraintValidator = (value: unknown, context: ConstraintContext) =
 
 export type ConstraintsMap = Record<string, ConstraintValidator>;
 
-export type FieldRules = Record<string, unknown>;
+export type FieldRules = Record<string, ConstraintOptions>;
 
 export type ValidationRules = Record<string, FieldRules>;
 
 export type ValidatorOptions = { constraints: ConstraintsMap };
 
+export type ValidateOptions = { groups?: string[] };
+
 export type Payload = Record<string, unknown>;
 
-export type Validator = (payload: Payload, rules: ValidationRules) => Violation[];
+export type Validator = (payload: Payload, rules: ValidationRules, options?: ValidateOptions) => Violation[];

@@ -6,6 +6,7 @@ import {
   ConstraintValidator,
   FieldRules,
   Payload,
+  ValidateOptions,
   ValidationRules,
   Validator,
   ValidatorOptions,
@@ -14,10 +15,11 @@ import {
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
 
-  return function validate(payload: Payload, rules: ValidationRules) {
+  return function validate(payload: Payload, rules: ValidationRules, options?: ValidateOptions) {
     const entries = Object.entries(rules);
+    const activeGroups = options?.groups ?? [];
 
-    return entries.flatMap(fieldEntry => applyFieldRules(constraints, payload, fieldEntry as FieldEntry));
+    return entries.flatMap(fieldEntry => applyFieldRules(constraints, payload, fieldEntry as FieldEntry, activeGroups));
   };
 };
 
@@ -60,12 +62,19 @@ function applyFieldRules(
   constraintValidatorMap: ConstraintsMap,
   payload: Payload,
   [field, fieldRules]: FieldEntry,
+  activeGroups: string[],
 ): ReturnType<ConstraintValidator> {
   const value = payload[field];
 
   return Object.keys(fieldRules).flatMap(constraintName => {
     const constraintValidator = resolveConstraint(constraintValidatorMap, field, constraintName);
     const options = fieldRules[constraintName];
+    const constraintGroups = options.groups ?? [];
+
+    if (constraintGroups.length > 0 && !constraintGroups.some(group => activeGroups.includes(group))) {
+      return [];
+    }
+
     return applyConstraint(constraintValidator, payload, field, constraintName, value, options as ConstraintOptions);
   });
 }
