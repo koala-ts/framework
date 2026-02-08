@@ -95,4 +95,46 @@ describe('email', () => {
       value: 'invalid',
     });
   });
+
+  it('rejects non-string values with the default message', () => {
+    const context: ConstraintContext = {
+      path: 'email',
+      root: { email: 42 },
+      value: 42,
+      constraint: 'email',
+      options: {},
+      applyConstraints: () => [],
+    };
+
+    const violations = email(42, context);
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'email',
+      constraint: 'email',
+      message: 'This value is not a valid email address.',
+      value: 42,
+    });
+  });
+
+  it('uses a custom message for non-string values', () => {
+    const context: ConstraintContext = {
+      path: 'email',
+      root: { email: 42 },
+      value: 42,
+      constraint: 'email',
+      options: { message: 'Invalid email' },
+      applyConstraints: () => [],
+    };
+
+    const violations = email(42, context);
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'email',
+      constraint: 'email',
+      message: 'Invalid email',
+      value: 42,
+    });
+  });
 });

@@ -70,4 +70,22 @@ describe('notBlank (unit)', () => {
       value: '   ',
     });
   });
+
+  it.each([
+    { value: 'valid', label: 'non-empty string' },
+    { value: ['value'], label: 'non-empty array' },
+  ])('returns no violations for $label', ({ value }) => {
+    const context: ConstraintContext = {
+      path: 'name',
+      root: { name: value },
+      value,
+      constraint: 'notBlank',
+      options: {},
+      applyConstraints: () => [],
+    };
+
+    const violations = notBlank(value, context);
+
+    expect(violations).toHaveLength(0);
+  });
 });

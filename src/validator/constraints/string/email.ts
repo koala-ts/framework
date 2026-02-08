@@ -10,19 +10,20 @@ type EmailOptions = {
 const strictEmailRegex = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
 
 export function email(value: unknown, context: ConstraintContext): Violation[] {
+  const options = context.options as EmailOptions;
+  const message = options.message ?? DEFAULT_MESSAGE;
+
   if (typeof value !== 'string') {
     return [
       {
         path: context.path,
         constraint: context.constraint,
-        message: DEFAULT_MESSAGE,
+        message,
         value,
       },
     ];
   }
 
-  const options = context.options as EmailOptions;
-  const message = options.message ?? DEFAULT_MESSAGE;
   const normalized = options.normalizer ? options.normalizer(value) : value;
 
   if (!strictEmailRegex.test(normalized)) {
