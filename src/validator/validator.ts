@@ -12,7 +12,9 @@ export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
 
   return function validate(payload: Payload, rules: ValidationRules) {
-    return Object.entries(rules).flatMap(fieldEntry => applyFieldRules(constraints, payload, fieldEntry as FieldEntry));
+    const entries = Object.entries(rules);
+
+    return entries.flatMap(fieldEntry => applyFieldRules(constraints, payload, fieldEntry as FieldEntry));
   };
 };
 
