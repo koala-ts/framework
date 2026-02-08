@@ -66,11 +66,12 @@ function applyFieldRules(
   payload: Payload,
   [field, fieldRules]: FieldEntry,
   activeGroups: string[],
+  currentValue?: unknown,
 ): ReturnType<ConstraintValidator> {
-  const value = payload[field];
+  const value = currentValue ?? payload[field];
   const normalizedRules = normalizeFieldRules(fieldRules);
   const applyConstraints = (nextValue: unknown, rules: FieldRules, path: string) =>
-    applyFieldRules(constraintValidatorMap, payload, [path, rules], activeGroups);
+    applyFieldRules(constraintValidatorMap, payload, [path, rules], activeGroups, nextValue);
 
   return normalizedRules.flatMap(([constraintName, options]) => {
     const constraintValidator = resolveConstraint(constraintValidatorMap, field, constraintName);
