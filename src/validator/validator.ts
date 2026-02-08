@@ -17,7 +17,7 @@ export const createValidator = (options: ValidatorOptions): Validator => {
 
   return function validate(payload: Payload, rules: ValidationRules, options?: ValidateOptions) {
     const entries = Object.entries(rules);
-    const activeGroups = options?.groups ?? [];
+    const activeGroups = options?.groups && options.groups.length > 0 ? options.groups : ['Default'];
 
     return entries.flatMap(fieldEntry => applyFieldRules(constraints, payload, fieldEntry as FieldEntry, activeGroups));
   };
@@ -69,7 +69,7 @@ function applyFieldRules(
   return Object.keys(fieldRules).flatMap(constraintName => {
     const constraintValidator = resolveConstraint(constraintValidatorMap, field, constraintName);
     const options = fieldRules[constraintName];
-    const constraintGroups = options.groups ?? [];
+    const constraintGroups = options?.groups ?? [];
 
     if (constraintGroups.length > 0 && !constraintGroups.some(group => activeGroups.includes(group))) {
       return [];

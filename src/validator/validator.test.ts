@@ -173,6 +173,54 @@ describe('Validator', () => {
 
       expect(violations).toHaveLength(0);
     });
+
+    it('should apply constraints when no groups are provided', () => {
+      const validate = createValidator({
+        constraints: {
+          groupedConstraint,
+        },
+      });
+
+      const rules = {
+        email: {
+          groupedConstraint: {},
+        },
+      };
+
+      const violations = validate({ email: '' }, rules);
+
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toEqual({
+        path: 'email',
+        constraint: 'groupedConstraint',
+        message: 'Grouped constraint failed',
+        value: '',
+      });
+    });
+
+    it('should apply constraints for the Default group when no groups are provided', () => {
+      const validate = createValidator({
+        constraints: {
+          groupedConstraint,
+        },
+      });
+
+      const rules = {
+        email: {
+          groupedConstraint: { groups: ['Default'] },
+        },
+      };
+
+      const violations = validate({ email: '' }, rules);
+
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toEqual({
+        path: 'email',
+        constraint: 'groupedConstraint',
+        message: 'Grouped constraint failed',
+        value: '',
+      });
+    });
   });
 });
 
