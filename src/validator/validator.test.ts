@@ -253,6 +253,28 @@ describe('Validator', () => {
         value: '',
       });
     });
+
+    it('should fall back to the Default group when groups are empty', () => {
+      const validate = createValidator({
+        constraints: {
+          groupedConstraint,
+        },
+      });
+
+      const rules = {
+        email: [{ groupedConstraint: { groups: ['Default'] } }],
+      };
+
+      const violations = validate({ email: '' }, rules, { groups: [] });
+
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toEqual({
+        path: 'email',
+        constraint: 'groupedConstraint',
+        message: 'Grouped constraint failed',
+        value: '',
+      });
+    });
   });
 });
 

@@ -68,4 +68,23 @@ describe('compound (integration)', () => {
       value: '',
     });
   });
+
+  it('uses the nested value passed via applyConstraints', () => {
+    const requiredEmail = compound([{ email: { normalizer: (value: string) => value.trim() } }]);
+
+    const validate = createValidator({
+      constraints: {
+        requiredEmail,
+        email,
+      },
+    });
+
+    const rules = {
+      userEmail: ['requiredEmail'],
+    };
+
+    const violations = validate({ userEmail: ' user@example.com ' }, rules);
+
+    expect(violations).toHaveLength(0);
+  });
 });
