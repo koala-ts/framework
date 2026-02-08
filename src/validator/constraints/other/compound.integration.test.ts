@@ -1,0 +1,71 @@
+import { describe, expect, it } from 'vitest';
+import { createValidator } from '../../validator';
+import { notBlank } from '../basic/not-blank';
+import { email } from '../string/email';
+import { compound } from './compound';
+
+describe('compound (integration)', () => {
+  it('applies nested constraints to the same value', () => {
+    const requiredEmail = compound(['notBlank', 'email']);
+
+    const validate = createValidator({
+      constraints: {
+        requiredEmail,
+        notBlank,
+        email,
+      },
+    });
+
+    const rules = {
+      userEmail: ['requiredEmail'],
+    };
+
+    const violations = validate({ userEmail: '' }, rules);
+
+    expect(violations).toHaveLength(2);
+    expect(violations[0]).toEqual({
+      path: 'userEmail',
+      constraint: 'notBlank',
+      message: 'This value should not be blank.',
+      value: '',
+    });
+    expect(violations[1]).toEqual({
+      path: 'userEmail',
+      constraint: 'email',
+      message: 'This value is not a valid email address.',
+      value: '',
+    });
+  });
+
+  it('accepts object rule definitions with options', () => {
+    const requiredEmail = compound(['notBlank', { email: { message: 'Invalid email' } }]);
+
+    const validate = createValidator({
+      constraints: {
+        requiredEmail,
+        notBlank,
+        email,
+      },
+    });
+
+    const rules = {
+      userEmail: ['requiredEmail'],
+    };
+
+    const violations = validate({ userEmail: '' }, rules);
+
+    expect(violations).toHaveLength(2);
+    expect(violations[0]).toEqual({
+      path: 'userEmail',
+      constraint: 'notBlank',
+      message: 'This value should not be blank.',
+      value: '',
+    });
+    expect(violations[1]).toEqual({
+      path: 'userEmail',
+      constraint: 'email',
+      message: 'Invalid email',
+      value: '',
+    });
+  });
+});

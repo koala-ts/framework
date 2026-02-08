@@ -3,7 +3,7 @@ import { compound } from './compound';
 import type { ConstraintContext, Violation } from '../../types';
 
 describe('compound', () => {
-  it('applies nested constraints using applyConstraints', () => {
+  it('creates a constraint that applies nested constraints from arrays', () => {
     const applyConstraints = vi.fn((): Violation[] => [
       {
         path: 'user',
@@ -13,28 +13,59 @@ describe('compound', () => {
       },
     ]);
 
-    const nestedConstraints = {
-      notBlank: {},
-    };
+    const nestedConstraints = ['notBlank'];
 
     const context: ConstraintContext = {
       path: 'user',
       root: { user: '' },
       value: '',
-      constraint: 'compound',
-      options: { constraints: nestedConstraints },
+      constraint: 'requiredEmail',
+      options: {},
       applyConstraints,
     };
 
-    const violations = compound('', context);
+    const requiredEmail = compound(nestedConstraints);
+    const violations = requiredEmail('', context);
 
-    expect(applyConstraints).toHaveBeenCalledWith('', nestedConstraints, 'user');
+    expect(applyConstraints).toHaveBeenCalledWith('', ['notBlank'], 'user');
     expect(violations).toHaveLength(1);
     expect(violations[0]).toEqual({
       path: 'user',
       constraint: 'notBlank',
       message: 'Required',
       value: '',
+    });
+  });
+
+  it('creates a constraint that applies nested constraints from objects', () => {
+    const applyConstraints = vi.fn((): Violation[] => [
+      {
+        path: 'user',
+        constraint: 'notNull',
+        message: 'Required',
+        value: null,
+      },
+    ]);
+
+    const context: ConstraintContext = {
+      path: 'user',
+      root: { user: null },
+      value: null,
+      constraint: 'requiredEmail',
+      options: {},
+      applyConstraints,
+    };
+
+    const requiredEmail = compound({ notNull: {} });
+    const violations = requiredEmail(null, context);
+
+    expect(applyConstraints).toHaveBeenCalledWith(null, { notNull: {} }, 'user');
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'user',
+      constraint: 'notNull',
+      message: 'Required',
+      value: null,
     });
   });
 });
