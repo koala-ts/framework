@@ -6,3 +6,4 @@ export * from '@/Routing';
 export * from '@/Security';
 export * from '@/Testing';
 export * from '@/serializer';
+export * from '@/validator';
