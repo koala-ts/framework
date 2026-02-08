@@ -1,5 +1,8 @@
-import type {
+import { UnknownConstraintError } from './errors';
+import {
   ConstraintContext,
+  ConstraintOptions,
+  ConstraintsMap,
   ConstraintValidator,
   FieldRules,
   Payload,
@@ -7,7 +10,6 @@ import type {
   Validator,
   ValidatorOptions,
 } from './types';
-import { UnknownConstraintError } from './errors';
 
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
@@ -20,11 +22,11 @@ export const createValidator = (options: ValidatorOptions): Validator => {
 };
 
 function resolveConstraint(
-  constraints: ValidatorOptions['constraints'],
+  constraintValidatorMap: ConstraintsMap,
   field: string,
   constraintName: string,
 ): ConstraintValidator {
-  const constraintValidator = constraints[constraintName];
+  const constraintValidator = constraintValidatorMap[constraintName];
 
   if (!constraintValidator) {
     throw new UnknownConstraintError(field, constraintName);
@@ -39,12 +41,14 @@ function applyConstraint(
   field: string,
   constraintName: string,
   value: unknown,
+  options: ConstraintOptions,
 ): ReturnType<ConstraintValidator> {
   const context: ConstraintContext = {
     path: field,
     root: payload,
     value,
     constraint: constraintName,
+    options,
   };
 
   return constraintValidator(value, context);
@@ -53,14 +57,15 @@ function applyConstraint(
 type FieldEntry = [string, FieldRules];
 
 function applyFieldRules(
-  constraints: ValidatorOptions['constraints'],
+  constraintValidatorMap: ConstraintsMap,
   payload: Payload,
   [field, fieldRules]: FieldEntry,
 ): ReturnType<ConstraintValidator> {
   const value = payload[field];
 
   return Object.keys(fieldRules).flatMap(constraintName => {
-    const constraintValidator = resolveConstraint(constraints, field, constraintName);
-    return applyConstraint(constraintValidator, payload, field, constraintName, value);
+    const constraintValidator = resolveConstraint(constraintValidatorMap, field, constraintName);
+    const options = fieldRules[constraintName];
+    return applyConstraint(constraintValidator, payload, field, constraintName, value, options as ConstraintOptions);
   });
 }

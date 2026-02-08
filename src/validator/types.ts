@@ -5,11 +5,13 @@ export type Violation = {
   value: unknown;
 };
 
+export type ConstraintOptions = Record<string, unknown>;
 export type ConstraintContext = {
   path: string;
   root: unknown;
   value: unknown;
   constraint: string;
+  options: ConstraintOptions;
 };
 
 export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];
