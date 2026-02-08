@@ -15,6 +15,7 @@ describe('notBlank (unit)', () => {
       value,
       constraint: 'notBlank',
       options: {},
+      applyConstraints: () => [],
     };
 
     const violations = notBlank(value, context);
@@ -35,6 +36,7 @@ describe('notBlank (unit)', () => {
       value: '',
       constraint: 'notBlank',
       options: { message: 'Required' },
+      applyConstraints: () => [],
     };
 
     const violations = notBlank('', context);
@@ -55,6 +57,7 @@ describe('notBlank (unit)', () => {
       value: '   ',
       constraint: 'notBlank',
       options: { normalizer: (value: string) => value.trim() },
+      applyConstraints: () => [],
     };
 
     const violations = notBlank('   ', context);

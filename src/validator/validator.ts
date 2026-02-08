@@ -45,6 +45,7 @@ function applyConstraint(
   constraintName: string,
   value: unknown,
   options: ConstraintOptions,
+  applyConstraints: ConstraintContext['applyConstraints'],
 ): ReturnType<ConstraintValidator> {
   const context: ConstraintContext = {
     path: field,
@@ -52,6 +53,7 @@ function applyConstraint(
     value,
     constraint: constraintName,
     options,
+    applyConstraints,
   };
 
   return constraintValidator(value, context);
@@ -67,6 +69,8 @@ function applyFieldRules(
 ): ReturnType<ConstraintValidator> {
   const value = payload[field];
   const normalizedRules = normalizeFieldRules(fieldRules);
+  const applyConstraints = (nextValue: unknown, rules: FieldRules, path: string) =>
+    applyFieldRules(constraintValidatorMap, payload, [path, rules], activeGroups);
 
   return normalizedRules.flatMap(([constraintName, options]) => {
     const constraintValidator = resolveConstraint(constraintValidatorMap, field, constraintName);
@@ -76,7 +80,7 @@ function applyFieldRules(
       return [];
     }
 
-    return applyConstraint(constraintValidator, payload, field, constraintName, value, options);
+    return applyConstraint(constraintValidator, payload, field, constraintName, value, options, applyConstraints);
   });
 }
 
