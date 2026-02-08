@@ -20,7 +20,7 @@ export type FieldRules = Record<string, unknown>;
 
 export type ValidationRules = Record<string, FieldRules>;
 
-export type CreateValidatorOptions = { constraints: ConstraintsMap };
+export type ValidatorOptions = { constraints: ConstraintsMap };
 
 export type Payload = Record<string, unknown>;
 
