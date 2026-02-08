@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { UnknownConstraintError } from './errors';
 import type { ConstraintContext, Violation } from './types';
 import { createValidator } from './validator';
 
@@ -12,9 +13,7 @@ describe('Validator', () => {
       },
     };
 
-    expect(() => validate({ name: 'John' }, rules)).toThrowError(
-      'Field "name" references unregistered constraint "required"',
-    );
+    expect(() => validate({ name: 'John' }, rules)).toThrowError(UnknownConstraintError);
   });
 
   it('should use provided constraints registry to validate rules', () => {

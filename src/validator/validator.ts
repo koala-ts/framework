@@ -7,6 +7,7 @@ import type {
   Validator,
   ValidatorOptions,
 } from './types';
+import { UnknownConstraintError } from './errors';
 
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
@@ -26,7 +27,7 @@ function resolveConstraint(
   const constraintValidator = constraints[constraintName];
 
   if (!constraintValidator) {
-    throw new Error(`Field "${field}" references unregistered constraint "${constraintName}".`);
+    throw new UnknownConstraintError(field, constraintName);
   }
 
   return constraintValidator;
