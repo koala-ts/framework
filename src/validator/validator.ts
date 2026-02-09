@@ -13,17 +13,56 @@ import {
   ValidatorOptions,
 } from './types';
 
+type FieldEntry = [string, FieldRules];
+
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
 
   return function validate(payload: Payload, rules: ValidationRules, options?: ValidateOptions) {
-    const entries = Object.entries(rules);
+    const ruleEntries: FieldEntry[] = Object.entries(rules);
+
     // If no groups are provided, implicitly validate against "Default".
     const activeGroups = options?.groups && options.groups.length > 0 ? options.groups : ['Default'];
 
-    return entries.flatMap(fieldEntry => applyFieldRules(constraints, payload, fieldEntry as FieldEntry, activeGroups));
+    // Apply all field rules and aggregate results.
+    return ruleEntries.flatMap(function (fieldEntry: FieldEntry) {
+      return applyFieldRules(constraints, payload, fieldEntry, activeGroups);
+    });
   };
 };
+
+function applyFieldRules(
+  constraintsByName: ConstraintsMap,
+  payload: Payload,
+  [field, rulesForField]: FieldEntry,
+  activeGroups: string[],
+  currentValue?: unknown,
+): ReturnType<ConstraintValidator> {
+  const isGroupActive = (groups: string[]) => groups.length === 0 || groups.some(group => activeGroups.includes(group));
+
+  const normalizedFieldRules = normalizeFieldRules(rulesForField);
+
+  return normalizedFieldRules.flatMap(([constraintName, options]) => {
+    const groups = options?.groups ?? [];
+    if (!isGroupActive(groups)) return [];
+
+    const applyNestedRules = (nextValue: unknown, rules: FieldRules, path: string) =>
+      applyFieldRules(constraintsByName, payload, [path, rules], activeGroups, nextValue);
+
+    const constraintValidator = resolveConstraint(constraintsByName, field, constraintName);
+    const value = currentValue ?? payload[field];
+    const context: ConstraintContext = {
+      path: field,
+      root: payload,
+      value,
+      constraint: constraintName,
+      options,
+      applyConstraints: applyNestedRules,
+    };
+
+    return constraintValidator(value, context);
+  });
+}
 
 function resolveConstraint(
   constraintValidatorMap: ConstraintsMap,
@@ -37,55 +76,6 @@ function resolveConstraint(
   }
 
   return constraintValidator;
-}
-
-function applyConstraint(
-  constraintValidator: ConstraintValidator,
-  payload: Payload,
-  field: string,
-  constraintName: string,
-  value: unknown,
-  options: ConstraintOptions,
-  applyConstraints: ConstraintContext['applyConstraints'],
-): ReturnType<ConstraintValidator> {
-  const context: ConstraintContext = {
-    path: field,
-    root: payload,
-    value,
-    constraint: constraintName,
-    options,
-    applyConstraints,
-  };
-
-  return constraintValidator(value, context);
-}
-
-type FieldEntry = [string, FieldRules];
-
-function applyFieldRules(
-  constraintValidatorMap: ConstraintsMap,
-  payload: Payload,
-  [field, fieldRules]: FieldEntry,
-  activeGroups: string[],
-  currentValue?: unknown,
-): ReturnType<ConstraintValidator> {
-  const value = currentValue ?? payload[field];
-  const normalizedRules = normalizeFieldRules(fieldRules);
-  // Reuse the same validation pipeline for nested/compound rules.
-  const applyConstraints = (nextValue: unknown, rules: FieldRules, path: string) =>
-    applyFieldRules(constraintValidatorMap, payload, [path, rules], activeGroups, nextValue);
-
-  return normalizedRules.flatMap(([constraintName, options]) => {
-    const constraintValidator = resolveConstraint(constraintValidatorMap, field, constraintName);
-    const constraintGroups = options?.groups ?? [];
-
-    // Skip constraints whose groups are not active for this validation run.
-    if (constraintGroups.length > 0 && !constraintGroups.some(group => activeGroups.includes(group))) {
-      return [];
-    }
-
-    return applyConstraint(constraintValidator, payload, field, constraintName, value, options, applyConstraints);
-  });
 }
 
 function normalizeFieldRules(fieldRules: FieldRules): Array<[string, ConstraintOptions]> {
