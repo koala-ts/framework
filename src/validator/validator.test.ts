@@ -14,7 +14,7 @@ describe('Validator', () => {
 
       expect(() => validate({ name: 'John' }, rules)).toThrowError(UnknownConstraintError);
       expect(() => validate({ name: 'John' }, rules)).toThrowError(
-        'Field "name" references unregistered constraint "required"',
+        'Field "name" references unregistered constraint "required".',
       );
     });
   });
