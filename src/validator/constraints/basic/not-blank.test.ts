@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { notBlank } from './not-blank';
 import type { ConstraintContext } from '../../types';
+import { notBlank } from './not-blank';
 
-describe('notBlank (unit)', () => {
+describe('notBlank', () => {
   it.each([
     { value: '', label: 'empty string' },
     { value: null, label: 'null' },
@@ -15,7 +15,7 @@ describe('notBlank (unit)', () => {
       value,
       constraint: 'notBlank',
       options: {},
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = notBlank(value, context);
@@ -36,7 +36,7 @@ describe('notBlank (unit)', () => {
       value: '',
       constraint: 'notBlank',
       options: { message: 'Required' },
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = notBlank('', context);
@@ -57,7 +57,7 @@ describe('notBlank (unit)', () => {
       value: '   ',
       constraint: 'notBlank',
       options: { normalizer: (value: string) => value.trim() },
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = notBlank('   ', context);
@@ -81,7 +81,7 @@ describe('notBlank (unit)', () => {
       value,
       constraint: 'notBlank',
       options: {},
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = notBlank(value, context);

@@ -12,7 +12,7 @@ export type ConstraintContext = {
   value: unknown;
   constraint: string;
   options: ConstraintOptions;
-  applyConstraints: (value: unknown, rules: FieldRules, path: string) => Violation[];
+  runNestedRules: (value: unknown, rules: FieldRules, path: string) => Violation[];
 };
 
 export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];

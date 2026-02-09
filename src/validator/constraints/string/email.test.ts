@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { email } from './email';
 import type { ConstraintContext } from '../../types';
+import { email } from './email';
 
 describe('email', () => {
   it('rejects invalid email by default', () => {
@@ -10,7 +10,7 @@ describe('email', () => {
       value: 'invalid',
       constraint: 'email',
       options: {},
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = email('invalid', context);
@@ -31,7 +31,7 @@ describe('email', () => {
       value: 'user@example.com',
       constraint: 'email',
       options: {},
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = email('user@example.com', context);
@@ -46,7 +46,7 @@ describe('email', () => {
       value: 'user@localhost',
       constraint: 'email',
       options: {},
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = email('user@localhost', context);
@@ -67,7 +67,7 @@ describe('email', () => {
       value: ' USER@EXAMPLE.COM ',
       constraint: 'email',
       options: { normalizer: (value: string) => value.trim().toLowerCase() },
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = email(' USER@EXAMPLE.COM ', context);
@@ -82,7 +82,7 @@ describe('email', () => {
       value: 'invalid',
       constraint: 'email',
       options: { message: 'Invalid email' },
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = email('invalid', context);
@@ -103,7 +103,7 @@ describe('email', () => {
       value: 42,
       constraint: 'email',
       options: {},
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = email(42, context);
@@ -124,7 +124,7 @@ describe('email', () => {
       value: 42,
       constraint: 'email',
       options: { message: 'Invalid email' },
-      applyConstraints: () => [],
+      runNestedRules: () => [],
     };
 
     const violations = email(42, context);

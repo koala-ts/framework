@@ -60,7 +60,7 @@ function applyFieldRules(
       value,
       constraint: constraintName,
       options,
-      applyConstraints: applyNestedRules,
+      runNestedRules: applyNestedRules,
     };
 
     return constraintValidator(value, context);

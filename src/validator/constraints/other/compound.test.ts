@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { compound } from './compound';
 import type { ConstraintContext, Violation } from '../../types';
+import { compound } from './compound';
 
 describe('compound', () => {
   it('creates a constraint that applies nested constraints from arrays', () => {
@@ -21,7 +21,7 @@ describe('compound', () => {
       value: '',
       constraint: 'requiredEmail',
       options: {},
-      applyConstraints,
+      runNestedRules: applyConstraints,
     };
 
     const requiredEmail = compound(nestedConstraints);
@@ -53,7 +53,7 @@ describe('compound', () => {
       value: null,
       constraint: 'requiredEmail',
       options: {},
-      applyConstraints,
+      runNestedRules: applyConstraints,
     };
 
     const requiredEmail = compound({ notNull: {} });
