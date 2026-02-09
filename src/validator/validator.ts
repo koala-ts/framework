@@ -43,12 +43,15 @@ function applyFieldRules(
   const normalizedFieldRules = normalizeFieldRules(rulesForField);
 
   return normalizedFieldRules.flatMap(([constraintName, options]) => {
+    // Check if the constraint should be applied based on groups.
     const groups = options?.groups ?? [];
     if (!isGroupActive(groups)) return [];
 
+    // Helper function to apply nested rules.
     const applyNestedRules = (nextValue: unknown, rules: FieldRules, path: string) =>
       applyFieldRules(constraintsByName, payload, [path, rules], activeGroups, nextValue);
 
+    // Find the constraint, build the context, and apply it.
     const constraintValidator = resolveConstraint(constraintsByName, field, constraintName);
     const value = currentValue ?? payload[field];
     const context: ConstraintContext = {
