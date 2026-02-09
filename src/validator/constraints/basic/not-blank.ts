@@ -2,13 +2,17 @@ import type { ConstraintContext, Violation } from '../../types';
 
 const DEFAULT_MESSAGE = 'This value should not be blank.';
 
+type NotBlankOptions = {
+  message?: string;
+  normalizer?: (value: string) => string;
+};
+
 export function notBlank(value: unknown, context: ConstraintContext): Violation[] {
-  const message = typeof context.options.message === 'string' ? context.options.message : DEFAULT_MESSAGE;
+  const options = context.options as NotBlankOptions;
+  const message = options.message ?? DEFAULT_MESSAGE;
 
   const normalizedValue =
-    typeof value === 'string' && typeof context.options.normalizer === 'function'
-      ? context.options.normalizer(value)
-      : value;
+    typeof value === 'string' && typeof options.normalizer === 'function' ? options.normalizer(value) : value;
 
   if (isBlank(normalizedValue)) {
     return [
