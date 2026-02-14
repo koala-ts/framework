@@ -8,3 +8,7 @@ export const builtInConstraints = {
   // String
   email,
 };
+
+export * from './string/email';
+export * from './basic/not-blank';
+export * from './other/compound';
