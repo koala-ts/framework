@@ -1,7 +1,19 @@
 {
   "name": "@koala-ts/framework",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./validator": "./dist/validator/index.js",
+    "./validator/constraints": "./dist/validator/constraints/index.js"
+  },
+  "typesVersions": {
+    "*": {
+      "validator": ["dist/validator/index.d.ts"],
+      "validator/constraints": ["dist/validator/constraints/index.d.ts"]
+    }
+  },
   "version": "2.4.4",
   "description": "A NodeJS framework for lazy developers",
   "keywords": [
