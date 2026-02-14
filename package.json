@@ -10,8 +10,12 @@
   },
   "typesVersions": {
     "*": {
-      "validator": ["dist/validator/index.d.ts"],
-      "validator/constraints": ["dist/validator/constraints/index.d.ts"]
+      "validator": [
+        "dist/validator/index.d.ts"
+      ],
+      "validator/constraints": [
+        "dist/validator/constraints/index.d.ts"
+      ]
     }
   },
   "version": "2.4.4",
