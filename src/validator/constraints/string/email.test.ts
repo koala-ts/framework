@@ -137,4 +137,19 @@ describe('email', () => {
       value: 42,
     });
   });
+
+  it('returns no violations for undefined values', () => {
+    const context: ConstraintContext = {
+      path: 'email',
+      root: { email: undefined },
+      value: undefined,
+      constraint: 'email',
+      options: {},
+      runNestedRules: () => [],
+    };
+
+    const violations = email(undefined, context);
+
+    expect(violations).toHaveLength(0);
+  });
 });

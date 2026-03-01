@@ -13,6 +13,10 @@ export function email(value: unknown, context: ConstraintContext): Violation[] {
   const options = context.options as EmailOptions;
   const message = options.message ?? DEFAULT_MESSAGE;
 
+  if (value === undefined) {
+    return [];
+  }
+
   if (typeof value !== 'string') {
     return [
       {
