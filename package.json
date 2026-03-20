@@ -61,7 +61,6 @@
     "@koa/router": "^15.1.1",
     "@koa/send": "^6.0.0",
     "@types/koa": "^3.0.0",
-    "@types/stack-trace": "^0.0.33",
     "@types/supertest": "^7.2.0",
     "argon2": "^0.44.0",
     "dotenv": "^17.2.3",
