@@ -1,6 +1,5 @@
-import { extendResponse } from '@/application/Response';
 import { type KoalaConfig } from '@/Config';
-import { type HttpMiddleware, type HttpScope } from '@/Http';
+import { initializeScope, type HttpMiddleware, type HttpScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files';
 import { type EventSubscriber, httpKernel } from '@/Kernel';
 import { getRoutes } from '@/Routing';
@@ -11,6 +10,7 @@ import { type Application } from './types';
 
 export function create(config: KoalaConfig): Application {
   const app = createBaseApplication();
+  app.use(initializeScope);
 
   if (undefined !== config.globalMiddleware) {
     applyGlobalMiddleware(app, config.globalMiddleware);
@@ -21,9 +21,7 @@ export function create(config: KoalaConfig): Application {
 
 function createBaseApplication(): Application {
   const app = new Koa() as Application;
-  app.scope = app.context;
 
-  app.use(extendResponse);
   app.use(httpKernel);
 
   return app;
