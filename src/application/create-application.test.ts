@@ -1,4 +1,4 @@
-import { create } from '@/application/ApplicationFactory';
+import { create } from '@/application/create-application';
 import { koalaDefaultConfig } from '@/Config';
 import { expect, test, vi } from 'vitest';
 
