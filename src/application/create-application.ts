@@ -37,16 +37,45 @@ export function create(config: KoalaConfig): Application {
 function createRouter(): RouterInstance {
   const router = new Router();
 
-  for (const route of getRoutes()) {
-    const middlewareStack = [...route.middleware, route.handler];
-
-    for (const method of route.methods) {
-      const routeMiddleware = route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
-      router[method](route.path, ...(routeMiddleware as Middleware<DefaultState, DefaultContext & HttpScope>[]));
-    }
+  for (const route of normalizeRoutes(getRoutes())) {
+    router[route.method](route.path, ...(route.middleware as Middleware<DefaultState, DefaultContext & HttpScope>[]));
   }
 
   return router;
+}
+
+function normalizeRoutes(routes: ReturnType<typeof getRoutes>): Array<{
+  method: (typeof routes)[number]['methods'][number];
+  path: (typeof routes)[number]['path'];
+  middleware: Array<(typeof routes)[number]['middleware'][number] | (typeof routes)[number]['handler']>;
+}> {
+  const registrations: Array<{
+    method: (typeof routes)[number]['methods'][number];
+    path: (typeof routes)[number]['path'];
+    middleware: Array<(typeof routes)[number]['middleware'][number] | (typeof routes)[number]['handler']>;
+  }> = [];
+
+  for (const route of routes) {
+    const middleware = resolveRouteMiddleware(route);
+
+    for (const method of route.methods) {
+      registrations.push({
+        method,
+        path: route.path,
+        middleware,
+      });
+    }
+  }
+
+  return registrations;
+}
+
+function resolveRouteMiddleware(
+  route: ReturnType<typeof getRoutes>[number],
+): Array<ReturnType<typeof getRoutes>[number]['middleware'][number] | ReturnType<typeof getRoutes>[number]['handler']> {
+  const middlewareStack = [...route.middleware, route.handler];
+
+  return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
 }
 
 function applyGlobalMiddleware(app: Application, middleware: HttpMiddleware[]): Application {
