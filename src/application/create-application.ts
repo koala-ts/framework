@@ -15,7 +15,7 @@ export function create(config: KoalaConfig): Application {
   app.use(initializeRequestScopeStorage);
   app.use(applyConfiguredGlobalMiddleware(config.globalMiddleware));
   app.use(serveStaticFiles(config.staticFiles));
-  app.use(registerRoutes);
+  app.use(registerRoutes());
 
   return registerEventSubscribers(app, config.eventSubscribers);
 }

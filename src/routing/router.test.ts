@@ -115,7 +115,7 @@ describe('registerRoutes', () => {
     Route({ path: '/registered-route', method: 'post', options: { parseBody: false } })(target, 'handler', {});
     const app = new Koa();
 
-    app.use(registerRoutes);
+    app.use(registerRoutes());
 
     const response = await request(app.callback()).post('/registered-route');
 
@@ -131,11 +131,27 @@ describe('registerRoutes', () => {
     Route({ path: '/allowed-methods-route', method: 'get', options: { parseBody: false } })(target, 'handler', {});
     const app = new Koa();
 
-    app.use(registerRoutes);
+    app.use(registerRoutes());
 
     const response = await request(app.callback()).post('/allowed-methods-route');
 
     expect(response.status).toBe(405);
     expect(response.headers.allow).toBe('HEAD, GET');
+  });
+
+  test('it builds the router once for multiple requests', async () => {
+    const createRouterSpy = vi.spyOn(Reflect, 'getMetadata');
+    const target = vi.fn(async ctx => {
+      ctx.status = 204;
+    });
+    Route({ path: '/router-created-once', method: 'get', options: { parseBody: false } })(target, 'handler', {});
+    const app = new Koa();
+
+    app.use(registerRoutes());
+
+    await request(app.callback()).get('/router-created-once');
+    await request(app.callback()).get('/router-created-once');
+
+    expect(createRouterSpy).toHaveBeenCalledTimes(2);
   });
 });

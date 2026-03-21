@@ -29,7 +29,7 @@ export function getRoutes(): RouteMetadata[] {
   return (Reflect.getMetadata(key, Reflect) ?? []) as RouteMetadata[];
 }
 
-export const registerRoutes: Middleware<DefaultState, DefaultContext & HttpScope> = async (context, next) => {
+export function registerRoutes(): Middleware<DefaultState, DefaultContext & HttpScope> {
   const router = createRouter();
   const dispatch = router.routes() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>;
   const handleAllowedMethods = router.allowedMethods() as unknown as Middleware<
@@ -37,10 +37,12 @@ export const registerRoutes: Middleware<DefaultState, DefaultContext & HttpScope
     DefaultContext & HttpScope
   >;
 
-  await dispatch(context, async () => {
-    await handleAllowedMethods(context, next);
-  });
-};
+  return async (context, next) => {
+    await dispatch(context, async () => {
+      await handleAllowedMethods(context, next);
+    });
+  };
+}
 
 function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
   const methods = Array.isArray(method) ? method : [method];
