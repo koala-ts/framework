@@ -1,5 +1,5 @@
 import path from 'path';
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   resolve: {
@@ -9,8 +9,9 @@ export default defineConfig({
     },
   },
   test: {
+    exclude: [...configDefaults.exclude, 'dist/**'],
     coverage: {
-      exclude: ['**/playground/**', '**/tests/**', '**/types.*', '**/index.*'],
+      exclude: ['**/dist/**', '**/playground/**', '**/tests/**', '**/types.*', '**/index.*'],
     },
   },
 });
