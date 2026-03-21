@@ -1,6 +1,6 @@
-import { expect, test, vi } from 'vitest';
-import { create } from '@/Application/ApplicationFactory';
+import { create } from '@/application/ApplicationFactory';
 import { koalaDefaultConfig } from '@/Config';
+import { expect, test, vi } from 'vitest';
 
 test('create app with default config', () => {
   const app = create(koalaDefaultConfig);

@@ -1,13 +1,13 @@
-import Router, { type RouterInstance } from '@koa/router';
-import Koa, { type DefaultContext, type DefaultState, type Middleware } from 'koa';
-import { koaBody } from 'koa-body';
-import { type Application } from './types';
-import { extendResponse } from '@/Application/Response';
+import { extendResponse } from '@/application/Response';
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files';
 import { type EventSubscriber, httpKernel } from '@/Kernel';
 import { getRoutes } from '@/Routing';
+import Router, { type RouterInstance } from '@koa/router';
+import Koa, { type DefaultContext, type DefaultState, type Middleware } from 'koa';
+import { koaBody } from 'koa-body';
+import { type Application } from './types';
 
 export function create(config: KoalaConfig): Application {
   const app = new Koa() as Application;

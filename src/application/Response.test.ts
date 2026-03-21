@@ -1,4 +1,4 @@
-import { extendResponse } from '@/Application/Response';
+import { extendResponse } from '@/application/Response';
 import { type HttpScope } from '@/Http';
 import { type Next } from 'koa';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
