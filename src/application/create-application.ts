@@ -56,12 +56,27 @@ function registerGlobalMiddleware(app: Application, middleware: HttpMiddleware[]
 }
 
 function registerEventSubscribers(app: Application, map: Record<string, EventSubscriber | EventSubscriber[]>): void {
+  for (const [event, subscriber] of normalizeEventSubscribers(map)) {
+    app.on(event, subscriber as unknown as (...args: unknown[]) => void);
+  }
+}
+
+function normalizeEventSubscribers(
+  map: Record<string, EventSubscriber | EventSubscriber[]>,
+): Array<[string, EventSubscriber]> {
+  const subscriptions: Array<[string, EventSubscriber]> = [];
+
   for (const [event, subscribers] of Object.entries(map)) {
     if (Array.isArray(subscribers)) {
-      for (const subscriber of subscribers) app.on(event, subscriber as unknown as (...args: unknown[]) => void);
+      for (const subscriber of subscribers) {
+        subscriptions.push([event, subscriber]);
+      }
+
       continue;
     }
 
-    app.on(event, subscribers as unknown as (...args: unknown[]) => void);
+    subscriptions.push([event, subscribers]);
   }
+
+  return subscriptions;
 }
