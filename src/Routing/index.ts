@@ -1,3 +1,3 @@
-export type * from '@/Routing/types';
-export { getRoutes } from '@/Routing/Router';
-export { Route } from '@/Routing/Router';
+export type * from '@/routing/types';
+export { getRoutes } from '@/routing/router';
+export { Route } from '@/routing/router';

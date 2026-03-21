@@ -4,7 +4,7 @@ import { serveStaticFiles } from '@/Http/Files';
 import { applyConfiguredGlobalMiddleware } from '@/Http/middleware/apply-configured-global-middleware';
 import { initializeRequestScopeStorage } from '@/Http/Scope/request-scope-storage';
 import { type EventSubscriber } from '@/Kernel';
-import { getRoutes } from '@/Routing';
+import { getRoutes } from '@/routing';
 import Router, { type RouterInstance } from '@koa/router';
 import Koa, { type DefaultContext, type DefaultState, type Middleware } from 'koa';
 import { koaBody } from 'koa-body';

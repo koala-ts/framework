@@ -1,4 +1,4 @@
-import { getRoutes, Route } from '@/Routing/Router';
+import { getRoutes, Route } from '@/routing/router';
 import { describe, expect, test, vi } from 'vitest';
 
 describe('Route', () => {
