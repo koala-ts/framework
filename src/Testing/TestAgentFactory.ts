@@ -1,9 +1,9 @@
-import supertest from 'supertest';
-import { type TestAgent } from './types';
-import { create } from '@/Application';
+import { create } from '@/application/create-application';
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope, type NextMiddleware } from '@/Http';
 import { type User } from '@/Security/types';
+import supertest from 'supertest';
+import { type TestAgent } from './types';
 
 export function createTestAgent(config: KoalaConfig, agentConfig?: { actAs?: User }): TestAgent {
   const globalMiddleware = config.globalMiddleware ?? [];

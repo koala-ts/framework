@@ -1,5 +1,11 @@
-import { getRoutes, Route } from '@/Routing/Router';
-import { describe, expect, test, vi } from 'vitest';
+import { getRoutes, registerRoutes, Route } from '@/routing/router';
+import Koa from 'koa';
+import request from 'supertest';
+import { afterEach, describe, expect, test, vi } from 'vitest';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('Route', () => {
   const exampleMiddleware = vi.fn();
@@ -95,8 +101,57 @@ describe('Route', () => {
   });
 
   test('empty routes', () => {
-    Reflect.getMetadata = vi.fn(() => undefined);
+    vi.spyOn(Reflect, 'getMetadata').mockReturnValue(undefined);
 
     expect(getRoutes()).toEqual([]);
+  });
+});
+
+describe('registerRoutes', () => {
+  test('it dispatches registered routes', async () => {
+    const target = vi.fn(async ctx => {
+      ctx.body = { ok: true };
+    });
+    Route({ path: '/registered-route', method: 'post', options: { parseBody: false } })(target, 'handler', {});
+    const app = new Koa();
+
+    registerRoutes(app as never);
+
+    const response = await request(app.callback()).post('/registered-route');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ ok: true });
+    expect(target).toHaveBeenCalledTimes(1);
+  });
+
+  test('it responds with allowed methods', async () => {
+    const target = vi.fn(async ctx => {
+      ctx.status = 204;
+    });
+    Route({ path: '/allowed-methods-route', method: 'get', options: { parseBody: false } })(target, 'handler', {});
+    const app = new Koa();
+
+    registerRoutes(app as never);
+
+    const response = await request(app.callback()).post('/allowed-methods-route');
+
+    expect(response.status).toBe(405);
+    expect(response.headers.allow).toBe('HEAD, GET');
+  });
+
+  test('it builds the router once for multiple requests', async () => {
+    const target = vi.fn(async ctx => {
+      ctx.status = 204;
+    });
+    Route({ path: '/router-created-once', method: 'get', options: { parseBody: false } })(target, 'handler', {});
+    const createRouterSpy = vi.spyOn(Reflect, 'getMetadata');
+    const app = new Koa();
+
+    registerRoutes(app as never);
+
+    await request(app.callback()).get('/router-created-once');
+    await request(app.callback()).get('/router-created-once');
+
+    expect(createRouterSpy).toHaveBeenCalledTimes(1);
   });
 });
