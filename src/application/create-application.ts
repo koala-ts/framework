@@ -17,7 +17,7 @@ export function create(config: KoalaConfig): Application {
   app.use(httpKernel);
 
   if (undefined !== config.globalMiddleware) {
-    registerGlobalMiddleware(app, config.globalMiddleware);
+    applyGlobalMiddleware(app, config.globalMiddleware);
   }
 
   app.use(serveStaticFiles(config.staticFiles));
@@ -49,10 +49,14 @@ function createRouter(): RouterInstance {
   return router;
 }
 
-function registerGlobalMiddleware(app: Application, middleware: HttpMiddleware[]): void {
-  for (const mw of middleware) {
-    app.use(mw);
-  }
+function applyGlobalMiddleware(app: Application, middleware: HttpMiddleware[]): Application {
+  return middleware.reduce(registerMiddleware, app);
+}
+
+function registerMiddleware(app: Application, middleware: HttpMiddleware): Application {
+  app.use(middleware);
+
+  return app;
 }
 
 function registerEventSubscribers(app: Application, map: Record<string, EventSubscriber | EventSubscriber[]>): void {
