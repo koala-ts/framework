@@ -7,6 +7,10 @@
 
 - Strictly follow functional programming principles.
 - Do not use classes unless strongly justified.
+- Do not use module-local `index.ts` barrels.
+- Do not use shared `types.ts` files.
+- Export public API explicitly from the library root entrypoint.
+- Place each exported type in a dedicated named file inside its module.
 - If the user breaks the rules, you must:
   - Stop.
   - Explain the violation clearly.
