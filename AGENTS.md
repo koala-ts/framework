@@ -8,14 +8,14 @@
 - Strictly follow functional programming principles.
 - Do not use classes unless strongly justified.
 - If the user breaks the rules, you must:
-    - Stop.
-    - Explain the violation clearly.
-    - Propose a correction.
-    - Continue only after alignment.
+  - Stop.
+  - Explain the violation clearly.
+  - Propose a correction.
+  - Continue only after alignment.
 - Strictly follow TDD iterations:
-    1. Write a failing test.
-    2. Write the minimum code to pass the test.
-    3. Refactor the code while ensuring tests still pass.
+  1. Write a failing test.
+  2. Write the minimum code to pass the test.
+  3. Refactor the code while ensuring tests still pass.
 - For new directory and file names, use kebab-case.
 
 ## Unit Tests
