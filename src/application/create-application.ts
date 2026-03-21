@@ -10,11 +10,7 @@ import { koaBody } from 'koa-body';
 import { type Application } from './types';
 
 export function create(config: KoalaConfig): Application {
-  const app = new Koa() as Application;
-  app.scope = app.context;
-
-  app.use(extendResponse);
-  app.use(httpKernel);
+  const app = createBaseApplication();
 
   if (undefined !== config.globalMiddleware) {
     applyGlobalMiddleware(app, config.globalMiddleware);
@@ -22,14 +18,21 @@ export function create(config: KoalaConfig): Application {
 
   app.use(serveStaticFiles(config.staticFiles));
 
-  // Register routes
-  const router = createRouter();
-  app.use(router.routes());
-  app.use(router.allowedMethods());
+  mountRouter(app, createRouter());
 
   if (undefined !== config.eventSubscribers) {
     registerEventSubscribers(app, config.eventSubscribers);
   }
+
+  return app;
+}
+
+function createBaseApplication(): Application {
+  const app = new Koa() as Application;
+  app.scope = app.context;
+
+  app.use(extendResponse);
+  app.use(httpKernel);
 
   return app;
 }
@@ -42,6 +45,13 @@ function createRouter(): RouterInstance {
   }
 
   return router;
+}
+
+function mountRouter(app: Application, router: RouterInstance): Application {
+  app.use(router.routes());
+  app.use(router.allowedMethods());
+
+  return app;
 }
 
 function normalizeRoutes(routes: ReturnType<typeof getRoutes>): Array<{
