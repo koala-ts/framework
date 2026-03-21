@@ -1,4 +1,4 @@
-import { create } from '@/application';
+import { create } from '@/application/create-application';
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope, type NextMiddleware } from '@/Http';
 import { type User } from '@/Security/types';

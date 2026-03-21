@@ -1,5 +1,5 @@
 import { registerEventSubscribers } from '@/Kernel';
-import { type Application } from '@/application/types';
+import { type Application } from '@/application/application';
 import { expect, test, vi } from 'vitest';
 
 test('register a single event subscriber', () => {

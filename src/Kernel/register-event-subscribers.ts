@@ -1,4 +1,4 @@
-import { type Application } from '@/application/types';
+import { type Application } from '@/application/application';
 import { type EventSubscriber } from '@/Kernel/types';
 
 export function registerEventSubscribers(

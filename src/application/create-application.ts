@@ -6,7 +6,7 @@ import { initializeRequestScopeStorage } from '@/Http/Scope/request-scope-storag
 import { registerEventSubscribers } from '@/Kernel';
 import { registerRoutes } from '@/routing';
 import Koa from 'koa';
-import { type Application } from './types';
+import { type Application } from './application';
 
 export function create(config: KoalaConfig): Application {
   const app = new Koa() as Application;
