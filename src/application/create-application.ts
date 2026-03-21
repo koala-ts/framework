@@ -1,5 +1,5 @@
 import { type KoalaConfig } from '@/Config';
-import { initializeScope, type HttpMiddleware, type HttpScope } from '@/Http';
+import { type HttpMiddleware, type HttpScope, initializeScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files';
 import { type EventSubscriber, httpKernel } from '@/Kernel';
 import { getRoutes } from '@/Routing';
@@ -9,22 +9,16 @@ import { koaBody } from 'koa-body';
 import { type Application } from './types';
 
 export function create(config: KoalaConfig): Application {
-  const app = createBaseApplication();
+  const app = new Koa() as Application;
+
   app.use(initializeScope);
+  app.use(httpKernel);
 
   if (undefined !== config.globalMiddleware) {
     applyGlobalMiddleware(app, config.globalMiddleware);
   }
 
   return applyEventSubscribers(mountRouter(mountStaticFiles(app, config), createRouter()), config);
-}
-
-function createBaseApplication(): Application {
-  const app = new Koa() as Application;
-
-  app.use(httpKernel);
-
-  return app;
 }
 
 function createRouter(): RouterInstance {
