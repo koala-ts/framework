@@ -16,15 +16,7 @@ export function create(config: KoalaConfig): Application {
     applyGlobalMiddleware(app, config.globalMiddleware);
   }
 
-  app.use(serveStaticFiles(config.staticFiles));
-
-  mountRouter(app, createRouter());
-
-  if (undefined !== config.eventSubscribers) {
-    registerEventSubscribers(app, config.eventSubscribers);
-  }
-
-  return app;
+  return applyEventSubscribers(mountRouter(mountStaticFiles(app, config), createRouter()), config);
 }
 
 function createBaseApplication(): Application {
@@ -50,6 +42,12 @@ function createRouter(): RouterInstance {
 function mountRouter(app: Application, router: RouterInstance): Application {
   app.use(router.routes());
   app.use(router.allowedMethods());
+
+  return app;
+}
+
+function mountStaticFiles(app: Application, config: KoalaConfig): Application {
+  app.use(serveStaticFiles(config.staticFiles));
 
   return app;
 }
@@ -122,4 +120,12 @@ function normalizeEventSubscribers(
   }
 
   return subscriptions;
+}
+
+function applyEventSubscribers(app: Application, config: KoalaConfig): Application {
+  if (undefined !== config.eventSubscribers) {
+    registerEventSubscribers(app, config.eventSubscribers);
+  }
+
+  return app;
 }
