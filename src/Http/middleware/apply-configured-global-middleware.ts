@@ -1,6 +1,6 @@
 import { type HttpMiddleware } from '@/Http';
 
-export function applyConfiguredGlobalMiddleware(middleware: HttpMiddleware[] = []): HttpMiddleware {
+export function applyConfiguredGlobalMiddleware(middleware: HttpMiddleware[] | undefined = []): HttpMiddleware {
   return async (scope, next) => {
     const pipeline = middleware.reduceRight<() => Promise<unknown>>(
       (stack, current) => {
