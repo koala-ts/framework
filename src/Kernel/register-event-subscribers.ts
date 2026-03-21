@@ -4,16 +4,14 @@ import { type EventSubscriber } from '@/Kernel/types';
 export function registerEventSubscribers(
   app: Application,
   map: Record<string, EventSubscriber | EventSubscriber[]> | undefined,
-): Application {
+): void {
   if (undefined === map) {
-    return app;
+    return;
   }
 
   for (const [event, subscriber] of normalizeEventSubscribers(map)) {
     app.on(event, subscriber as unknown as (...args: unknown[]) => void);
   }
-
-  return app;
 }
 
 function normalizeEventSubscribers(

@@ -115,7 +115,7 @@ describe('registerRoutes', () => {
     Route({ path: '/registered-route', method: 'post', options: { parseBody: false } })(target, 'handler', {});
     const app = new Koa();
 
-    app.use(registerRoutes());
+    registerRoutes(app as never);
 
     const response = await request(app.callback()).post('/registered-route');
 
@@ -131,7 +131,7 @@ describe('registerRoutes', () => {
     Route({ path: '/allowed-methods-route', method: 'get', options: { parseBody: false } })(target, 'handler', {});
     const app = new Koa();
 
-    app.use(registerRoutes());
+    registerRoutes(app as never);
 
     const response = await request(app.callback()).post('/allowed-methods-route');
 
@@ -140,18 +140,18 @@ describe('registerRoutes', () => {
   });
 
   test('it builds the router once for multiple requests', async () => {
-    const createRouterSpy = vi.spyOn(Reflect, 'getMetadata');
     const target = vi.fn(async ctx => {
       ctx.status = 204;
     });
     Route({ path: '/router-created-once', method: 'get', options: { parseBody: false } })(target, 'handler', {});
+    const createRouterSpy = vi.spyOn(Reflect, 'getMetadata');
     const app = new Koa();
 
-    app.use(registerRoutes());
+    registerRoutes(app as never);
 
     await request(app.callback()).get('/router-created-once');
     await request(app.callback()).get('/router-created-once');
 
-    expect(createRouterSpy).toHaveBeenCalledTimes(2);
+    expect(createRouterSpy).toHaveBeenCalledTimes(1);
   });
 });

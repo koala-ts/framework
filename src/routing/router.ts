@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { type Application } from '@/application/application';
 import { type HttpScope } from '@/Http';
 import { koaBody } from 'koa-body';
 import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
@@ -29,19 +30,13 @@ export function getRoutes(): RouteMetadata[] {
   return (Reflect.getMetadata(key, Reflect) ?? []) as RouteMetadata[];
 }
 
-export function registerRoutes(): Middleware<DefaultState, DefaultContext & HttpScope> {
+export function registerRoutes(app: Application): Application {
   const router = createRouter();
-  const dispatch = router.routes() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>;
-  const handleAllowedMethods = router.allowedMethods() as unknown as Middleware<
-    DefaultState,
-    DefaultContext & HttpScope
-  >;
 
-  return async (context, next) => {
-    await dispatch(context, async () => {
-      await handleAllowedMethods(context, next);
-    });
-  };
+  app.use(router.routes() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
+  app.use(router.allowedMethods() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
+
+  return app;
 }
 
 function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
