@@ -1,5 +1,6 @@
 import { create } from '@/application/create-application';
 import { koalaDefaultConfig } from '@/Config';
+import request from 'supertest';
 import { expect, test, vi } from 'vitest';
 
 test('create app with default config', () => {
@@ -8,13 +9,13 @@ test('create app with default config', () => {
   expect(app).toBeDefined();
 });
 
-test('register configured global middleware', () => {
+test('run configured global middleware', async () => {
   const middleware = vi.fn(async (_scope, next) => await next());
   const app = create({ ...koalaDefaultConfig, globalMiddleware: [middleware] });
 
-  const registeredMiddleware = app.middleware.includes(middleware);
+  await request(app.callback()).get('/missing-route');
 
-  expect(registeredMiddleware).toBe(true);
+  expect(middleware).toHaveBeenCalledTimes(1);
 });
 
 test('register a single event subscriber', () => {
