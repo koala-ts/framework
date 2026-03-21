@@ -1,7 +1,8 @@
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope, initializeScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files';
-import { type EventSubscriber, httpKernel } from '@/Kernel';
+import { type EventSubscriber } from '@/Kernel';
+import { initializeRequestScopeStorage } from '@/Http/Scope/request-scope-storage';
 import { getRoutes } from '@/Routing';
 import Router, { type RouterInstance } from '@koa/router';
 import Koa, { type DefaultContext, type DefaultState, type Middleware } from 'koa';
@@ -12,7 +13,7 @@ export function create(config: KoalaConfig): Application {
   const app = new Koa() as Application;
 
   app.use(initializeScope);
-  app.use(httpKernel);
+  app.use(initializeRequestScopeStorage);
 
   if (undefined !== config.globalMiddleware) {
     applyGlobalMiddleware(app, config.globalMiddleware);

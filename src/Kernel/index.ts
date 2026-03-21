@@ -1,2 +1,2 @@
 export * from './types';
-export * from './HttpKernel';
+export { initializeRequestScopeStorage, useEmit, useRequest, useResponse } from '@/Http/Scope/request-scope-storage';
