@@ -1,4 +1,4 @@
-import getRawBody from 'raw-body';
+import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, Route, UploadedFile } from '../src';
 
@@ -30,7 +30,7 @@ class MyController {
 
   @Route({ method: 'POST', path: '/non-parsed-body', options: { parseBody: false } })
   async nonParsedBody(scope: HttpScope<MyRequest>): Promise<void> {
-    const rawBody = await getRawBody(scope.request.req, { encoding: 'utf8' });
+    const rawBody = await text(scope.request.req);
     scope.response.body = { rawBody };
   }
 }
