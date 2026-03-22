@@ -10,31 +10,26 @@ import type { RouteMetadata } from './route-metadata';
 import type { RouteOptions } from './route-options';
 import type { RouterMethod } from './router-method';
 
-const key = Symbol('Route');
+const routeMetadataKey = Symbol('Route');
+
+interface RouteRegistration {
+  method: RouterMethod;
+  path: string;
+  middleware: Array<RouteMetadata['middleware'][number] | RouteMetadata['handler']>;
+}
 
 export function createRouteDecorator({ method, path, middleware = [], options = {} }: Route): MethodDecorator {
   return function (target: object, propertyKey: string | symbol): void {
-    const routes: RouteMetadata[] = getRoutes();
-
-    routes.push({
-      path,
-      methods: qualifyMethod(method),
-      handler: qualifyHandler(target, propertyKey),
-      parseBody: options.parseBody ?? true,
-      middleware,
-      bodyOptions: extractBodyOptions(options),
-    });
-
-    Reflect.defineMetadata(key, routes, Reflect);
+    storeRoutes([...getRoutes(), createRouteMetadata({ method, path, middleware, options }, target, propertyKey)]);
   };
 }
 
 export function getRoutes(): RouteMetadata[] {
-  return (Reflect.getMetadata(key, Reflect) ?? []) as RouteMetadata[];
+  return (Reflect.getMetadata(routeMetadataKey, Reflect) ?? []) as RouteMetadata[];
 }
 
 export function registerRoutes(app: Application): Application {
-  const router = createRouter();
+  const router = createRouter(getRoutes());
 
   app.use(router.routes() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
   app.use(router.allowedMethods() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
@@ -42,17 +37,69 @@ export function registerRoutes(app: Application): Application {
   return app;
 }
 
-function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
-  const methods = Array.isArray(method) ? method : [method];
-  const result: RouterMethod[] = [];
+function createRouter(routes: RouteMetadata[]): RouterInstance {
+  const router = new Router();
 
-  for (const method of methods) {
-    const lower = method.toLowerCase() as RouterMethod;
-    const methodName = ['any', 'all'].includes(lower) ? 'all' : lower;
-    result.push(methodName);
+  for (const route of normalizeRoutes(routes)) {
+    router[route.method](route.path, ...(route.middleware as Middleware<DefaultState, DefaultContext & HttpScope>[]));
   }
 
-  return result;
+  return router;
+}
+
+function normalizeRoutes(routes: RouteMetadata[]): RouteRegistration[] {
+  const registrations: RouteRegistration[] = [];
+
+  for (const route of routes) {
+    registrations.push(...normalizeRoute(route));
+  }
+
+  return registrations;
+}
+
+function normalizeRoute(route: RouteMetadata): RouteRegistration[] {
+  const middleware = resolveRouteMiddleware(route);
+
+  return route.methods.map(method => ({
+    method,
+    path: route.path,
+    middleware,
+  }));
+}
+
+function resolveRouteMiddleware(route: RouteMetadata): RouteRegistration['middleware'] {
+  const middlewareStack = [...route.middleware, route.handler];
+
+  return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
+}
+
+function storeRoutes(routes: RouteMetadata[]): void {
+  Reflect.defineMetadata(routeMetadataKey, routes, Reflect);
+}
+
+function createRouteMetadata(
+  { method, path, middleware, options }: Pick<Route, 'method' | 'path' | 'middleware' | 'options'>,
+  target: object,
+  propertyKey: string | symbol,
+): RouteMetadata {
+  return {
+    path,
+    methods: qualifyMethod(method),
+    handler: qualifyHandler(target, propertyKey),
+    parseBody: options?.parseBody ?? true,
+    middleware: middleware ?? [],
+    bodyOptions: extractBodyOptions(options ?? {}),
+  };
+}
+
+function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
+  const methods = Array.isArray(method) ? method : [method];
+
+  return methods.map(method => {
+    const lower = method.toLowerCase() as RouterMethod;
+
+    return ['any', 'all'].includes(lower) ? 'all' : lower;
+  });
 }
 
 function qualifyHandler(target: unknown, propertyKey: string | symbol): HttpMiddleware {
@@ -65,45 +112,6 @@ function qualifyHandler(target: unknown, propertyKey: string | symbol): HttpMidd
 
 function extractBodyOptions(options: RouteOptions): RouteMetadata['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
+
   return bodyOptions as RouteMetadata['bodyOptions'];
-}
-
-function createRouter(): RouterInstance {
-  const router = new Router();
-
-  for (const route of normalizeRoutes(getRoutes())) {
-    router[route.method](route.path, ...(route.middleware as Middleware<DefaultState, DefaultContext & HttpScope>[]));
-  }
-
-  return router;
-}
-
-function normalizeRoutes(routes: ReturnType<typeof getRoutes>): RouteRegistration[] {
-  const registrations: RouteRegistration[] = [];
-
-  for (const route of routes) {
-    const middleware = resolveRouteMiddleware(route);
-
-    for (const method of route.methods) {
-      registrations.push({
-        method,
-        path: route.path,
-        middleware,
-      });
-    }
-  }
-
-  return registrations;
-}
-
-function resolveRouteMiddleware(route: ReturnType<typeof getRoutes>[number]): RouteRegistration['middleware'] {
-  const middlewareStack = [...route.middleware, route.handler];
-
-  return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
-}
-
-interface RouteRegistration {
-  method: RouterMethod;
-  path: string;
-  middleware: Array<RouteMetadata['middleware'][number] | RouteMetadata['handler']>;
 }
