@@ -8,7 +8,7 @@ export * from '@/Http';
 export * from '@/Kernel';
 
 // Routing
-export { Route } from '@/routing/decorator/route';
+export * from '@/routing/decorator/route';
 export { getRoutes, registerRoutes } from '@/routing/decorator/router';
 export type { HttpMethod } from '@/routing/decorator/http-method';
 export type { RouteMetadata } from '@/routing/decorator/route-metadata';
