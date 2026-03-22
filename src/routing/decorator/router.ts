@@ -20,7 +20,11 @@ interface RouteRegistration {
 
 export function createRouteDecorator({ method, path, middleware = [], options = {} }: Route): MethodDecorator {
   return function (target: object, propertyKey: string | symbol): void {
-    storeRoutes([...getRoutes(), createRouteMetadata({ method, path, middleware, options }, target, propertyKey)]);
+    const routes = getRoutes();
+
+    routes.push(createRouteMetadata({ method, path, middleware, options }, target, propertyKey));
+
+    storeRoutes(routes);
   };
 }
 
@@ -78,7 +82,15 @@ function storeRoutes(routes: RouteMetadata[]): void {
 }
 
 function createRouteMetadata(
-  { method, path, middleware, options }: Pick<Route, 'method' | 'path' | 'middleware' | 'options'>,
+  {
+    method,
+    path,
+    middleware,
+    options,
+  }: Pick<Route, 'method' | 'path'> & {
+    middleware: NonNullable<Route['middleware']>;
+    options: NonNullable<Route['options']>;
+  },
   target: object,
   propertyKey: string | symbol,
 ): RouteMetadata {
@@ -87,8 +99,8 @@ function createRouteMetadata(
     methods: qualifyMethod(method),
     handler: qualifyHandler(target, propertyKey),
     parseBody: options?.parseBody ?? true,
-    middleware: middleware ?? [],
-    bodyOptions: extractBodyOptions(options ?? {}),
+    middleware,
+    bodyOptions: extractBodyOptions(options),
   };
 }
 
