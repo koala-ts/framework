@@ -162,9 +162,10 @@ describe('Decorator Routing E2E Test', () => {
     } as KoalaConfig);
 
     const response = await agent.delete('/decorator-route');
+    const allowedMethods = response.headers.allow.split(', ').sort();
 
     expect(response.status).toBe(405);
-    expect(response.headers.allow).toBe('POST, HEAD, GET');
+    expect(allowedMethods).toEqual(['GET', 'HEAD', 'POST']);
   });
 
   test('it should parse multipart bodies for decorated routes', async () => {
