@@ -1,4 +1,4 @@
-import getRawBody from 'raw-body';
+import { text } from 'node:stream/consumers';
 import { describe, expect, test, vi } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, Route, type KoalaConfig, type UploadedFile } from '../src';
 
@@ -58,7 +58,7 @@ class DecoratorRoutingController {
 
   @Route({ method: 'post', path: '/decorator-raw-body', options: { parseBody: false } })
   async rawBody(scope: HttpScope): Promise<void> {
-    const body = await getRawBody(scope.request.req, { encoding: 'utf8' });
+    const body = await text(scope.request.req);
 
     scope.response.body = { body };
   }
