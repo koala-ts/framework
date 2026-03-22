@@ -1,15 +1,18 @@
 import 'reflect-metadata';
 import { type Application } from '@/application/application';
-import { type HttpScope } from '@/Http';
+import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { koaBody } from 'koa-body';
 import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
 import Router, { type RouterInstance } from '@koa/router';
-import type { HttpMethod, Route, RouteMetadata, RouteOptions, RouterMethod } from './types';
-import type { HttpMiddleware } from '@/Http';
+import type { HttpMethod } from './http-method';
+import type { Route } from './route';
+import type { RouteMetadata } from './route-metadata';
+import type { RouteOptions } from './route-options';
+import type { RouterMethod } from './router-method';
 
 const key = Symbol('Route');
 
-export function Route({ method, path, middleware = [], options = {} }: Route): MethodDecorator {
+export function createRouteDecorator({ method, path, middleware = [], options = {} }: Route): MethodDecorator {
   return function (target: object, propertyKey: string | symbol): void {
     const routes: RouteMetadata[] = getRoutes();
 
