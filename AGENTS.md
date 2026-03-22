@@ -1,16 +1,17 @@
 ## General instructions
 
-- Follow instructions in `~/.codex/AGENTS.md` if exists.
-- Override instructions in `~/.codex/AGENTS.md` if they conflict with the instructions in this file.
+- Follow instructions in `~/.codex/AGENTS.md` when present, unless this file overrides them.
 
 ## JavaScript / TypeScript Rules
 
 - Strictly follow functional programming principles.
 - Do not use classes unless strongly justified.
 - Do not use module-local `index.ts` barrels.
-- Do not use shared `types.ts` files.
 - Export public API explicitly from the library root entrypoint.
-- Place each exported type in a dedicated named file inside its module.
+- Declare internal types in the same file where they are used when they belong to a single file or a single behavior.
+- Place exported or shared types in dedicated named files inside their module when they represent a public contract or a concept used in multiple files.
+- Do not create dumping-ground files such as `types.ts`, `interfaces.ts`, or `models.ts`.
+- If a type is exported only to support tests, export it from the source file that owns the behavior instead of moving it to a shared file.
 - If the user breaks the rules, you must:
   - Stop.
   - Explain the violation clearly.
