@@ -26,8 +26,6 @@ describe('Discovery config', () => {
         routesDir: 'tests/fixtures/route-modules/discovery-filter',
       });
 
-    expect(assertConfig).toThrow(
-      'Invalid routing configuration: choose only one of routeModules, routesDir, or routeManifest.',
-    );
+    expect(assertConfig).toThrow('Invalid routing configuration: choose only one of routeModules or routesDir.');
   });
 });

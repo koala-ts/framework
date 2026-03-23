@@ -46,23 +46,6 @@ describe('Routing resolution E2E Test', () => {
     expect(response.body).toEqual({ ok: true, source: 'fallback' });
   });
 
-  test('creates an application from a default route manifest', async () => {
-    const app = create({
-      routing: {
-        routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
-      },
-    } as KoalaConfig);
-
-    await autoDiscoverRoutes(app, {
-      routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
-    });
-
-    const response = await request(app.callback()).get('/decorator-function-route');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ ok: true, source: 'function' });
-  });
-
   test('discovers nested routes and ignores test and type files', async () => {
     const app = create({
       routing: {

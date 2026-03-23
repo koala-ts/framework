@@ -8,7 +8,7 @@ import {
   type DiscoverySource,
 } from '@/routing/discovery/discovery-config';
 import { discoverRouteModules } from '@/routing/discovery/discover-route-modules';
-import { loadRouteManifestModules, loadRouteModuleDefinitions } from '@/routing/discovery/load-route-modules';
+import { loadRouteModuleDefinitions } from '@/routing/discovery/load-route-modules';
 import { getRegisteredRouteDefinitions } from '@/routing/decorator/decorated-route';
 import type { RouteMetadata } from '@/routing/decorator/route-metadata';
 
@@ -27,8 +27,6 @@ async function resolveRoutesFromDiscoverySource(source: DiscoverySource): Promis
   switch (source.kind) {
     case 'route-modules':
       return await loadRouteModuleDefinitions(source.routeModules);
-    case 'route-manifest':
-      return await loadRouteModuleDefinitions(await loadRouteManifestModules(source.routeManifest));
     case 'routes-dir':
       return await loadRouteModuleDefinitions(discoverRouteModules(source.routesDir));
     case 'registered':

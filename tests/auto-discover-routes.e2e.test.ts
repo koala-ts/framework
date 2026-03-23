@@ -39,18 +39,6 @@ describe('Auto discover routes', () => {
     expect(alphaResponse.body).toEqual({ ok: true, source: 'alpha' });
   });
 
-  test('discovers route modules from a route manifest', async () => {
-    const app = create({} as KoalaConfig);
-    await autoDiscoverRoutes(app, {
-      routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
-    });
-
-    const response = await request(app.callback()).get('/decorator-function-route');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ ok: true, source: 'function' });
-  });
-
   test('fails when multiple discovery sources are configured together', async () => {
     const app = create({} as KoalaConfig);
     const discoverRoutes = (): ReturnType<typeof autoDiscoverRoutes> =>
@@ -60,7 +48,7 @@ describe('Auto discover routes', () => {
       });
 
     await expect(discoverRoutes).rejects.toThrow(
-      'Invalid routing configuration: choose only one of routeModules, routesDir, or routeManifest.',
+      'Invalid routing configuration: choose only one of routeModules or routesDir.',
     );
   });
 
