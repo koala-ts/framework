@@ -9,12 +9,12 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 const routeRegistryKey = Symbol.for('@koala-ts/framework/route-registry');
 
-describe('decorated-route', () => {
+describe('Decorated routes', () => {
   beforeEach(() => {
     delete (globalThis as Record<symbol, unknown>)[routeRegistryKey];
   });
 
-  describe('attachRouteToTarget', () => {
+  describe('Attaching route metadata', () => {
     test('attaches metadata to a function route', () => {
       const handler = vi.fn<HttpMiddleware>();
       const middleware = [vi.fn<HttpMiddleware>()];
@@ -48,7 +48,6 @@ describe('decorated-route', () => {
       class ReportsController {
         public list(): void {}
       }
-
       const target = ReportsController.prototype;
 
       attachRouteToTarget({ method: 'get', path: '/reports' }, target, 'list');
@@ -70,12 +69,11 @@ describe('decorated-route', () => {
 
     test('rejects unsupported decorator targets', () => {
       const attachRoute = (): HttpMiddleware => attachRouteToTarget({ method: 'get', path: '/reports' }, { value: 1 });
-
       expect(attachRoute).toThrow('Route decorator can only be applied to functions or methods.');
     });
   });
 
-  describe('hasAttachedRouteMetadata', () => {
+  describe('Checking attached metadata', () => {
     test('reports when a handler has route metadata', () => {
       const handler = vi.fn<HttpMiddleware>();
 
@@ -95,7 +93,7 @@ describe('decorated-route', () => {
     });
   });
 
-  describe('getRouteDefinitionsFromHandler', () => {
+  describe('Reading route definitions from handlers', () => {
     test('returns no route definitions for non functions', () => {
       const value = { path: '/reports' };
 
@@ -105,7 +103,7 @@ describe('decorated-route', () => {
     });
   });
 
-  describe('getRegisteredRouteDefinitions', () => {
+  describe('Reading registered route definitions', () => {
     test('collects registered route definitions from attached handlers', () => {
       const firstHandler = vi.fn<HttpMiddleware>();
       const secondHandler = vi.fn<HttpMiddleware>();
