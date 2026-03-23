@@ -1,6 +1,6 @@
 import type { Controller, HttpMiddleware } from '@/index';
+import { resolveConfiguredRoutes } from '@/routing/decorator/resolve-routes';
 import { Route } from '@/routing/decorator/route';
-import { resolveConfiguredRoutes } from '@/routing/resolve-routes';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 const routeRegistryKey = Symbol.for('@koala-ts/framework/route-registry');

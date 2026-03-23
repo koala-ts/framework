@@ -2,7 +2,7 @@ import { type Application } from '@/application/application';
 import type { KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { attachRouteToTarget, getRegisteredRouteDefinitions } from '@/routing/decorator/decorated-route';
-import { resolveConfiguredRoutes } from '@/routing/resolve-routes';
+import { resolveConfiguredRoutes } from '@/routing/decorator/resolve-routes';
 import { koaBody } from 'koa-body';
 import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
 import Router, { type RouterInstance } from '@koa/router';
