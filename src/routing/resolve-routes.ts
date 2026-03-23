@@ -39,6 +39,17 @@ export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
   return routes;
 }
 
+export async function resolveDiscoveredRoutes(config: RoutingConfig): Promise<RouteMetadata[]> {
+  assertValidRoutingConfig(config, []);
+
+  const source = selectRouteSource(config, []);
+  const routes = await resolveDiscoveredRoutesFromSource(source);
+
+  assertNoDuplicateRoutes(routes);
+
+  return routes;
+}
+
 function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteMetadata[] {
   const routes: RouteMetadata[] = [];
 
@@ -213,8 +224,50 @@ function resolveRoutesFromSource(source: RouteSource): RouteMetadata[] {
   }
 }
 
+async function resolveDiscoveredRoutesFromSource(source: RouteSource): Promise<RouteMetadata[]> {
+  switch (source.kind) {
+    case 'controllers':
+      return resolveControllerDefinitions(source.controllers);
+    case 'route-modules':
+      return await resolveAsyncRouteModuleDefinitions(source.routeModules);
+    case 'route-manifest':
+      return await resolveAsyncRouteModuleDefinitions(await resolveAsyncRouteManifest(source.routeManifest));
+    case 'routes-dir':
+      return await resolveAsyncRouteModuleDefinitions(discoverRouteModules(source.routesDir));
+    case 'registered':
+      return getRegisteredRouteDefinitions();
+  }
+}
+
 function resolveModulePath(modulePath: string, baseDirectory: string = process.cwd()): string {
   return path.isAbsolute(modulePath) ? modulePath : path.resolve(baseDirectory, modulePath);
+}
+
+async function resolveAsyncRouteModuleDefinitions(routeModules: RouteModule[]): Promise<RouteMetadata[]> {
+  const routes: RouteMetadata[] = [];
+
+  for (const routeModule of routeModules) {
+    const modulePath = resolveModulePath(routeModule);
+    const exports = (await importRouteModule.import(modulePath)) as Record<string, unknown>;
+
+    routes.push(...extractRouteModuleDefinitions(exports, modulePath));
+  }
+
+  return routes;
+}
+
+async function resolveAsyncRouteManifest(routeManifest: RouteManifest): Promise<RouteModule[]> {
+  const manifestPath = resolveModulePath(routeManifest);
+
+  if (!fs.existsSync(manifestPath)) {
+    throw new Error(`Route manifest does not exist: ${manifestPath}`);
+  }
+
+  const manifestExports = (await importRouteModule.import(manifestPath)) as Record<string, unknown>;
+  const manifestRouteModules = extractRouteManifestModules(manifestExports, manifestPath);
+  const manifestDirectory = path.dirname(manifestPath);
+
+  return manifestRouteModules.map(routeModule => resolveModulePath(routeModule, manifestDirectory));
 }
 
 function assertNoDuplicateRoutes(routes: RouteMetadata[]): void {
