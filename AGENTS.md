@@ -33,6 +33,9 @@
 - If a variable/const is needed only for assertions, declare it in the Assert section.
 - Test case names must be plain English.
 - DO NOT reveal implementation details in the test case names.
+- Maintain existing tests whenever they already cover the intended behavior.
+- Add new tests only when behavior is new or currently uncovered.
+- Do not add redundant tests that duplicate existing observable-behavior coverage.
 
 ## Running development commands
 
