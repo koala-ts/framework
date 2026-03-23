@@ -1,7 +1,9 @@
 import { type Application } from '@/application/application';
+import type { KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { attachRouteToTarget, getRegisteredRouteDefinitions } from '@/routing/decorator/decorated-route';
 import { toRouteDefinition, toRouteMetadata, type RouteDefinition } from '@/routing/route-definition';
+import { resolveConfiguredRoutes } from '@/routing/resolve-routes';
 import { koaBody } from 'koa-body';
 import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
 import Router, { type RouterInstance } from '@koa/router';
@@ -47,6 +49,10 @@ export function registerRouteDefinitions(app: Application, routes: RouteDefiniti
   app.use(router.allowedMethods() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
 
   return app;
+}
+
+export function registerConfiguredRoutes(app: Application, config: KoalaConfig): Application {
+  return registerRouteDefinitions(app, resolveConfiguredRoutes(config));
 }
 
 function createRouter(routes: RouteDefinition[]): RouterInstance {

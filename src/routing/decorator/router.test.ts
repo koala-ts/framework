@@ -1,7 +1,14 @@
 import type { Application } from '@/application/application';
+import type { KoalaConfig } from '@/Config';
 import type { HttpMiddleware } from '@/Http';
 import { attachRouteToTarget } from '@/routing/decorator/decorated-route';
-import { createRouteDecorator, getRoutes, registerRouteDefinitions, registerRoutes } from '@/routing/decorator/router';
+import {
+  createRouteDecorator,
+  getRoutes,
+  registerConfiguredRoutes,
+  registerRouteDefinitions,
+  registerRoutes,
+} from '@/routing/decorator/router';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 const mockState = vi.hoisted(() => ({
@@ -188,6 +195,24 @@ test('registers route metadata without body parsing when disabled', () => {
     {
       method: 'delete',
       path: '/articles',
+      middleware: [handler],
+    },
+  ]);
+});
+
+test('registers configured routes through the routing boundary', () => {
+  const app = { use: vi.fn() } as unknown as Application;
+  const handler = vi.fn() as unknown as HttpMiddleware;
+
+  attachRouteToTarget({ method: 'get', path: '/configured-route', options: { parseBody: false } }, handler);
+
+  const result = registerConfiguredRoutes(app, {} as KoalaConfig);
+
+  expect(result).toBe(app);
+  expect(mockState.routerCalls).toEqual([
+    {
+      method: 'get',
+      path: '/configured-route',
       middleware: [handler],
     },
   ]);
