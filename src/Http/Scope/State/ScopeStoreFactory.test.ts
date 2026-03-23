@@ -17,10 +17,10 @@ describe('createStore', () => {
 
     expect(() => {
       store.set('id', 2);
-    }).toThrowError(ScopeStoreError);
+    }).toThrow(ScopeStoreError);
     expect(() => {
       store.set('id', 2);
-    }).toThrowError('No active scope store found. Make sure to call set() within a run() context.');
+    }).toThrow('No active scope store found. Make sure to call set() within a run() context.');
   });
 
   test('get should fail if no active store found', () => {
@@ -28,7 +28,7 @@ describe('createStore', () => {
 
     expect(() => {
       store.get('id');
-    }).toThrowError(ScopeStoreError);
+    }).toThrow(ScopeStoreError);
   });
 
   test('has should fail if no active store found', () => {
@@ -36,7 +36,7 @@ describe('createStore', () => {
 
     expect(() => {
       store.has('id');
-    }).toThrowError(ScopeStoreError);
+    }).toThrow(ScopeStoreError);
   });
 
   test('all should fail if no active store found', () => {
@@ -44,7 +44,7 @@ describe('createStore', () => {
 
     expect(() => {
       store.all();
-    }).toThrowError(ScopeStoreError);
+    }).toThrow(ScopeStoreError);
   });
 
   test('set, get and all should work with active store', () => {
@@ -157,7 +157,7 @@ describe('createStore', () => {
       store.run({ id: 1 }, () => {
         throw new Error('callback error');
       });
-    }).toThrowError('callback error');
+    }).toThrow('callback error');
   });
 
   test('supports complex state types', () => {

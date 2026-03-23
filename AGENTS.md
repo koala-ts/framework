@@ -35,6 +35,8 @@
 - Separate Arrange → Act and Act → Assert with one empty line each (exactly two empty-line separators per test case).
 - The Act step must always be a single line.
 - If a variable/const is needed only for assertions, declare it in the Assert section.
+- Test files should use a top-level `describe` for the module or behavior under test.
+- Add nested `describe` blocks when grouping related behavior materially improves readability.
 - Test case names must be plain English.
 - DO NOT reveal implementation details in the test case names.
 - Route behaviors are the exception when meaningful unit tests would require framework-level mocking; cover those through E2E tests instead.

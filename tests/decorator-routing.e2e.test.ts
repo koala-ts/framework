@@ -191,7 +191,7 @@ describe('Decorator Routing E2E Test', () => {
         },
       } as KoalaConfig);
 
-    expect(createAgent).toThrowError('Duplicate route detected for GET /duplicate-route');
+    expect(createAgent).toThrow('Duplicate route detected for GET /duplicate-route');
   });
 
   test('it should respond with allowed methods for decorated routes', async () => {

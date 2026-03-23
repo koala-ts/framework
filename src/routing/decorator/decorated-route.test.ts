@@ -5,119 +5,136 @@ import {
   getRouteDefinitionsFromHandler,
   hasAttachedRouteMetadata,
 } from '@/routing/decorator/decorated-route';
-import { beforeEach, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 const routeRegistryKey = Symbol.for('@koala-ts/framework/route-registry');
 
-beforeEach(() => {
-  delete (globalThis as Record<symbol, unknown>)[routeRegistryKey];
-});
+describe('decorated-route', () => {
+  beforeEach(() => {
+    delete (globalThis as Record<symbol, unknown>)[routeRegistryKey];
+  });
 
-test('attaches metadata to a function route', () => {
-  const handler = vi.fn() as unknown as HttpMiddleware;
+  describe('attachRouteToTarget', () => {
+    test('attaches metadata to a function route', () => {
+      const handler = vi.fn<HttpMiddleware>();
+      const middleware = [vi.fn<HttpMiddleware>()];
 
-  attachRouteToTarget(
-    {
-      method: 'ANY',
-      path: '/reports',
-      middleware: [vi.fn() as unknown as HttpMiddleware],
-      options: { parseBody: false, multipart: true },
-    },
-    handler,
-  );
+      attachRouteToTarget(
+        {
+          method: 'ANY',
+          path: '/reports',
+          middleware,
+          options: { parseBody: false, multipart: true },
+        },
+        handler,
+      );
 
-  const definitions = getRouteDefinitionsFromHandler(handler, 'reports.handler');
+      const definitions = getRouteDefinitionsFromHandler(handler, 'reports.handler');
 
-  expect(definitions).toEqual([
-    {
-      path: '/reports',
-      methods: ['all'],
-      handler,
-      parseBody: false,
-      middleware: expect.any(Array),
-      bodyOptions: { multipart: true },
-      source: 'reports.handler',
-    },
-  ]);
-});
+      expect(definitions).toEqual([
+        {
+          path: '/reports',
+          methods: ['all'],
+          handler,
+          parseBody: false,
+          middleware,
+          bodyOptions: { multipart: true },
+          source: 'reports.handler',
+        },
+      ]);
+    });
 
-test('attaches metadata to a controller method', () => {
-  class ReportsController {
-    public list(): void {}
-  }
+    test('attaches metadata to a controller method', () => {
+      class ReportsController {
+        public list(): void {}
+      }
 
-  const target = ReportsController.prototype;
+      const target = ReportsController.prototype;
 
-  attachRouteToTarget({ method: 'get', path: '/reports' }, target, 'list');
+      attachRouteToTarget({ method: 'get', path: '/reports' }, target, 'list');
 
-  const definitions = getRouteDefinitionsFromHandler(target.list);
+      const definitions = getRouteDefinitionsFromHandler(target.list);
 
-  expect(definitions).toEqual([
-    {
-      path: '/reports',
-      methods: ['get'],
-      handler: target.list,
-      parseBody: true,
-      middleware: [],
-      bodyOptions: {},
-      source: undefined,
-    },
-  ]);
-});
+      expect(definitions).toEqual([
+        {
+          path: '/reports',
+          methods: ['get'],
+          handler: target.list,
+          parseBody: true,
+          middleware: [],
+          bodyOptions: {},
+          source: undefined,
+        },
+      ]);
+    });
 
-test('rejects unsupported decorator targets', () => {
-  const attachRoute = (): HttpMiddleware => attachRouteToTarget({ method: 'get', path: '/reports' }, { value: 1 });
+    test('rejects unsupported decorator targets', () => {
+      const attachRoute = (): HttpMiddleware => attachRouteToTarget({ method: 'get', path: '/reports' }, { value: 1 });
 
-  expect(attachRoute).toThrowError('Route decorator can only be applied to functions or methods.');
-});
+      expect(attachRoute).toThrow('Route decorator can only be applied to functions or methods.');
+    });
+  });
 
-test('reports when a handler has route metadata', () => {
-  const handler = vi.fn() as unknown as HttpMiddleware;
+  describe('hasAttachedRouteMetadata', () => {
+    test('reports when a handler has route metadata', () => {
+      const handler = vi.fn<HttpMiddleware>();
 
-  attachRouteToTarget({ method: 'all', path: '/reports' }, handler);
+      attachRouteToTarget({ method: 'all', path: '/reports' }, handler);
 
-  expect(hasAttachedRouteMetadata(handler)).toBe(true);
-});
+      const hasMetadata = hasAttachedRouteMetadata(handler);
 
-test('returns no route definitions for non functions', () => {
-  const definitions = getRouteDefinitionsFromHandler({ path: '/reports' }, 'reports.source');
+      expect(hasMetadata).toBe(true);
+    });
 
-  expect(definitions).toEqual([]);
-});
+    test('returns false for values without attached metadata', () => {
+      const value = { path: '/reports' };
 
-test('returns false for values without attached metadata', () => {
-  const hasMetadata = hasAttachedRouteMetadata({ path: '/reports' });
+      const hasMetadata = hasAttachedRouteMetadata(value);
 
-  expect(hasMetadata).toBe(false);
-});
+      expect(hasMetadata).toBe(false);
+    });
+  });
 
-test('collects registered route definitions from attached handlers', () => {
-  const firstHandler = vi.fn() as unknown as HttpMiddleware;
-  const secondHandler = vi.fn() as unknown as HttpMiddleware;
+  describe('getRouteDefinitionsFromHandler', () => {
+    test('returns no route definitions for non functions', () => {
+      const value = { path: '/reports' };
 
-  attachRouteToTarget({ method: 'GET', path: '/reports' }, firstHandler);
-  attachRouteToTarget({ method: ['post', 'ALL'], path: '/reports/import' }, secondHandler);
+      const definitions = getRouteDefinitionsFromHandler(value, 'reports.source');
 
-  const definitions = getRegisteredRouteDefinitions();
+      expect(definitions).toEqual([]);
+    });
+  });
 
-  expect(definitions).toEqual([
-    {
-      path: '/reports',
-      methods: ['get'],
-      handler: firstHandler,
-      parseBody: true,
-      middleware: [],
-      bodyOptions: {},
-      source: undefined,
-    },
-    {
-      path: '/reports/import',
-      methods: ['post', 'all'],
-      handler: secondHandler,
-      parseBody: true,
-      middleware: [],
-      bodyOptions: {},
-      source: undefined,
-    },
-  ]);
+  describe('getRegisteredRouteDefinitions', () => {
+    test('collects registered route definitions from attached handlers', () => {
+      const firstHandler = vi.fn<HttpMiddleware>();
+      const secondHandler = vi.fn<HttpMiddleware>();
+
+      attachRouteToTarget({ method: 'GET', path: '/reports' }, firstHandler);
+      attachRouteToTarget({ method: ['post', 'ALL'], path: '/reports/import' }, secondHandler);
+
+      const definitions = getRegisteredRouteDefinitions();
+
+      expect(definitions).toEqual([
+        {
+          path: '/reports',
+          methods: ['get'],
+          handler: firstHandler,
+          parseBody: true,
+          middleware: [],
+          bodyOptions: {},
+          source: undefined,
+        },
+        {
+          path: '/reports/import',
+          methods: ['post', 'all'],
+          handler: secondHandler,
+          parseBody: true,
+          middleware: [],
+          bodyOptions: {},
+          source: undefined,
+        },
+      ]);
+    });
+  });
 });

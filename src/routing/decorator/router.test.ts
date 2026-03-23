@@ -88,132 +88,134 @@ vi.mock('@koa/router', () => {
 
 const routeRegistryKey = Symbol.for('@koala-ts/framework/route-registry');
 
-beforeEach(() => {
-  mockState.routerCalls.splice(0, mockState.routerCalls.length);
-  mockState.koaBodySpy.mockClear();
-  mockState.routesMiddleware.mockClear();
-  mockState.allowedMethodsMiddleware.mockClear();
-  delete (globalThis as Record<symbol, unknown>)[routeRegistryKey];
-});
-
-describe('createRouteDecorator', () => {
-  test('returns the decorated handler for function targets', () => {
-    const handler = vi.fn() as unknown as HttpMiddleware;
-    const decorate = createRouteDecorator({ method: 'get', path: '/articles' });
-
-    const decoratedHandler = decorate(handler);
-
-    expect(decoratedHandler).toBe(handler);
+describe('router', () => {
+  beforeEach(() => {
+    mockState.routerCalls.splice(0, mockState.routerCalls.length);
+    mockState.koaBodySpy.mockClear();
+    mockState.routesMiddleware.mockClear();
+    mockState.allowedMethodsMiddleware.mockClear();
+    delete (globalThis as Record<symbol, unknown>)[routeRegistryKey];
   });
 
-  test('returns undefined for method decorator targets', () => {
-    class ArticlesController {
-      public list(): void {}
-    }
+  describe('createRouteDecorator', () => {
+    test('returns the decorated handler for function targets', () => {
+      const handler = vi.fn<HttpMiddleware>();
+      const decorate = createRouteDecorator({ method: 'get', path: '/articles' });
 
-    const decorate = createRouteDecorator({ method: 'get', path: '/articles' });
-    const descriptor = Object.getOwnPropertyDescriptor(ArticlesController.prototype, 'list')!;
+      const decoratedHandler = decorate(handler);
 
-    const result = decorate(ArticlesController.prototype, 'list', descriptor);
+      expect(decoratedHandler).toBe(handler);
+    });
 
-    expect(result).toBeUndefined();
+    test('returns undefined for method decorator targets', () => {
+      class ArticlesController {
+        public list(): void {}
+      }
+
+      const decorate = createRouteDecorator({ method: 'get', path: '/articles' });
+      const descriptor = Object.getOwnPropertyDescriptor(ArticlesController.prototype, 'list')!;
+
+      const result = decorate(ArticlesController.prototype, 'list', descriptor);
+
+      expect(result).toBeUndefined();
+    });
   });
-});
 
-test('reads registered routes as route metadata', () => {
-  const handler = vi.fn() as unknown as HttpMiddleware;
+  test('reads registered routes as route metadata', () => {
+    const handler = vi.fn<HttpMiddleware>();
 
-  attachRouteToTarget({ method: 'post', path: '/articles', options: { parseBody: false } }, handler);
+    attachRouteToTarget({ method: 'post', path: '/articles', options: { parseBody: false } }, handler);
 
-  const routes = getRoutes();
+    const routes = getRoutes();
 
-  expect(routes).toEqual([
-    {
-      path: '/articles',
-      methods: ['post'],
-      handler,
-      parseBody: false,
-      middleware: [],
-      bodyOptions: {},
-      source: undefined,
-    },
-  ]);
-});
+    expect(routes).toEqual([
+      {
+        path: '/articles',
+        methods: ['post'],
+        handler,
+        parseBody: false,
+        middleware: [],
+        bodyOptions: {},
+        source: undefined,
+      },
+    ]);
+  });
 
-test('registers route definitions on the application', () => {
-  const app = { use: vi.fn() } as unknown as Application;
-  const routeMiddleware = vi.fn() as unknown as HttpMiddleware;
-  const handler = vi.fn() as unknown as HttpMiddleware;
+  test('registers route definitions on the application', () => {
+    const app = { use: vi.fn() } as unknown as Application;
+    const routeMiddleware = vi.fn<HttpMiddleware>();
+    const handler = vi.fn<HttpMiddleware>();
 
-  const result = registerRouteDefinitions(app, [
-    {
-      path: '/articles',
-      methods: ['get', 'post'],
-      handler,
-      parseBody: true,
-      middleware: [routeMiddleware],
-      bodyOptions: { multipart: true },
-    },
-  ]);
+    const result = registerRouteDefinitions(app, [
+      {
+        path: '/articles',
+        methods: ['get', 'post'],
+        handler,
+        parseBody: true,
+        middleware: [routeMiddleware],
+        bodyOptions: { multipart: true },
+      },
+    ]);
 
-  expect(result).toBe(app);
-  expect(mockState.koaBodySpy).toHaveBeenCalledWith({ multipart: true });
-  expect(mockState.routerCalls).toEqual([
-    {
-      method: 'get',
-      path: '/articles',
-      middleware: [{ options: { multipart: true }, type: 'koa-body-middleware' }, routeMiddleware, handler],
-    },
-    {
-      method: 'post',
-      path: '/articles',
-      middleware: [{ options: { multipart: true }, type: 'koa-body-middleware' }, routeMiddleware, handler],
-    },
-  ]);
-  expect(app.use).toHaveBeenNthCalledWith(1, mockState.routesMiddleware);
-  expect(app.use).toHaveBeenNthCalledWith(2, mockState.allowedMethodsMiddleware);
-});
+    expect(result).toBe(app);
+    expect(mockState.koaBodySpy).toHaveBeenCalledWith({ multipart: true });
+    expect(mockState.routerCalls).toEqual([
+      {
+        method: 'get',
+        path: '/articles',
+        middleware: [{ options: { multipart: true }, type: 'koa-body-middleware' }, routeMiddleware, handler],
+      },
+      {
+        method: 'post',
+        path: '/articles',
+        middleware: [{ options: { multipart: true }, type: 'koa-body-middleware' }, routeMiddleware, handler],
+      },
+    ]);
+    expect(app.use).toHaveBeenNthCalledWith(1, mockState.routesMiddleware);
+    expect(app.use).toHaveBeenNthCalledWith(2, mockState.allowedMethodsMiddleware);
+  });
 
-test('registers route metadata without body parsing when disabled', () => {
-  const app = { use: vi.fn() } as unknown as Application;
-  const handler = vi.fn() as unknown as HttpMiddleware;
+  test('registers route metadata without body parsing when disabled', () => {
+    const app = { use: vi.fn() } as unknown as Application;
+    const handler = vi.fn<HttpMiddleware>();
 
-  const result = registerRoutes(app, [
-    {
-      path: '/articles',
-      methods: ['delete'],
-      handler,
-      parseBody: false,
-      middleware: [],
-      bodyOptions: { multipart: true },
-    },
-  ]);
+    const result = registerRoutes(app, [
+      {
+        path: '/articles',
+        methods: ['delete'],
+        handler,
+        parseBody: false,
+        middleware: [],
+        bodyOptions: { multipart: true },
+      },
+    ]);
 
-  expect(result).toBe(app);
-  expect(mockState.koaBodySpy).not.toHaveBeenCalled();
-  expect(mockState.routerCalls).toEqual([
-    {
-      method: 'delete',
-      path: '/articles',
-      middleware: [handler],
-    },
-  ]);
-});
+    expect(result).toBe(app);
+    expect(mockState.koaBodySpy).not.toHaveBeenCalled();
+    expect(mockState.routerCalls).toEqual([
+      {
+        method: 'delete',
+        path: '/articles',
+        middleware: [handler],
+      },
+    ]);
+  });
 
-test('registers configured routes through the routing boundary', () => {
-  const app = { use: vi.fn() } as unknown as Application;
-  const handler = vi.fn() as unknown as HttpMiddleware;
+  test('registers configured routes through the routing boundary', () => {
+    const app = { use: vi.fn() } as unknown as Application;
+    const handler = vi.fn<HttpMiddleware>();
 
-  attachRouteToTarget({ method: 'get', path: '/configured-route', options: { parseBody: false } }, handler);
+    attachRouteToTarget({ method: 'get', path: '/configured-route', options: { parseBody: false } }, handler);
 
-  const result = registerConfiguredRoutes(app, {} as KoalaConfig);
+    const result = registerConfiguredRoutes(app, {} as KoalaConfig);
 
-  expect(result).toBe(app);
-  expect(mockState.routerCalls).toEqual([
-    {
-      method: 'get',
-      path: '/configured-route',
-      middleware: [handler],
-    },
-  ]);
+    expect(result).toBe(app);
+    expect(mockState.routerCalls).toEqual([
+      {
+        method: 'get',
+        path: '/configured-route',
+        middleware: [handler],
+      },
+    ]);
+  });
 });
