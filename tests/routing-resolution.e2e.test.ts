@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
+  autoDiscoverRoutes,
   create,
   getRoutes,
   koalaDefaultConfig,
@@ -52,6 +53,10 @@ describe('Routing resolution E2E Test', () => {
       },
     } as KoalaConfig);
 
+    await autoDiscoverRoutes(app, {
+      routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+    });
+
     const response = await request(app.callback()).get('/decorator-function-route');
 
     expect(response.status).toBe(200);
@@ -65,6 +70,10 @@ describe('Routing resolution E2E Test', () => {
       },
     } as KoalaConfig);
 
+    await autoDiscoverRoutes(app, {
+      routesDir: 'tests/fixtures/route-modules/discovery-filter',
+    });
+
     const alphaResponse = await request(app.callback()).get('/alpha');
     const betaResponse = await request(app.callback()).get('/beta');
 
@@ -74,15 +83,15 @@ describe('Routing resolution E2E Test', () => {
     expect(betaResponse.body).toEqual({ ok: true, source: 'beta' });
   });
 
-  test('fails with source details when configured route modules collide', () => {
-    const createApplication = (): ReturnType<typeof create> =>
-      create({
-        routing: {
-          routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
-        },
-      } as KoalaConfig);
+  test('fails with source details when configured route modules collide', async () => {
+    const app = create({} as KoalaConfig);
 
-    expect(createApplication).toThrow(
+    const discoverRoutes = (): ReturnType<typeof autoDiscoverRoutes> =>
+      autoDiscoverRoutes(app, {
+        routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+      });
+
+    await expect(discoverRoutes).rejects.toThrow(
       /Duplicate route detected for GET \/duplicate-route: .*duplicate-a\.ts and .*duplicate-b\.ts/,
     );
   });

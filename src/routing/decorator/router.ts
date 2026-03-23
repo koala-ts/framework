@@ -58,6 +58,10 @@ export function registerConfiguredRoutes(app: Application, config: KoalaConfig):
   return registerRouteMetadata(app, resolveConfiguredRoutes(config));
 }
 
+export function registerLegacyRoutes(app: Application, config: KoalaConfig): Application {
+  return registerRouteMetadata(app, resolveConfiguredRoutes(resolveLegacyConfig(config)));
+}
+
 function createRouter(routes: RouteMetadata[]): RouterInstance {
   const router = new Router();
 
@@ -100,4 +104,12 @@ function isMethodTarget(target: object | HttpMiddleware, propertyKey?: string | 
   }
 
   return typeof (target as Record<PropertyKey, unknown>)[propertyKey] === 'function';
+}
+
+function resolveLegacyConfig(config: KoalaConfig): KoalaConfig {
+  if (config.controllers !== undefined) {
+    return { controllers: config.controllers };
+  }
+
+  return {};
 }

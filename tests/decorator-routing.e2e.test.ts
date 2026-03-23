@@ -1,7 +1,17 @@
 import { text } from 'node:stream/consumers';
 import path from 'node:path';
 import { describe, expect, test, vi } from 'vitest';
-import { createTestAgent, type HttpRequest, type HttpScope, Route, type KoalaConfig, type UploadedFile } from '../src';
+import {
+  autoDiscoverRoutes,
+  create,
+  createTestAgent,
+  createTestAgentFromApp,
+  type HttpRequest,
+  type HttpScope,
+  Route,
+  type KoalaConfig,
+  type UploadedFile,
+} from '../src';
 
 interface DecoratorRoutingRequest extends HttpRequest {
   body: { name: string };
@@ -140,9 +150,13 @@ describe('Decorator Routing E2E Test', () => {
   });
 
   test('it should dispatch function-first route modules', async () => {
-    const agent = createTestAgent({
-      routing: { routeModules: ['tests/fixtures/route-modules/function-route.ts'] },
-    } as KoalaConfig);
+    const app = create({} as KoalaConfig);
+
+    await autoDiscoverRoutes(app, {
+      routeModules: ['tests/fixtures/route-modules/function-route.ts'],
+    });
+
+    const agent = createTestAgentFromApp(app);
 
     const response = await agent.get('/decorator-function-route');
 
@@ -151,9 +165,13 @@ describe('Decorator Routing E2E Test', () => {
   });
 
   test('it should discover function-first route modules from routesDir', async () => {
-    const agent = createTestAgent({
-      routing: { routesDir: path.resolve(process.cwd(), 'tests/fixtures/route-modules/discovered-routes') },
-    } as KoalaConfig);
+    const app = create({} as KoalaConfig);
+
+    await autoDiscoverRoutes(app, {
+      routesDir: path.resolve(process.cwd(), 'tests/fixtures/route-modules/discovered-routes'),
+    });
+
+    const agent = createTestAgentFromApp(app);
 
     const response = await agent.get('/discovered-function-route');
 
@@ -162,9 +180,13 @@ describe('Decorator Routing E2E Test', () => {
   });
 
   test('it should dispatch function-first route modules declared with get sugar', async () => {
-    const agent = createTestAgent({
-      routing: { routeModules: ['tests/fixtures/route-modules/get-route.ts'] },
-    } as KoalaConfig);
+    const app = create({} as KoalaConfig);
+
+    await autoDiscoverRoutes(app, {
+      routeModules: ['tests/fixtures/route-modules/get-route.ts'],
+    });
+
+    const agent = createTestAgentFromApp(app);
 
     const response = await agent.get('/get-sugar-route');
 
@@ -173,9 +195,13 @@ describe('Decorator Routing E2E Test', () => {
   });
 
   test('it should dispatch function-first route modules declared through a route manifest', async () => {
-    const agent = createTestAgent({
-      routing: { routeManifest: 'tests/fixtures/route-modules/generated-route-manifest.ts' },
-    } as KoalaConfig);
+    const app = create({} as KoalaConfig);
+
+    await autoDiscoverRoutes(app, {
+      routeManifest: 'tests/fixtures/route-modules/generated-route-manifest.ts',
+    });
+
+    const agent = createTestAgentFromApp(app);
 
     const response = await agent.get('/decorator-function-route');
 
@@ -183,15 +209,15 @@ describe('Decorator Routing E2E Test', () => {
     expect(response.body).toEqual({ ok: true, source: 'function' });
   });
 
-  test('it should fail fast when route modules register duplicate routes', () => {
-    const createAgent = (): ReturnType<typeof createTestAgent> =>
-      createTestAgent({
-        routing: {
-          routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
-        },
-      } as KoalaConfig);
+  test('it should fail fast when route modules register duplicate routes', async () => {
+    const app = create({} as KoalaConfig);
 
-    expect(createAgent).toThrow('Duplicate route detected for GET /duplicate-route');
+    const discoverRoutes = (): ReturnType<typeof autoDiscoverRoutes> =>
+      autoDiscoverRoutes(app, {
+        routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+      });
+
+    await expect(discoverRoutes).rejects.toThrow('Duplicate route detected for GET /duplicate-route');
   });
 
   test('it should respond with allowed methods for decorated routes', async () => {
