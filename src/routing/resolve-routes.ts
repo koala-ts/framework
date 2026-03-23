@@ -1,9 +1,11 @@
+import type { Application } from '@/application/application';
 import type { Controller, KoalaConfig, RouteManifest, RouteModule, RoutingConfig } from '@/Config/types';
 import {
   getRegisteredRouteDefinitions,
   getRouteDefinitionsFromHandler,
   hasAttachedRouteMetadata,
 } from '@/routing/decorator/decorated-route';
+import { registerRouteMetadata } from '@/routing/decorator/router';
 import type { RouteMetadata } from '@/routing/decorator/route-metadata';
 import { createJiti } from 'jiti';
 import * as fs from 'node:fs';
@@ -42,6 +44,12 @@ export async function resolveDiscoveredRoutes(config: RoutingConfig): Promise<Ro
   assertNoDuplicateRoutes(routes);
 
   return routes;
+}
+
+export async function autoDiscoverRoutes(app: Application, routingConfig: RoutingConfig): Promise<Application> {
+  const routes = await resolveDiscoveredRoutes(routingConfig);
+
+  return registerRouteMetadata(app, routes);
 }
 
 function resolveControllerDefinitions(controllers: Controller[]): RouteMetadata[] {

@@ -9,7 +9,7 @@ export * from '@/Kernel';
 
 // Routing
 export * from '@/routing/decorator/route';
-export { autoDiscoverRoutes } from '@/routing/auto-discover-routes';
+export { autoDiscoverRoutes } from '@/routing/resolve-routes';
 export { getRoutes, registerRoutes } from '@/routing/decorator/router';
 export type { HttpMethod } from '@/routing/decorator/http-method';
 export type { RouteMetadata } from '@/routing/decorator/route-metadata';
