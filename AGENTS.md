@@ -29,6 +29,7 @@
 
 - Always follow AAA.
 - Each module should have an in-place unit test when unit testing is appropriate for the behavior.
+- Do not add root entrypoint export-surface tests such as `src/index.test.ts` unless the user explicitly asks for them.
 - Do not add comments like Arrange, Act, Assert.
 - Each test must have exactly three sections: Arrange, Act, Assert.
 - Separate Arrange → Act and Act → Assert with one empty line each (exactly two empty-line separators per test case).
