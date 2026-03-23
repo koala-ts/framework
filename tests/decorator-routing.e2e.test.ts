@@ -149,6 +149,16 @@ describe('Decorator Routing E2E Test', () => {
     expect(response.body).toEqual({ ok: true });
   });
 
+  test('it should not auto discover function-first route modules through the sync test agent', async () => {
+    const agent = createTestAgent({
+      routing: { routeModules: ['tests/fixtures/route-modules/function-route.ts'] },
+    } as KoalaConfig);
+
+    const response = await agent.get('/decorator-function-route');
+
+    expect(response.status).toBe(404);
+  });
+
   test('it should dispatch function-first route modules', async () => {
     const app = create({} as KoalaConfig);
 

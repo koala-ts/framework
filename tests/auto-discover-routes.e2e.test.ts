@@ -3,6 +3,18 @@ import { describe, expect, test } from 'vitest';
 import { autoDiscoverRoutes, create, type KoalaConfig } from '../src';
 
 describe('Auto discover routes', () => {
+  test('does not discover routes during sync app creation', async () => {
+    const app = create({
+      routing: {
+        routeModules: ['tests/fixtures/route-modules/function-route.ts'],
+      },
+    } as KoalaConfig);
+
+    const response = await request(app.callback()).get('/decorator-function-route');
+
+    expect(response.status).toBe(404);
+  });
+
   test('discovers route modules from explicit route modules config', async () => {
     const app = create({} as KoalaConfig);
     await autoDiscoverRoutes(app, {
