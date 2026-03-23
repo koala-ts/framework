@@ -1,5 +1,6 @@
 import type { HttpMiddleware } from '@/Http';
 import type { RouteMetadata } from '@/routing/decorator/route-metadata';
+import type { RouteDefinition } from './route-definition';
 import { expect, test, vi } from 'vitest';
 import { toRouteDefinition, toRouteMetadata } from './route-definition';
 
@@ -32,9 +33,9 @@ test('converts route metadata into a route definition', () => {
 test('converts a route definition back into route metadata', () => {
   const handler = vi.fn() as unknown as HttpMiddleware;
   const middleware = [vi.fn() as unknown as HttpMiddleware];
-  const route = {
+  const route: RouteDefinition = {
     path: '/articles',
-    methods: ['get'] as const,
+    methods: ['get'],
     handler,
     parseBody: true,
     middleware,

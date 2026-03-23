@@ -105,8 +105,9 @@ describe('createRouteDecorator', () => {
     }
 
     const decorate = createRouteDecorator({ method: 'get', path: '/articles' });
+    const descriptor = Object.getOwnPropertyDescriptor(ArticlesController.prototype, 'list')!;
 
-    const result = decorate(ArticlesController.prototype, 'list');
+    const result = decorate(ArticlesController.prototype, 'list', descriptor);
 
     expect(result).toBeUndefined();
   });
