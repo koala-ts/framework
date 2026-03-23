@@ -18,21 +18,15 @@ const importRouteModule = createJiti(import.meta.url, {
   moduleCache: true,
 });
 
-type RouteSource =
-  | { kind: 'controllers'; controllers: Controller[] }
+type DiscoverySource =
   | { kind: 'route-modules'; routeModules: RouteModule[] }
   | { kind: 'route-manifest'; routeManifest: RouteManifest }
   | { kind: 'routes-dir'; routesDir: string }
   | { kind: 'registered' };
 
 export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
-  const routingConfig = resolveRoutingConfig(config);
   const controllers = config.controllers ?? [];
-
-  assertValidRoutingConfig(routingConfig, controllers);
-
-  const source = selectRouteSource(routingConfig, controllers);
-  const routes = resolveRoutesFromSource(source);
+  const routes = controllers.length > 0 ? resolveControllerDefinitions(controllers) : getRegisteredRouteDefinitions();
 
   assertNoDuplicateRoutes(routes);
 
@@ -40,41 +34,14 @@ export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
 }
 
 export async function resolveDiscoveredRoutes(config: RoutingConfig): Promise<RouteMetadata[]> {
-  assertValidRoutingConfig(config, []);
+  assertValidDiscoveryConfig(config);
 
-  const source = selectRouteSource(config, []);
-  const routes = await resolveDiscoveredRoutesFromSource(source);
+  const source = selectDiscoverySource(config);
+  const routes = await resolveRoutesFromDiscoverySource(source);
 
   assertNoDuplicateRoutes(routes);
 
   return routes;
-}
-
-function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteMetadata[] {
-  const routes: RouteMetadata[] = [];
-
-  for (const routeModule of routeModules) {
-    const modulePath = resolveModulePath(routeModule);
-    const exports = importRouteModule(modulePath) as Record<string, unknown>;
-
-    routes.push(...extractRouteModuleDefinitions(exports, modulePath));
-  }
-
-  return routes;
-}
-
-function resolveRouteManifest(routeManifest: RouteManifest): RouteModule[] {
-  const manifestPath = resolveModulePath(routeManifest);
-
-  if (!fs.existsSync(manifestPath)) {
-    throw new Error(`Route manifest does not exist: ${manifestPath}`);
-  }
-
-  const manifestExports = importRouteModule(manifestPath) as Record<string, unknown>;
-  const manifestRouteModules = extractRouteManifestModules(manifestExports, manifestPath);
-  const manifestDirectory = path.dirname(manifestPath);
-
-  return manifestRouteModules.map(routeModule => resolveModulePath(routeModule, manifestDirectory));
 }
 
 function resolveControllerDefinitions(controllers: Controller[]): RouteMetadata[] {
@@ -170,30 +137,19 @@ function isSupportedRouteModule(filePath: string): boolean {
   return supportedRouteModuleExtensions.has(path.extname(filePath));
 }
 
-function resolveRoutingConfig(config: KoalaConfig): RoutingConfig {
-  return config.routing ?? {};
-}
-
-function assertValidRoutingConfig(config: RoutingConfig, controllers: Controller[]): void {
+function assertValidDiscoveryConfig(config: RoutingConfig): void {
   const configuredSources = [
-    controllers.length > 0 ? 'controllers' : undefined,
     config.routeModules !== undefined ? 'routeModules' : undefined,
     config.routesDir !== undefined ? 'routesDir' : undefined,
     config.routeManifest !== undefined ? 'routeManifest' : undefined,
   ].filter((source): source is string => source !== undefined);
 
   if (configuredSources.length > 1) {
-    throw new Error(
-      'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
-    );
+    throw new Error('Invalid routing configuration: choose only one of routeModules, routesDir, or routeManifest.');
   }
 }
 
-function selectRouteSource(config: RoutingConfig, controllers: Controller[]): RouteSource {
-  if (controllers.length > 0) {
-    return { kind: 'controllers', controllers };
-  }
-
+function selectDiscoverySource(config: RoutingConfig): DiscoverySource {
   if (config.routeModules !== undefined) {
     return { kind: 'route-modules', routeModules: config.routeModules };
   }
@@ -209,25 +165,8 @@ function selectRouteSource(config: RoutingConfig, controllers: Controller[]): Ro
   return { kind: 'registered' };
 }
 
-function resolveRoutesFromSource(source: RouteSource): RouteMetadata[] {
+async function resolveRoutesFromDiscoverySource(source: DiscoverySource): Promise<RouteMetadata[]> {
   switch (source.kind) {
-    case 'controllers':
-      return resolveControllerDefinitions(source.controllers);
-    case 'route-modules':
-      return resolveRouteModuleDefinitions(source.routeModules);
-    case 'route-manifest':
-      return resolveRouteModuleDefinitions(resolveRouteManifest(source.routeManifest));
-    case 'routes-dir':
-      return resolveRouteModuleDefinitions(discoverRouteModules(source.routesDir));
-    case 'registered':
-      return getRegisteredRouteDefinitions();
-  }
-}
-
-async function resolveDiscoveredRoutesFromSource(source: RouteSource): Promise<RouteMetadata[]> {
-  switch (source.kind) {
-    case 'controllers':
-      return resolveControllerDefinitions(source.controllers);
     case 'route-modules':
       return await resolveAsyncRouteModuleDefinitions(source.routeModules);
     case 'route-manifest':

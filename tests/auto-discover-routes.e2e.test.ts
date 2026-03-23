@@ -48,7 +48,7 @@ describe('Auto discover routes', () => {
       });
 
     await expect(discoverRoutes).rejects.toThrow(
-      'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+      'Invalid routing configuration: choose only one of routeModules, routesDir, or routeManifest.',
     );
   });
 

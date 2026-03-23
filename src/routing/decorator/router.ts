@@ -54,10 +54,6 @@ export function registerRouteMetadata(app: Application, routes: RouteMetadata[])
   return app;
 }
 
-export function registerConfiguredRoutes(app: Application, config: KoalaConfig): Application {
-  return registerRouteMetadata(app, resolveConfiguredRoutes(config));
-}
-
 export function registerLegacyRoutes(app: Application, config: KoalaConfig): Application {
   return registerRouteMetadata(app, resolveConfiguredRoutes(resolveLegacyConfig(config)));
 }
