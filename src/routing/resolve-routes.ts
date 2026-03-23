@@ -4,6 +4,11 @@ import {
   getRouteDefinitionsFromHandler,
   hasAttachedRouteMetadata,
 } from '@/routing/decorator/decorated-route';
+import {
+  assertValidDiscoveryConfig,
+  selectDiscoverySource,
+  type DiscoverySource,
+} from '@/routing/discovery/discovery-config';
 import type { RouteMetadata } from '@/routing/decorator/route-metadata';
 import { createJiti } from 'jiti';
 import * as fs from 'node:fs';
@@ -17,12 +22,6 @@ const importRouteModule = createJiti(import.meta.url, {
   interopDefault: false,
   moduleCache: true,
 });
-
-type DiscoverySource =
-  | { kind: 'route-modules'; routeModules: RouteModule[] }
-  | { kind: 'route-manifest'; routeManifest: RouteManifest }
-  | { kind: 'routes-dir'; routesDir: string }
-  | { kind: 'registered' };
 
 export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
   const controllers = config.controllers ?? [];
@@ -135,34 +134,6 @@ function isSupportedRouteModule(filePath: string): boolean {
   }
 
   return supportedRouteModuleExtensions.has(path.extname(filePath));
-}
-
-function assertValidDiscoveryConfig(config: RoutingConfig): void {
-  const configuredSources = [
-    config.routeModules !== undefined ? 'routeModules' : undefined,
-    config.routesDir !== undefined ? 'routesDir' : undefined,
-    config.routeManifest !== undefined ? 'routeManifest' : undefined,
-  ].filter((source): source is string => source !== undefined);
-
-  if (configuredSources.length > 1) {
-    throw new Error('Invalid routing configuration: choose only one of routeModules, routesDir, or routeManifest.');
-  }
-}
-
-function selectDiscoverySource(config: RoutingConfig): DiscoverySource {
-  if (config.routeModules !== undefined) {
-    return { kind: 'route-modules', routeModules: config.routeModules };
-  }
-
-  if (config.routeManifest !== undefined) {
-    return { kind: 'route-manifest', routeManifest: config.routeManifest };
-  }
-
-  if (config.routesDir !== undefined) {
-    return { kind: 'routes-dir', routesDir: config.routesDir };
-  }
-
-  return { kind: 'registered' };
 }
 
 async function resolveRoutesFromDiscoverySource(source: DiscoverySource): Promise<RouteMetadata[]> {
