@@ -1,6 +1,6 @@
 import type { HttpMiddleware } from '@/Http';
+import type { RouteDefinition } from '@/routing/route-definition';
 import type { HttpMethod } from './http-method';
-import type { RouteMetadata } from './route-metadata';
 import type { RouteOptions } from './route-options';
 import type { Route } from './route';
 import type { RouterMethod } from './router-method';
@@ -13,7 +13,7 @@ interface AttachedRouteMetadata {
   methods: RouterMethod[];
   parseBody: boolean;
   middleware: HttpMiddleware[];
-  bodyOptions: RouteMetadata['bodyOptions'];
+  bodyOptions: RouteDefinition['bodyOptions'];
 }
 
 type DecoratedRouteHandler = HttpMiddleware & {
@@ -34,8 +34,8 @@ export function attachRouteToTarget(route: Route, target: unknown, propertyKey?:
   return attachRouteMetadata(handler, route);
 }
 
-export function getRegisteredRouteMetadata(): RouteMetadata[] {
-  const routes: RouteMetadata[] = [];
+export function getRegisteredRouteDefinitions(): RouteDefinition[] {
+  const routes: RouteDefinition[] = [];
 
   for (const handler of getRegisteredHandlers()) {
     routes.push(...getRouteDefinitionsFromHandler(handler));
@@ -44,7 +44,7 @@ export function getRegisteredRouteMetadata(): RouteMetadata[] {
   return routes;
 }
 
-export function getRouteDefinitionsFromHandler(handler: unknown, source?: string): RouteMetadata[] {
+export function getRouteDefinitionsFromHandler(handler: unknown, source?: string): RouteDefinition[] {
   if (typeof handler !== 'function') {
     return [];
   }
@@ -109,10 +109,10 @@ function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
   });
 }
 
-function extractBodyOptions(options: RouteOptions): RouteMetadata['bodyOptions'] {
+function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
 
-  return bodyOptions as RouteMetadata['bodyOptions'];
+  return bodyOptions as RouteDefinition['bodyOptions'];
 }
 
 function resolveRouteHandler(target: unknown, propertyKey?: string | symbol): HttpMiddleware | undefined {

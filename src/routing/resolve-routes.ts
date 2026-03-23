@@ -3,11 +3,11 @@ import * as path from 'node:path';
 import { createJiti } from 'jiti';
 import type { Controller, KoalaConfig, RouteModule } from '@/Config';
 import {
-  getRegisteredRouteMetadata,
+  getRegisteredRouteDefinitions,
   getRouteDefinitionsFromHandler,
   hasAttachedRouteMetadata,
 } from '@/routing/decorator/decorated-route';
-import type { RouteMetadata } from '@/routing/decorator/route-metadata';
+import type { RouteDefinition } from '@/routing/route-definition';
 
 const supportedRouteModuleExtensions = new Set(['.js', '.mjs', '.cjs', '.ts', '.mts', '.cts']);
 const importRouteModule = createJiti(import.meta.url, {
@@ -18,7 +18,7 @@ const importRouteModule = createJiti(import.meta.url, {
   moduleCache: true,
 });
 
-export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
+export function resolveConfiguredRoutes(config: KoalaConfig): RouteDefinition[] {
   const routeModules = [...(config.routeModules ?? []), ...discoverRouteModules(config.routesDir)];
   const controllers = config.controllers ?? [];
   const routes = [...resolveRouteModuleDefinitions(routeModules), ...resolveControllerDefinitions(controllers)];
@@ -27,11 +27,11 @@ export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
     return assertNoDuplicateRoutes(routes);
   }
 
-  return assertNoDuplicateRoutes(getRegisteredRouteMetadata());
+  return assertNoDuplicateRoutes(getRegisteredRouteDefinitions());
 }
 
-function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteMetadata[] {
-  const routes: RouteMetadata[] = [];
+function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteDefinition[] {
+  const routes: RouteDefinition[] = [];
 
   for (const routeModule of routeModules) {
     const modulePath = resolveModulePath(routeModule);
@@ -43,8 +43,8 @@ function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteMetada
   return routes;
 }
 
-function resolveControllerDefinitions(controllers: Controller[]): RouteMetadata[] {
-  const routes: RouteMetadata[] = [];
+function resolveControllerDefinitions(controllers: Controller[]): RouteDefinition[] {
+  const routes: RouteDefinition[] = [];
 
   for (const controller of controllers) {
     const prototype = controller.prototype as Record<string, unknown> | undefined;
@@ -65,8 +65,8 @@ function resolveControllerDefinitions(controllers: Controller[]): RouteMetadata[
   return routes;
 }
 
-function extractRouteModuleDefinitions(exports: Record<string, unknown>, source: string): RouteMetadata[] {
-  const routes: RouteMetadata[] = [];
+function extractRouteModuleDefinitions(exports: Record<string, unknown>, source: string): RouteDefinition[] {
+  const routes: RouteDefinition[] = [];
 
   for (const exportedValue of Object.values(exports)) {
     if (!hasAttachedRouteMetadata(exportedValue)) {
@@ -134,7 +134,7 @@ function resolveModulePath(modulePath: string): string {
   return path.isAbsolute(modulePath) ? modulePath : path.resolve(process.cwd(), modulePath);
 }
 
-function assertNoDuplicateRoutes(routes: RouteMetadata[]): RouteMetadata[] {
+function assertNoDuplicateRoutes(routes: RouteDefinition[]): RouteDefinition[] {
   const signatures = new Map<string, string | undefined>();
 
   for (const route of routes) {

@@ -1,6 +1,7 @@
 import { type Application } from '@/application/application';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
-import { attachRouteToTarget, getRegisteredRouteMetadata } from '@/routing/decorator/decorated-route';
+import { attachRouteToTarget, getRegisteredRouteDefinitions } from '@/routing/decorator/decorated-route';
+import { toRouteDefinition, toRouteMetadata, type RouteDefinition } from '@/routing/route-definition';
 import { koaBody } from 'koa-body';
 import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
 import Router, { type RouterInstance } from '@koa/router';
@@ -11,7 +12,7 @@ import type { RouterMethod } from './router-method';
 interface RouteRegistration {
   method: RouterMethod;
   path: string;
-  middleware: Array<RouteMetadata['middleware'][number] | RouteMetadata['handler']>;
+  middleware: Array<RouteDefinition['middleware'][number] | RouteDefinition['handler']>;
 }
 
 type RouteDecorator = MethodDecorator & (<T extends HttpMiddleware>(handler: T) => T);
@@ -33,10 +34,14 @@ export function createRouteDecorator(route: Route): RouteDecorator {
 }
 
 export function getRoutes(): RouteMetadata[] {
-  return getRegisteredRouteMetadata();
+  return getRegisteredRouteDefinitions().map(toRouteMetadata);
 }
 
 export function registerRoutes(app: Application, routes: RouteMetadata[] = getRoutes()): Application {
+  return registerRouteDefinitions(app, routes.map(toRouteDefinition));
+}
+
+export function registerRouteDefinitions(app: Application, routes: RouteDefinition[]): Application {
   const router = createRouter(routes);
 
   app.use(router.routes() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
@@ -45,7 +50,7 @@ export function registerRoutes(app: Application, routes: RouteMetadata[] = getRo
   return app;
 }
 
-function createRouter(routes: RouteMetadata[]): RouterInstance {
+function createRouter(routes: RouteDefinition[]): RouterInstance {
   const router = new Router();
 
   for (const route of normalizeRoutes(routes)) {
@@ -55,7 +60,7 @@ function createRouter(routes: RouteMetadata[]): RouterInstance {
   return router;
 }
 
-function normalizeRoutes(routes: RouteMetadata[]): RouteRegistration[] {
+function normalizeRoutes(routes: RouteDefinition[]): RouteRegistration[] {
   const registrations: RouteRegistration[] = [];
 
   for (const route of routes) {
@@ -65,7 +70,7 @@ function normalizeRoutes(routes: RouteMetadata[]): RouteRegistration[] {
   return registrations;
 }
 
-function normalizeRoute(route: RouteMetadata): RouteRegistration[] {
+function normalizeRoute(route: RouteDefinition): RouteRegistration[] {
   const middleware = resolveRouteMiddleware(route);
 
   return route.methods.map(method => ({
@@ -75,7 +80,7 @@ function normalizeRoute(route: RouteMetadata): RouteRegistration[] {
   }));
 }
 
-function resolveRouteMiddleware(route: RouteMetadata): RouteRegistration['middleware'] {
+function resolveRouteMiddleware(route: RouteDefinition): RouteRegistration['middleware'] {
   const middlewareStack = [...route.middleware, route.handler];
 
   return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
