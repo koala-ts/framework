@@ -1,6 +1,3 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { createJiti } from 'jiti';
 import type { Controller, KoalaConfig, RouteManifest, RouteModule, RoutingConfig } from '@/Config/types';
 import {
   getRegisteredRouteDefinitions,
@@ -8,6 +5,9 @@ import {
   hasAttachedRouteMetadata,
 } from '@/routing/decorator/decorated-route';
 import type { RouteMetadata } from '@/routing/decorator/route-metadata';
+import { createJiti } from 'jiti';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 const supportedRouteModuleExtensions = new Set(['.js', '.mjs', '.cjs', '.ts', '.mts', '.cts']);
 const importRouteModule = createJiti(import.meta.url, {
@@ -30,10 +30,13 @@ export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
   const controllers = config.controllers ?? [];
 
   assertValidRoutingConfig(routingConfig, controllers);
+
   const source = selectRouteSource(routingConfig, controllers);
   const routes = resolveRoutesFromSource(source);
 
-  return assertNoDuplicateRoutes(routes);
+  assertNoDuplicateRoutes(routes);
+
+  return routes;
 }
 
 function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteMetadata[] {
@@ -214,7 +217,7 @@ function resolveModulePath(modulePath: string, baseDirectory: string = process.c
   return path.isAbsolute(modulePath) ? modulePath : path.resolve(baseDirectory, modulePath);
 }
 
-function assertNoDuplicateRoutes(routes: RouteMetadata[]): RouteMetadata[] {
+function assertNoDuplicateRoutes(routes: RouteMetadata[]): void {
   const signatures = new Map<string, string | undefined>();
 
   for (const route of routes) {
@@ -228,8 +231,6 @@ function assertNoDuplicateRoutes(routes: RouteMetadata[]): RouteMetadata[] {
       signatures.set(signature, route.source);
     }
   }
-
-  return routes;
 }
 
 function buildDuplicateRouteMessage(
