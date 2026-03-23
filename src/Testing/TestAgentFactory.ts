@@ -7,7 +7,7 @@ import supertest from 'supertest';
 import { type TestAgent } from './types';
 
 export function createTestAgent(config: KoalaConfig, agentConfig?: { actAs?: User }): TestAgent {
-  return createTestAgentFromApp(create(createTestConfig(config, agentConfig)));
+  return createTestAgentFromApp(create(createLegacyTestConfig(config, agentConfig)));
 }
 
 export function createTestAgentFromApp(app: Application, agentConfig?: { actAs?: User }): TestAgent {
@@ -20,9 +20,14 @@ export function createTestAgentFromApp(app: Application, agentConfig?: { actAs?:
   return supertest(app.callback());
 }
 
-function createTestConfig(config: KoalaConfig, agentConfig?: { actAs?: User }): KoalaConfig {
+function createLegacyTestConfig(config: KoalaConfig, agentConfig?: { actAs?: User }): KoalaConfig {
   const globalMiddleware = config.globalMiddleware ?? [];
-  const testConfig = { ...config };
+  const testConfig: KoalaConfig = {
+    controllers: config.controllers,
+    globalMiddleware,
+    staticFiles: config.staticFiles,
+    eventSubscribers: config.eventSubscribers,
+  };
 
   const { actAs } = agentConfig ?? {};
 
