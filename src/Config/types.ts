@@ -6,7 +6,14 @@ export type Controller = new (...args: unknown[]) => unknown;
 export type RouteModule = string;
 export type RouteManifest = string;
 
+export interface RoutingConfig {
+  routeModules?: RouteModule[];
+  routesDir?: string;
+  routeManifest?: RouteManifest;
+}
+
 export interface KoalaConfig {
+  routing?: RoutingConfig;
   controllers?: Controller[];
   routeModules?: RouteModule[];
   routesDir?: string;

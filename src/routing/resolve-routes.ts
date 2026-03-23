@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { createJiti } from 'jiti';
-import type { Controller, KoalaConfig, RouteManifest, RouteModule } from '@/Config';
+import type { Controller, KoalaConfig, RouteManifest, RouteModule, RoutingConfig } from '@/Config/types';
 import {
   getRegisteredRouteDefinitions,
   getRouteDefinitionsFromHandler,
@@ -19,21 +19,22 @@ const importRouteModule = createJiti(import.meta.url, {
 });
 
 export function resolveConfiguredRoutes(config: KoalaConfig): RouteDefinition[] {
-  const configuredRouteModules = config.routeModules ?? [];
-  const discoveredRouteModules = resolveConfiguredRouteModules(config);
+  const routingConfig = resolveRoutingConfig(config);
+  const configuredRouteModules = routingConfig.routeModules ?? [];
+  const discoveredRouteModules = resolveConfiguredRouteModules(routingConfig);
   const controllers = config.controllers ?? [];
   const routeModuleDefinitions = resolveRouteModuleDefinitions([...configuredRouteModules, ...discoveredRouteModules]);
   const controllerDefinitions = resolveControllerDefinitions(controllers);
   const routes = [...routeModuleDefinitions, ...controllerDefinitions];
 
-  if (hasExplicitRouteSources(config)) {
+  if (hasExplicitRouteSources(routingConfig, controllers)) {
     return assertNoDuplicateRoutes(routes);
   }
 
   return assertNoDuplicateRoutes(getRegisteredRouteDefinitions());
 }
 
-function resolveConfiguredRouteModules(config: KoalaConfig): RouteModule[] {
+function resolveConfiguredRouteModules(config: RoutingConfig): RouteModule[] {
   if (config.routeManifest !== undefined) {
     return resolveRouteManifest(config.routeManifest);
   }
@@ -161,13 +162,21 @@ function isSupportedRouteModule(filePath: string): boolean {
   return supportedRouteModuleExtensions.has(path.extname(filePath));
 }
 
-function hasExplicitRouteSources(config: KoalaConfig): boolean {
+function hasExplicitRouteSources(config: RoutingConfig, controllers: Controller[]): boolean {
   return (
     (config.routeModules?.length ?? 0) > 0 ||
     config.routeManifest !== undefined ||
     config.routesDir !== undefined ||
-    (config.controllers?.length ?? 0) > 0
+    controllers.length > 0
   );
+}
+
+function resolveRoutingConfig(config: KoalaConfig): RoutingConfig {
+  return {
+    routeManifest: config.routing?.routeManifest ?? config.routeManifest,
+    routeModules: config.routing?.routeModules ?? config.routeModules,
+    routesDir: config.routing?.routesDir ?? config.routesDir,
+  };
 }
 
 function resolveModulePath(modulePath: string, baseDirectory: string = process.cwd()): string {

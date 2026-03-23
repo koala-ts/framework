@@ -44,7 +44,9 @@ test('creates an application from globally registered routes when config is empt
 
 test('creates an application from a default route manifest', async () => {
   const app = create({
-    routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+    routing: {
+      routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+    },
   } as KoalaConfig);
   const response = await request(app.callback()).get('/decorator-function-route');
 
@@ -54,7 +56,9 @@ test('creates an application from a default route manifest', async () => {
 
 test('discovers nested routes and ignores test and type files', async () => {
   const app = create({
-    routesDir: 'tests/fixtures/route-modules/discovery-filter',
+    routing: {
+      routesDir: 'tests/fixtures/route-modules/discovery-filter',
+    },
   } as KoalaConfig);
 
   const alphaResponse = await request(app.callback()).get('/alpha');
@@ -69,7 +73,9 @@ test('discovers nested routes and ignores test and type files', async () => {
 test('fails with source details when configured route modules collide', () => {
   const createApplication = (): ReturnType<typeof create> =>
     create({
-      routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+      routing: {
+        routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+      },
     } as KoalaConfig);
 
   expect(createApplication).toThrowError(

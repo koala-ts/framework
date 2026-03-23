@@ -141,7 +141,7 @@ describe('Decorator Routing E2E Test', () => {
 
   test('it should dispatch function-first route modules', async () => {
     const agent = createTestAgent({
-      routeModules: ['tests/fixtures/route-modules/function-route.ts'],
+      routing: { routeModules: ['tests/fixtures/route-modules/function-route.ts'] },
     } as KoalaConfig);
 
     const response = await agent.get('/decorator-function-route');
@@ -152,7 +152,7 @@ describe('Decorator Routing E2E Test', () => {
 
   test('it should discover function-first route modules from routesDir', async () => {
     const agent = createTestAgent({
-      routesDir: path.resolve(process.cwd(), 'tests/fixtures/route-modules/discovered-routes'),
+      routing: { routesDir: path.resolve(process.cwd(), 'tests/fixtures/route-modules/discovered-routes') },
     } as KoalaConfig);
 
     const response = await agent.get('/discovered-function-route');
@@ -163,7 +163,7 @@ describe('Decorator Routing E2E Test', () => {
 
   test('it should dispatch function-first route modules declared with get sugar', async () => {
     const agent = createTestAgent({
-      routeModules: ['tests/fixtures/route-modules/get-route.ts'],
+      routing: { routeModules: ['tests/fixtures/route-modules/get-route.ts'] },
     } as KoalaConfig);
 
     const response = await agent.get('/get-sugar-route');
@@ -174,7 +174,7 @@ describe('Decorator Routing E2E Test', () => {
 
   test('it should dispatch function-first route modules declared through a route manifest', async () => {
     const agent = createTestAgent({
-      routeManifest: 'tests/fixtures/route-modules/generated-route-manifest.ts',
+      routing: { routeManifest: 'tests/fixtures/route-modules/generated-route-manifest.ts' },
     } as KoalaConfig);
 
     const response = await agent.get('/decorator-function-route');
@@ -186,7 +186,9 @@ describe('Decorator Routing E2E Test', () => {
   test('it should fail fast when route modules register duplicate routes', () => {
     const createAgent = (): ReturnType<typeof createTestAgent> =>
       createTestAgent({
-        routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+        routing: {
+          routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+        },
       } as KoalaConfig);
 
     expect(createAgent).toThrowError('Duplicate route detected for GET /duplicate-route');
