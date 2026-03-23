@@ -1,6 +1,15 @@
 import request from 'supertest';
 import { beforeEach, expect, test, vi } from 'vitest';
-import { create, getRoutes, koalaDefaultConfig, registerRoutes, Route, type HttpMiddleware, type HttpScope, type KoalaConfig } from '../src';
+import {
+  create,
+  getRoutes,
+  koalaDefaultConfig,
+  registerRoutes,
+  Route,
+  type HttpMiddleware,
+  type HttpScope,
+  type KoalaConfig,
+} from '../src';
 
 const routeRegistryKey = Symbol.for('@koala-ts/framework/route-registry');
 
@@ -63,12 +72,18 @@ test('fails with source details when configured route modules collide', () => {
       routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
     } as KoalaConfig);
 
-  expect(createApplication).toThrowError(/Duplicate route detected for GET \/duplicate-route: .*duplicate-a\.ts and .*duplicate-b\.ts/);
+  expect(createApplication).toThrowError(
+    /Duplicate route detected for GET \/duplicate-route: .*duplicate-a\.ts and .*duplicate-b\.ts/,
+  );
 });
 
 test('fails without source details when registered routes collide', () => {
-  Route({ method: 'get', path: '/duplicate-fallback', options: { parseBody: false } })(vi.fn() as unknown as HttpMiddleware);
-  Route({ method: 'get', path: '/duplicate-fallback', options: { parseBody: false } })(vi.fn() as unknown as HttpMiddleware);
+  Route({ method: 'get', path: '/duplicate-fallback', options: { parseBody: false } })(
+    vi.fn() as unknown as HttpMiddleware,
+  );
+  Route({ method: 'get', path: '/duplicate-fallback', options: { parseBody: false } })(
+    vi.fn() as unknown as HttpMiddleware,
+  );
 
   const createApplication = (): ReturnType<typeof create> => create({} as KoalaConfig);
 
