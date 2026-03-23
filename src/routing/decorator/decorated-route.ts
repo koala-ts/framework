@@ -1,0 +1,128 @@
+import type { HttpMiddleware } from '@/Http';
+import type { HttpMethod } from './http-method';
+import type { RouteMetadata } from './route-metadata';
+import type { RouteOptions } from './route-options';
+import type { Route } from './route';
+import type { RouterMethod } from './router-method';
+
+const routeMetadataKey = Symbol.for('@koala-ts/framework/route-metadata');
+const routeRegistryKey = Symbol.for('@koala-ts/framework/route-registry');
+
+interface AttachedRouteMetadata {
+  path: string;
+  methods: RouterMethod[];
+  parseBody: boolean;
+  middleware: HttpMiddleware[];
+  bodyOptions: RouteMetadata['bodyOptions'];
+}
+
+type DecoratedRouteHandler = HttpMiddleware & {
+  [routeMetadataKey]?: AttachedRouteMetadata[];
+};
+
+type RouteGlobal = typeof globalThis & {
+  [routeRegistryKey]?: Set<HttpMiddleware>;
+};
+
+export function attachRouteToTarget(route: Route, target: unknown, propertyKey?: string | symbol): HttpMiddleware {
+  const handler = resolveRouteHandler(target, propertyKey);
+
+  if (handler === undefined) {
+    throw new TypeError('Route decorator can only be applied to functions or methods.');
+  }
+
+  return attachRouteMetadata(handler, route);
+}
+
+export function getRegisteredRouteMetadata(): RouteMetadata[] {
+  const routes: RouteMetadata[] = [];
+
+  for (const handler of getRegisteredHandlers()) {
+    routes.push(...getRouteDefinitionsFromHandler(handler));
+  }
+
+  return routes;
+}
+
+export function getRouteDefinitionsFromHandler(handler: unknown, source?: string): RouteMetadata[] {
+  if (typeof handler !== 'function') {
+    return [];
+  }
+
+  const routeHandler = handler as HttpMiddleware;
+
+  return getAttachedRouteMetadata(handler).map(route => ({
+    ...route,
+    handler: routeHandler,
+    source,
+  }));
+}
+
+export function hasAttachedRouteMetadata(handler: unknown): handler is HttpMiddleware {
+  return getAttachedRouteMetadata(handler).length > 0;
+}
+
+function attachRouteMetadata(handler: HttpMiddleware, route: Route): HttpMiddleware {
+  const decoratedHandler = handler as DecoratedRouteHandler;
+
+  decoratedHandler[routeMetadataKey] = [...getAttachedRouteMetadata(handler), createAttachedRouteMetadata(route)];
+  getRegisteredHandlers().add(handler);
+
+  return handler;
+}
+
+function getAttachedRouteMetadata(handler: unknown): AttachedRouteMetadata[] {
+  if (typeof handler !== 'function') {
+    return [];
+  }
+
+  const decoratedHandler = handler as DecoratedRouteHandler;
+
+  return decoratedHandler[routeMetadataKey] ?? [];
+}
+
+function getRegisteredHandlers(): Set<HttpMiddleware> {
+  const routeGlobal = globalThis as RouteGlobal;
+
+  routeGlobal[routeRegistryKey] ??= new Set<HttpMiddleware>();
+
+  return routeGlobal[routeRegistryKey];
+}
+
+function createAttachedRouteMetadata({ method, path, middleware = [], options = {} }: Route): AttachedRouteMetadata {
+  return {
+    path,
+    methods: qualifyMethod(method),
+    parseBody: options.parseBody ?? true,
+    middleware,
+    bodyOptions: extractBodyOptions(options),
+  };
+}
+
+function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
+  const methods = Array.isArray(method) ? method : [method];
+
+  return methods.map(currentMethod => {
+    const normalizedMethod = currentMethod.toLowerCase() as RouterMethod;
+
+    return ['any', 'all'].includes(normalizedMethod) ? 'all' : normalizedMethod;
+  });
+}
+
+function extractBodyOptions(options: RouteOptions): RouteMetadata['bodyOptions'] {
+  const { parseBody: _parseBody, ...bodyOptions } = options;
+
+  return bodyOptions as RouteMetadata['bodyOptions'];
+}
+
+function resolveRouteHandler(target: unknown, propertyKey?: string | symbol): HttpMiddleware | undefined {
+  if (propertyKey !== undefined && target !== null && target !== undefined) {
+    const candidate = (target as Record<PropertyKey, unknown>)[propertyKey];
+
+    if (typeof candidate === 'function') {
+      return candidate as HttpMiddleware;
+    }
+  }
+
+  return typeof target === 'function' ? (target as HttpMiddleware) : undefined;
+}

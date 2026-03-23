@@ -9,4 +9,5 @@ export interface RouteMetadata {
   parseBody: boolean;
   middleware: HttpMiddleware[];
   bodyOptions: Partial<RouteOptions>;
+  source?: string;
 }

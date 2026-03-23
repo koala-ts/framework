@@ -1,4 +1,5 @@
 import { text } from 'node:stream/consumers';
+import path from 'node:path';
 import { describe, expect, test, vi } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, Route, type KoalaConfig, type UploadedFile } from '../src';
 
@@ -138,22 +139,35 @@ describe('Decorator Routing E2E Test', () => {
     expect(response.body).toEqual({ ok: true });
   });
 
-  test('it should dispatch decorated function handlers', async () => {
-    const handler = vi.fn((scope: HttpScope) => {
-      scope.response.body = { ok: true, source: 'function' };
-    });
-
-    Route({ method: 'get', path: '/decorator-function-route', options: { parseBody: false } })(handler, 'handler', {});
-
+  test('it should dispatch function-first route modules', async () => {
     const agent = createTestAgent({
-      controllers: [],
+      routeModules: ['tests/fixtures/route-modules/function-route.ts'],
     } as KoalaConfig);
 
     const response = await agent.get('/decorator-function-route');
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ ok: true, source: 'function' });
-    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  test('it should discover function-first route modules from routesDir', async () => {
+    const agent = createTestAgent({
+      routesDir: path.resolve(process.cwd(), 'tests/fixtures/route-modules/discovered-routes'),
+    } as KoalaConfig);
+
+    const response = await agent.get('/discovered-function-route');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ ok: true, source: 'routesDir' });
+  });
+
+  test('it should fail fast when route modules register duplicate routes', () => {
+    const createAgent = (): ReturnType<typeof createTestAgent> =>
+      createTestAgent({
+        routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+      } as KoalaConfig);
+
+    expect(createAgent).toThrowError('Duplicate route detected for GET /duplicate-route');
   });
 
   test('it should respond with allowed methods for decorated routes', async () => {

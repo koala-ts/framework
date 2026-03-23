@@ -4,6 +4,7 @@ import { serveStaticFiles } from '@/Http/Files';
 import { applyConfiguredGlobalMiddleware } from '@/Http/middleware/apply-configured-global-middleware';
 import { initializeRequestScopeStorage } from '@/Http/Scope/request-scope-storage';
 import { registerEventSubscribers } from '@/Kernel';
+import { resolveConfiguredRoutes } from '@/routing/resolve-routes';
 import { registerRoutes } from '@/routing/decorator/router';
 import Koa from 'koa';
 import { type Application } from './application';
@@ -16,7 +17,7 @@ export function create(config: KoalaConfig): Application {
   app.use(applyConfiguredGlobalMiddleware(config.globalMiddleware));
   app.use(serveStaticFiles(config.staticFiles));
 
-  registerRoutes(app);
+  registerRoutes(app, resolveConfiguredRoutes(config));
   registerEventSubscribers(app, config.eventSubscribers);
 
   return app;
