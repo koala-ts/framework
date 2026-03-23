@@ -7,7 +7,7 @@ import {
   getRouteDefinitionsFromHandler,
   hasAttachedRouteMetadata,
 } from '@/routing/decorator/decorated-route';
-import type { RouteDefinition } from '@/routing/route-definition';
+import type { RouteMetadata } from '@/routing/decorator/route-metadata';
 
 const supportedRouteModuleExtensions = new Set(['.js', '.mjs', '.cjs', '.ts', '.mts', '.cts']);
 const importRouteModule = createJiti(import.meta.url, {
@@ -18,7 +18,7 @@ const importRouteModule = createJiti(import.meta.url, {
   moduleCache: true,
 });
 
-export function resolveConfiguredRoutes(config: KoalaConfig): RouteDefinition[] {
+export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
   const routingConfig = resolveRoutingConfig(config);
   const controllers = config.controllers ?? [];
 
@@ -44,8 +44,8 @@ function resolveConfiguredRouteModules(config: RoutingConfig): RouteModule[] {
   return discoverRouteModules(config.routesDir);
 }
 
-function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteDefinition[] {
-  const routes: RouteDefinition[] = [];
+function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteMetadata[] {
+  const routes: RouteMetadata[] = [];
 
   for (const routeModule of routeModules) {
     const modulePath = resolveModulePath(routeModule);
@@ -71,8 +71,8 @@ function resolveRouteManifest(routeManifest: RouteManifest): RouteModule[] {
   return manifestRouteModules.map(routeModule => resolveModulePath(routeModule, manifestDirectory));
 }
 
-function resolveControllerDefinitions(controllers: Controller[]): RouteDefinition[] {
-  const routes: RouteDefinition[] = [];
+function resolveControllerDefinitions(controllers: Controller[]): RouteMetadata[] {
+  const routes: RouteMetadata[] = [];
 
   for (const controller of controllers) {
     const prototype = controller.prototype as Record<string, unknown> | undefined;
@@ -93,8 +93,8 @@ function resolveControllerDefinitions(controllers: Controller[]): RouteDefinitio
   return routes;
 }
 
-function extractRouteModuleDefinitions(exports: Record<string, unknown>, source: string): RouteDefinition[] {
-  const routes: RouteDefinition[] = [];
+function extractRouteModuleDefinitions(exports: Record<string, unknown>, source: string): RouteMetadata[] {
+  const routes: RouteMetadata[] = [];
   const exportedValues = Object.values(exports);
 
   for (const exportedValue of exportedValues) {
@@ -196,7 +196,7 @@ function resolveModulePath(modulePath: string, baseDirectory: string = process.c
   return path.isAbsolute(modulePath) ? modulePath : path.resolve(baseDirectory, modulePath);
 }
 
-function assertNoDuplicateRoutes(routes: RouteDefinition[]): RouteDefinition[] {
+function assertNoDuplicateRoutes(routes: RouteMetadata[]): RouteMetadata[] {
   const signatures = new Map<string, string | undefined>();
 
   for (const route of routes) {

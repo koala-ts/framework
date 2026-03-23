@@ -2,7 +2,6 @@ import { type Application } from '@/application/application';
 import type { KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { attachRouteToTarget, getRegisteredRouteDefinitions } from '@/routing/decorator/decorated-route';
-import { toRouteDefinition, toRouteMetadata, type RouteDefinition } from '@/routing/route-definition';
 import { resolveConfiguredRoutes } from '@/routing/resolve-routes';
 import { koaBody } from 'koa-body';
 import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
@@ -14,7 +13,7 @@ import type { RouterMethod } from './router-method';
 interface RouteRegistration {
   method: RouterMethod;
   path: string;
-  middleware: Array<RouteDefinition['middleware'][number] | RouteDefinition['handler']>;
+  middleware: Array<RouteMetadata['middleware'][number] | RouteMetadata['handler']>;
 }
 
 type RouteDecorator = MethodDecorator & (<T extends HttpMiddleware>(handler: T) => T);
@@ -35,14 +34,18 @@ export function createRouteDecorator(route: Route): RouteDecorator {
 }
 
 export function getRoutes(): RouteMetadata[] {
-  return getRegisteredRouteDefinitions().map(toRouteMetadata);
+  return getRegisteredRouteDefinitions();
 }
 
 export function registerRoutes(app: Application, routes: RouteMetadata[] = getRoutes()): Application {
-  return registerRouteDefinitions(app, routes.map(toRouteDefinition));
+  return registerRouteMetadata(app, routes);
 }
 
-export function registerRouteDefinitions(app: Application, routes: RouteDefinition[]): Application {
+export function registerRouteDefinitions(app: Application, routes: RouteMetadata[]): Application {
+  return registerRouteMetadata(app, routes);
+}
+
+export function registerRouteMetadata(app: Application, routes: RouteMetadata[]): Application {
   const router = createRouter(routes);
 
   app.use(router.routes() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
@@ -52,10 +55,10 @@ export function registerRouteDefinitions(app: Application, routes: RouteDefiniti
 }
 
 export function registerConfiguredRoutes(app: Application, config: KoalaConfig): Application {
-  return registerRouteDefinitions(app, resolveConfiguredRoutes(config));
+  return registerRouteMetadata(app, resolveConfiguredRoutes(config));
 }
 
-function createRouter(routes: RouteDefinition[]): RouterInstance {
+function createRouter(routes: RouteMetadata[]): RouterInstance {
   const router = new Router();
 
   for (const route of normalizeRoutes(routes)) {
@@ -65,7 +68,7 @@ function createRouter(routes: RouteDefinition[]): RouterInstance {
   return router;
 }
 
-function normalizeRoutes(routes: RouteDefinition[]): RouteRegistration[] {
+function normalizeRoutes(routes: RouteMetadata[]): RouteRegistration[] {
   const registrations: RouteRegistration[] = [];
 
   for (const route of routes) {
@@ -75,7 +78,7 @@ function normalizeRoutes(routes: RouteDefinition[]): RouteRegistration[] {
   return registrations;
 }
 
-function normalizeRoute(route: RouteDefinition): RouteRegistration[] {
+function normalizeRoute(route: RouteMetadata): RouteRegistration[] {
   const middleware = resolveRouteMiddleware(route);
 
   return route.methods.map(method => ({
@@ -85,7 +88,7 @@ function normalizeRoute(route: RouteDefinition): RouteRegistration[] {
   }));
 }
 
-function resolveRouteMiddleware(route: RouteDefinition): RouteRegistration['middleware'] {
+function resolveRouteMiddleware(route: RouteMetadata): RouteRegistration['middleware'] {
   const middlewareStack = [...route.middleware, route.handler];
 
   return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;

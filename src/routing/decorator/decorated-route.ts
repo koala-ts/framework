@@ -1,8 +1,8 @@
 import type { HttpMiddleware } from '@/Http';
-import type { RouteDefinition } from '@/routing/route-definition';
 import type { HttpMethod } from './http-method';
 import type { RouteOptions } from './route-options';
 import type { Route } from './route';
+import type { RouteMetadata } from './route-metadata';
 import type { RouterMethod } from './router-method';
 
 const routeMetadataKey = Symbol.for('@koala-ts/framework/route-metadata');
@@ -13,7 +13,7 @@ interface AttachedRouteMetadata {
   methods: RouterMethod[];
   parseBody: boolean;
   middleware: HttpMiddleware[];
-  bodyOptions: RouteDefinition['bodyOptions'];
+  bodyOptions: RouteMetadata['bodyOptions'];
 }
 
 type DecoratedRouteHandler = HttpMiddleware & {
@@ -34,8 +34,8 @@ export function attachRouteToTarget(route: Route, target: unknown, propertyKey?:
   return attachRouteMetadata(handler, route);
 }
 
-export function getRegisteredRouteDefinitions(): RouteDefinition[] {
-  const routes: RouteDefinition[] = [];
+export function getRegisteredRouteDefinitions(): RouteMetadata[] {
+  const routes: RouteMetadata[] = [];
 
   for (const handler of getRegisteredHandlers()) {
     routes.push(...getRouteDefinitionsFromHandler(handler));
@@ -44,7 +44,7 @@ export function getRegisteredRouteDefinitions(): RouteDefinition[] {
   return routes;
 }
 
-export function getRouteDefinitionsFromHandler(handler: unknown, source?: string): RouteDefinition[] {
+export function getRouteDefinitionsFromHandler(handler: unknown, source?: string): RouteMetadata[] {
   if (typeof handler !== 'function') {
     return [];
   }
@@ -116,10 +116,10 @@ function createMethodList(method: HttpMethod): HttpMethod[] {
   return [method];
 }
 
-function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
+function extractBodyOptions(options: RouteOptions): RouteMetadata['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
 
-  return bodyOptions as RouteDefinition['bodyOptions'];
+  return bodyOptions as RouteMetadata['bodyOptions'];
 }
 
 function resolveRouteHandler(target: unknown, propertyKey?: string | symbol): HttpMiddleware | undefined {
