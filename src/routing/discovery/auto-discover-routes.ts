@@ -2,7 +2,11 @@ import type { Application } from '@/application/application';
 import type { RoutingConfig } from '@/Config';
 import { registerRouteMetadata } from '@/routing/decorator/router';
 import { assertNoDuplicateRoutes } from '@/routing/discovery/assert-no-duplicate-routes';
-import { assertValidDiscoveryConfig, selectDiscoverySource } from '@/routing/discovery/discovery-config';
+import {
+  assertValidDiscoveryConfig,
+  selectDiscoverySource,
+  type DiscoverySource,
+} from '@/routing/discovery/discovery-config';
 import { discoverRouteModules } from '@/routing/discovery/discover-route-modules';
 import { loadRouteManifestModules, loadRouteModuleDefinitions } from '@/routing/discovery/load-route-modules';
 import { getRegisteredRouteDefinitions } from '@/routing/decorator/decorated-route';
@@ -19,9 +23,7 @@ export async function autoDiscoverRoutes(app: Application, routingConfig: Routin
   return registerRouteMetadata(app, routes);
 }
 
-async function resolveRoutesFromDiscoverySource(
-  source: ReturnType<typeof selectDiscoverySource>,
-): Promise<RouteMetadata[]> {
+async function resolveRoutesFromDiscoverySource(source: DiscoverySource): Promise<RouteMetadata[]> {
   switch (source.kind) {
     case 'route-modules':
       return await loadRouteModuleDefinitions(source.routeModules);
