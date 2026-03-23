@@ -15,9 +15,6 @@ export interface RoutingConfig {
 export interface KoalaConfig {
   routing?: RoutingConfig;
   controllers?: Controller[];
-  routeModules?: RouteModule[];
-  routesDir?: string;
-  routeManifest?: RouteManifest;
   globalMiddleware?: HttpMiddleware[];
   staticFiles?: StaticFilesOptions;
   eventSubscribers?: Record<string, EventSubscriber | EventSubscriber[]>;

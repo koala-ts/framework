@@ -174,11 +174,7 @@ function hasExplicitRouteSources(config: RoutingConfig, controllers: Controller[
 }
 
 function resolveRoutingConfig(config: KoalaConfig): RoutingConfig {
-  return {
-    routeManifest: config.routing?.routeManifest ?? config.routeManifest,
-    routeModules: config.routing?.routeModules ?? config.routeModules,
-    routesDir: config.routing?.routesDir ?? config.routesDir,
-  };
+  return config.routing ?? {};
 }
 
 function assertValidRoutingConfig(config: RoutingConfig, controllers: Controller[]): void {

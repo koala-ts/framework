@@ -43,7 +43,9 @@ test('ignores invalid controller entries when resolving routes', () => {
 
 test('resolves function route modules and ignores non route exports', () => {
   const routes = resolveConfiguredRoutes({
-    routeModules: ['tests/fixtures/route-modules/mixed-exports.ts'],
+    routing: {
+      routeModules: ['tests/fixtures/route-modules/mixed-exports.ts'],
+    },
   });
 
   expect(routes).toEqual([
@@ -61,7 +63,9 @@ test('resolves function route modules and ignores non route exports', () => {
 
 test('resolves route modules from a default manifest export', () => {
   const routes = resolveConfiguredRoutes({
-    routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+    routing: {
+      routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+    },
   });
 
   expect(routes).toEqual([
@@ -79,7 +83,11 @@ test('resolves route modules from a default manifest export', () => {
 
 test('fails when the configured route manifest does not exist', () => {
   const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
-    resolveConfiguredRoutes({ routeManifest: 'tests/fixtures/route-modules/missing-manifest.ts' });
+    resolveConfiguredRoutes({
+      routing: {
+        routeManifest: 'tests/fixtures/route-modules/missing-manifest.ts',
+      },
+    });
 
   expect(resolveRoutes).toThrowError(
     `Route manifest does not exist: ${path.resolve(process.cwd(), 'tests/fixtures/route-modules/missing-manifest.ts')}`,
@@ -88,7 +96,11 @@ test('fails when the configured route manifest does not exist', () => {
 
 test('fails when the configured route manifest shape is invalid', () => {
   const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
-    resolveConfiguredRoutes({ routeManifest: 'tests/fixtures/route-modules/invalid-route-manifest.ts' });
+    resolveConfiguredRoutes({
+      routing: {
+        routeManifest: 'tests/fixtures/route-modules/invalid-route-manifest.ts',
+      },
+    });
 
   expect(resolveRoutes).toThrowError(
     `Route manifest must export a routeModules array: ${path.resolve(process.cwd(), 'tests/fixtures/route-modules/invalid-route-manifest.ts')}`,
@@ -211,7 +223,9 @@ test('fails when controllers and route manifest are configured together', () => 
 
 test('discovers supported route modules recursively and ignores test and type files', () => {
   const routes = resolveConfiguredRoutes({
-    routesDir: 'tests/fixtures/route-modules/discovery-filter',
+    routing: {
+      routesDir: 'tests/fixtures/route-modules/discovery-filter',
+    },
   });
 
   expect(routes).toEqual([
@@ -238,7 +252,11 @@ test('discovers supported route modules recursively and ignores test and type fi
 
 test('fails when the configured routes directory does not exist', () => {
   const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
-    resolveConfiguredRoutes({ routesDir: 'tests/fixtures/route-modules/missing-routes' });
+    resolveConfiguredRoutes({
+      routing: {
+        routesDir: 'tests/fixtures/route-modules/missing-routes',
+      },
+    });
 
   expect(resolveRoutes).toThrowError(
     `Routes directory does not exist: ${path.resolve(process.cwd(), 'tests/fixtures/route-modules/missing-routes')}`,
@@ -268,7 +286,9 @@ test('falls back to registered routes when no explicit route source is configure
 test('fails with route source details when explicit sources register duplicate routes', () => {
   const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
     resolveConfiguredRoutes({
-      routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+      routing: {
+        routeModules: ['tests/fixtures/route-modules/duplicate-a.ts', 'tests/fixtures/route-modules/duplicate-b.ts'],
+      },
     });
 
   expect(resolveRoutes).toThrowError(
