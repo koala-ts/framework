@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { createJiti } from 'jiti';
-import type { Controller, KoalaConfig, RouteModule } from '@/Config';
+import type { Controller, KoalaConfig, RouteManifest, RouteModule } from '@/Config';
 import {
   getRegisteredRouteDefinitions,
   getRouteDefinitionsFromHandler,
@@ -19,7 +19,7 @@ const importRouteModule = createJiti(import.meta.url, {
 });
 
 export function resolveConfiguredRoutes(config: KoalaConfig): RouteDefinition[] {
-  const routeModules = [...(config.routeModules ?? []), ...discoverRouteModules(config.routesDir)];
+  const routeModules = [...(config.routeModules ?? []), ...resolveConfiguredRouteModules(config)];
   const controllers = config.controllers ?? [];
   const routes = [...resolveRouteModuleDefinitions(routeModules), ...resolveControllerDefinitions(controllers)];
 
@@ -28,6 +28,14 @@ export function resolveConfiguredRoutes(config: KoalaConfig): RouteDefinition[] 
   }
 
   return assertNoDuplicateRoutes(getRegisteredRouteDefinitions());
+}
+
+function resolveConfiguredRouteModules(config: KoalaConfig): RouteModule[] {
+  if (config.routeManifest !== undefined) {
+    return resolveRouteManifest(config.routeManifest);
+  }
+
+  return discoverRouteModules(config.routesDir);
 }
 
 function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteDefinition[] {
@@ -41,6 +49,20 @@ function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteDefini
   }
 
   return routes;
+}
+
+function resolveRouteManifest(routeManifest: RouteManifest): RouteModule[] {
+  const manifestPath = resolveModulePath(routeManifest);
+
+  if (!fs.existsSync(manifestPath)) {
+    throw new Error(`Route manifest does not exist: ${manifestPath}`);
+  }
+
+  const manifestExports = importRouteModule(manifestPath) as Record<string, unknown>;
+  const manifestRouteModules = extractRouteManifestModules(manifestExports, manifestPath);
+  const manifestDirectory = path.dirname(manifestPath);
+
+  return manifestRouteModules.map(routeModule => resolveModulePath(routeModule, manifestDirectory));
 }
 
 function resolveControllerDefinitions(controllers: Controller[]): RouteDefinition[] {
@@ -77,6 +99,16 @@ function extractRouteModuleDefinitions(exports: Record<string, unknown>, source:
   }
 
   return routes;
+}
+
+function extractRouteManifestModules(exports: Record<string, unknown>, manifestPath: string): RouteModule[] {
+  const routeModules = exports.routeModules ?? exports.default;
+
+  if (!isRouteModuleList(routeModules)) {
+    throw new Error(`Route manifest must export a routeModules array: ${manifestPath}`);
+  }
+
+  return routeModules;
 }
 
 function discoverRouteModules(routesDir?: string): RouteModule[] {
@@ -126,12 +158,15 @@ function isSupportedRouteModule(filePath: string): boolean {
 
 function hasExplicitRouteSources(config: KoalaConfig): boolean {
   return (
-    (config.routeModules?.length ?? 0) > 0 || config.routesDir !== undefined || (config.controllers?.length ?? 0) > 0
+    (config.routeModules?.length ?? 0) > 0 ||
+    config.routeManifest !== undefined ||
+    config.routesDir !== undefined ||
+    (config.controllers?.length ?? 0) > 0
   );
 }
 
-function resolveModulePath(modulePath: string): string {
-  return path.isAbsolute(modulePath) ? modulePath : path.resolve(process.cwd(), modulePath);
+function resolveModulePath(modulePath: string, baseDirectory: string = process.cwd()): string {
+  return path.isAbsolute(modulePath) ? modulePath : path.resolve(baseDirectory, modulePath);
 }
 
 function assertNoDuplicateRoutes(routes: RouteDefinition[]): RouteDefinition[] {
@@ -165,4 +200,8 @@ function buildDuplicateRouteMessage(
   }
 
   return `Duplicate route detected for ${method.toUpperCase()} ${pathName}: ${details.join(' and ')}`;
+}
+
+function isRouteModuleList(value: unknown): value is RouteModule[] {
+  return Array.isArray(value) && value.every(routeModule => typeof routeModule === 'string');
 }

@@ -172,6 +172,17 @@ describe('Decorator Routing E2E Test', () => {
     expect(response.body).toEqual({ ok: true, source: 'get-sugar' });
   });
 
+  test('it should dispatch function-first route modules declared through a route manifest', async () => {
+    const agent = createTestAgent({
+      routeManifest: 'tests/fixtures/route-modules/generated-route-manifest.ts',
+    } as KoalaConfig);
+
+    const response = await agent.get('/decorator-function-route');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ ok: true, source: 'function' });
+  });
+
   test('it should fail fast when route modules register duplicate routes', () => {
     const createAgent = (): ReturnType<typeof createTestAgent> =>
       createTestAgent({
