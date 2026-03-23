@@ -95,6 +95,120 @@ test('fails when the configured route manifest shape is invalid', () => {
   );
 });
 
+test('fails when route modules and routes directory are configured together', () => {
+  const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
+    resolveConfiguredRoutes({
+      routing: {
+        routeModules: ['tests/fixtures/route-modules/function-route.ts'],
+        routesDir: 'tests/fixtures/route-modules/discovery-filter',
+      },
+    });
+
+  expect(resolveRoutes).toThrowError(
+    'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+  );
+});
+
+test('fails when route modules and route manifest are configured together', () => {
+  const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
+    resolveConfiguredRoutes({
+      routing: {
+        routeModules: ['tests/fixtures/route-modules/function-route.ts'],
+        routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+      },
+    });
+
+  expect(resolveRoutes).toThrowError(
+    'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+  );
+});
+
+test('fails when routes directory and route manifest are configured together', () => {
+  const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
+    resolveConfiguredRoutes({
+      routing: {
+        routesDir: 'tests/fixtures/route-modules/discovery-filter',
+        routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+      },
+    });
+
+  expect(resolveRoutes).toThrowError(
+    'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+  );
+});
+
+test('fails when all routing sources are configured together', () => {
+  const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
+    resolveConfiguredRoutes({
+      routing: {
+        routeModules: ['tests/fixtures/route-modules/function-route.ts'],
+        routesDir: 'tests/fixtures/route-modules/discovery-filter',
+        routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+      },
+    });
+
+  expect(resolveRoutes).toThrowError(
+    'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+  );
+});
+
+test('fails when controllers and route modules are configured together', () => {
+  class ArticlesController {
+    @Route({ method: 'get', path: '/articles' })
+    public list(): void {}
+  }
+
+  const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
+    resolveConfiguredRoutes({
+      controllers: [ArticlesController],
+      routing: {
+        routeModules: ['tests/fixtures/route-modules/function-route.ts'],
+      },
+    });
+
+  expect(resolveRoutes).toThrowError(
+    'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+  );
+});
+
+test('fails when controllers and routes directory are configured together', () => {
+  class ArticlesController {
+    @Route({ method: 'get', path: '/articles' })
+    public list(): void {}
+  }
+
+  const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
+    resolveConfiguredRoutes({
+      controllers: [ArticlesController],
+      routing: {
+        routesDir: 'tests/fixtures/route-modules/discovery-filter',
+      },
+    });
+
+  expect(resolveRoutes).toThrowError(
+    'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+  );
+});
+
+test('fails when controllers and route manifest are configured together', () => {
+  class ArticlesController {
+    @Route({ method: 'get', path: '/articles' })
+    public list(): void {}
+  }
+
+  const resolveRoutes = (): ReturnType<typeof resolveConfiguredRoutes> =>
+    resolveConfiguredRoutes({
+      controllers: [ArticlesController],
+      routing: {
+        routeManifest: 'tests/fixtures/route-modules/generated-default-route-manifest.ts',
+      },
+    });
+
+  expect(resolveRoutes).toThrowError(
+    'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+  );
+});
+
 test('discovers supported route modules recursively and ignores test and type files', () => {
   const routes = resolveConfiguredRoutes({
     routesDir: 'tests/fixtures/route-modules/discovery-filter',

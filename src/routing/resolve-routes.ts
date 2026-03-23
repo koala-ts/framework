@@ -20,9 +20,11 @@ const importRouteModule = createJiti(import.meta.url, {
 
 export function resolveConfiguredRoutes(config: KoalaConfig): RouteDefinition[] {
   const routingConfig = resolveRoutingConfig(config);
+  const controllers = config.controllers ?? [];
+
+  assertValidRoutingConfig(routingConfig, controllers);
   const configuredRouteModules = routingConfig.routeModules ?? [];
   const discoveredRouteModules = resolveConfiguredRouteModules(routingConfig);
-  const controllers = config.controllers ?? [];
   const routeModuleDefinitions = resolveRouteModuleDefinitions([...configuredRouteModules, ...discoveredRouteModules]);
   const controllerDefinitions = resolveControllerDefinitions(controllers);
   const routes = [...routeModuleDefinitions, ...controllerDefinitions];
@@ -177,6 +179,21 @@ function resolveRoutingConfig(config: KoalaConfig): RoutingConfig {
     routeModules: config.routing?.routeModules ?? config.routeModules,
     routesDir: config.routing?.routesDir ?? config.routesDir,
   };
+}
+
+function assertValidRoutingConfig(config: RoutingConfig, controllers: Controller[]): void {
+  const configuredSources = [
+    controllers.length > 0 ? 'controllers' : undefined,
+    config.routeModules !== undefined ? 'routeModules' : undefined,
+    config.routesDir !== undefined ? 'routesDir' : undefined,
+    config.routeManifest !== undefined ? 'routeManifest' : undefined,
+  ].filter((source): source is string => source !== undefined);
+
+  if (configuredSources.length > 1) {
+    throw new Error(
+      'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
+    );
+  }
 }
 
 function resolveModulePath(modulePath: string, baseDirectory: string = process.cwd()): string {
