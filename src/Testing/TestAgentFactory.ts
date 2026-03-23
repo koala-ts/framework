@@ -1,4 +1,5 @@
 import { create } from '@/application/create-application';
+import type { Application } from '@/application/application';
 import { type KoalaConfig } from '@/Config';
 import { type HttpMiddleware, type HttpScope, type NextMiddleware } from '@/Http';
 import { type User } from '@/Security/types';
@@ -6,6 +7,20 @@ import supertest from 'supertest';
 import { type TestAgent } from './types';
 
 export function createTestAgent(config: KoalaConfig, agentConfig?: { actAs?: User }): TestAgent {
+  return createTestAgentFromApp(create(createTestConfig(config, agentConfig)));
+}
+
+export function createTestAgentFromApp(app: Application, agentConfig?: { actAs?: User }): TestAgent {
+  const { actAs } = agentConfig ?? {};
+
+  if (actAs !== undefined) {
+    app.middleware.unshift(actAsUser(actAs));
+  }
+
+  return supertest(app.callback());
+}
+
+function createTestConfig(config: KoalaConfig, agentConfig?: { actAs?: User }): KoalaConfig {
   const globalMiddleware = config.globalMiddleware ?? [];
   const testConfig = { ...config };
 
@@ -15,7 +30,7 @@ export function createTestAgent(config: KoalaConfig, agentConfig?: { actAs?: Use
     testConfig.globalMiddleware = [actAsUser(actAs), ...globalMiddleware];
   }
 
-  return supertest(create(testConfig).callback());
+  return testConfig;
 }
 
 function actAsUser(user: User): HttpMiddleware {
