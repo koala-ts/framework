@@ -41,10 +41,6 @@ export function registerRoutes(app: Application, routes: RouteMetadata[] = getRo
   return registerRouteMetadata(app, routes);
 }
 
-export function registerRouteDefinitions(app: Application, routes: RouteMetadata[]): Application {
-  return registerRouteMetadata(app, routes);
-}
-
 export function registerRouteMetadata(app: Application, routes: RouteMetadata[]): Application {
   const router = createRouter(routes);
 

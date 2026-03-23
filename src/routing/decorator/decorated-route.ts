@@ -103,17 +103,13 @@ function createAttachedRouteMetadata({ method, path, middleware = [], options = 
 }
 
 function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
-  const methods = Array.isArray(method) ? method : createMethodList(method);
+  const methods = Array.isArray(method) ? method : [method];
 
   return methods.map(currentMethod => {
     const normalizedMethod = currentMethod.toLowerCase() as RouterMethod;
 
     return ['any', 'all'].includes(normalizedMethod) ? 'all' : normalizedMethod;
   });
-}
-
-function createMethodList(method: HttpMethod): HttpMethod[] {
-  return [method];
 }
 
 function extractBodyOptions(options: RouteOptions): RouteMetadata['bodyOptions'] {

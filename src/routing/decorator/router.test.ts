@@ -5,8 +5,8 @@ import { attachRouteToTarget } from '@/routing/decorator/decorated-route';
 import {
   createRouteDecorator,
   getRoutes,
-  registerRouteDefinitions,
   registerLegacyRoutes,
+  registerRouteMetadata,
   registerRoutes,
 } from '@/routing/decorator/router';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -141,12 +141,12 @@ describe('router', () => {
     ]);
   });
 
-  test('registers route definitions on the application', () => {
+  test('registers route metadata on the application', () => {
     const app = { use: vi.fn() } as unknown as Application;
     const routeMiddleware = vi.fn<HttpMiddleware>();
     const handler = vi.fn<HttpMiddleware>();
 
-    const result = registerRouteDefinitions(app, [
+    const result = registerRouteMetadata(app, [
       {
         path: '/articles',
         methods: ['get', 'post'],
