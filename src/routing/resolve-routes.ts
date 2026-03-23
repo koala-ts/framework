@@ -18,30 +18,22 @@ const importRouteModule = createJiti(import.meta.url, {
   moduleCache: true,
 });
 
+type RouteSource =
+  | { kind: 'controllers'; controllers: Controller[] }
+  | { kind: 'route-modules'; routeModules: RouteModule[] }
+  | { kind: 'route-manifest'; routeManifest: RouteManifest }
+  | { kind: 'routes-dir'; routesDir: string }
+  | { kind: 'registered' };
+
 export function resolveConfiguredRoutes(config: KoalaConfig): RouteMetadata[] {
   const routingConfig = resolveRoutingConfig(config);
   const controllers = config.controllers ?? [];
 
   assertValidRoutingConfig(routingConfig, controllers);
-  const configuredRouteModules = routingConfig.routeModules ?? [];
-  const discoveredRouteModules = resolveConfiguredRouteModules(routingConfig);
-  const routeModuleDefinitions = resolveRouteModuleDefinitions([...configuredRouteModules, ...discoveredRouteModules]);
-  const controllerDefinitions = resolveControllerDefinitions(controllers);
-  const routes = [...routeModuleDefinitions, ...controllerDefinitions];
+  const source = selectRouteSource(routingConfig, controllers);
+  const routes = resolveRoutesFromSource(source);
 
-  if (hasExplicitRouteSources(routingConfig, controllers)) {
-    return assertNoDuplicateRoutes(routes);
-  }
-
-  return assertNoDuplicateRoutes(getRegisteredRouteDefinitions());
-}
-
-function resolveConfiguredRouteModules(config: RoutingConfig): RouteModule[] {
-  if (config.routeManifest !== undefined) {
-    return resolveRouteManifest(config.routeManifest);
-  }
-
-  return discoverRouteModules(config.routesDir);
+  return assertNoDuplicateRoutes(routes);
 }
 
 function resolveRouteModuleDefinitions(routeModules: RouteModule[]): RouteMetadata[] {
@@ -164,15 +156,6 @@ function isSupportedRouteModule(filePath: string): boolean {
   return supportedRouteModuleExtensions.has(path.extname(filePath));
 }
 
-function hasExplicitRouteSources(config: RoutingConfig, controllers: Controller[]): boolean {
-  return (
-    (config.routeModules?.length ?? 0) > 0 ||
-    config.routeManifest !== undefined ||
-    config.routesDir !== undefined ||
-    controllers.length > 0
-  );
-}
-
 function resolveRoutingConfig(config: KoalaConfig): RoutingConfig {
   return config.routing ?? {};
 }
@@ -189,6 +172,41 @@ function assertValidRoutingConfig(config: RoutingConfig, controllers: Controller
     throw new Error(
       'Invalid routing configuration: choose only one of controllers, routeModules, routesDir, or routeManifest.',
     );
+  }
+}
+
+function selectRouteSource(config: RoutingConfig, controllers: Controller[]): RouteSource {
+  if (controllers.length > 0) {
+    return { kind: 'controllers', controllers };
+  }
+
+  if (config.routeModules !== undefined) {
+    return { kind: 'route-modules', routeModules: config.routeModules };
+  }
+
+  if (config.routeManifest !== undefined) {
+    return { kind: 'route-manifest', routeManifest: config.routeManifest };
+  }
+
+  if (config.routesDir !== undefined) {
+    return { kind: 'routes-dir', routesDir: config.routesDir };
+  }
+
+  return { kind: 'registered' };
+}
+
+function resolveRoutesFromSource(source: RouteSource): RouteMetadata[] {
+  switch (source.kind) {
+    case 'controllers':
+      return resolveControllerDefinitions(source.controllers);
+    case 'route-modules':
+      return resolveRouteModuleDefinitions(source.routeModules);
+    case 'route-manifest':
+      return resolveRouteModuleDefinitions(resolveRouteManifest(source.routeManifest));
+    case 'routes-dir':
+      return resolveRouteModuleDefinitions(discoverRouteModules(source.routesDir));
+    case 'registered':
+      return getRegisteredRouteDefinitions();
   }
 }
 
