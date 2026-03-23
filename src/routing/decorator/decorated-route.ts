@@ -50,8 +50,9 @@ export function getRouteDefinitionsFromHandler(handler: unknown, source?: string
   }
 
   const routeHandler = handler as HttpMiddleware;
+  const attachedRoutes = getAttachedRouteMetadata(handler);
 
-  return getAttachedRouteMetadata(handler).map(route => ({
+  return attachedRoutes.map(route => ({
     ...route,
     handler: routeHandler,
     source,
@@ -90,23 +91,29 @@ function getRegisteredHandlers(): Set<HttpMiddleware> {
 }
 
 function createAttachedRouteMetadata({ method, path, middleware = [], options = {} }: Route): AttachedRouteMetadata {
+  const parseBody = options.parseBody === undefined ? true : options.parseBody;
+
   return {
     path,
     methods: qualifyMethod(method),
-    parseBody: options.parseBody ?? true,
+    parseBody,
     middleware,
     bodyOptions: extractBodyOptions(options),
   };
 }
 
 function qualifyMethod(method: HttpMethod | HttpMethod[]): RouterMethod[] {
-  const methods = Array.isArray(method) ? method : [method];
+  const methods = Array.isArray(method) ? method : createMethodList(method);
 
   return methods.map(currentMethod => {
     const normalizedMethod = currentMethod.toLowerCase() as RouterMethod;
 
     return ['any', 'all'].includes(normalizedMethod) ? 'all' : normalizedMethod;
   });
+}
+
+function createMethodList(method: HttpMethod): HttpMethod[] {
+  return [method];
 }
 
 function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
@@ -116,13 +123,11 @@ function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions
 }
 
 function resolveRouteHandler(target: unknown, propertyKey?: string | symbol): HttpMiddleware | undefined {
-  if (propertyKey !== undefined && target !== null && target !== undefined) {
-    const candidate = (target as Record<PropertyKey, unknown>)[propertyKey];
-
-    if (typeof candidate === 'function') {
-      return candidate as HttpMiddleware;
-    }
+  if (propertyKey === undefined || target === null || target === undefined) {
+    return typeof target === 'function' ? (target as HttpMiddleware) : undefined;
   }
 
-  return typeof target === 'function' ? (target as HttpMiddleware) : undefined;
+  const candidate = (target as Record<PropertyKey, unknown>)[propertyKey];
+
+  return typeof candidate === 'function' ? (candidate as HttpMiddleware) : undefined;
 }

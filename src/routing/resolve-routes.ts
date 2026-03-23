@@ -19,9 +19,12 @@ const importRouteModule = createJiti(import.meta.url, {
 });
 
 export function resolveConfiguredRoutes(config: KoalaConfig): RouteDefinition[] {
-  const routeModules = [...(config.routeModules ?? []), ...resolveConfiguredRouteModules(config)];
+  const configuredRouteModules = config.routeModules ?? [];
+  const discoveredRouteModules = resolveConfiguredRouteModules(config);
   const controllers = config.controllers ?? [];
-  const routes = [...resolveRouteModuleDefinitions(routeModules), ...resolveControllerDefinitions(controllers)];
+  const routeModuleDefinitions = resolveRouteModuleDefinitions([...configuredRouteModules, ...discoveredRouteModules]);
+  const controllerDefinitions = resolveControllerDefinitions(controllers);
+  const routes = [...routeModuleDefinitions, ...controllerDefinitions];
 
   if (hasExplicitRouteSources(config)) {
     return assertNoDuplicateRoutes(routes);
@@ -89,8 +92,9 @@ function resolveControllerDefinitions(controllers: Controller[]): RouteDefinitio
 
 function extractRouteModuleDefinitions(exports: Record<string, unknown>, source: string): RouteDefinition[] {
   const routes: RouteDefinition[] = [];
+  const exportedValues = Object.values(exports);
 
-  for (const exportedValue of Object.values(exports)) {
+  for (const exportedValue of exportedValues) {
     if (!hasAttachedRouteMetadata(exportedValue)) {
       continue;
     }
@@ -127,8 +131,9 @@ function discoverRouteModules(routesDir?: string): RouteModule[] {
 
 function readRouteModulePaths(currentDirectory: string): string[] {
   const routeModules: string[] = [];
+  const entries = fs.readdirSync(currentDirectory, { withFileTypes: true });
 
-  for (const entry of fs.readdirSync(currentDirectory, { withFileTypes: true })) {
+  for (const entry of entries) {
     const absolutePath = path.join(currentDirectory, entry.name);
 
     if (entry.isDirectory()) {
@@ -149,7 +154,7 @@ function isSupportedRouteModule(filePath: string): boolean {
     return false;
   }
 
-  if (filePath.includes('.test.') || filePath.includes('.spec.')) {
+  if (hasIgnoredTestSuffix(filePath)) {
     return false;
   }
 
@@ -204,4 +209,8 @@ function buildDuplicateRouteMessage(
 
 function isRouteModuleList(value: unknown): value is RouteModule[] {
   return Array.isArray(value) && value.every(routeModule => typeof routeModule === 'string');
+}
+
+function hasIgnoredTestSuffix(filePath: string): boolean {
+  return filePath.includes('.test.') || filePath.includes('.spec.');
 }

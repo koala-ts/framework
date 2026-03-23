@@ -18,19 +18,18 @@ interface RouteRegistration {
 type RouteDecorator = MethodDecorator & (<T extends HttpMiddleware>(handler: T) => T);
 
 export function createRouteDecorator(route: Route): RouteDecorator {
-  return function decorateRoute<T extends HttpMiddleware>(target: object | T, propertyKey?: string | symbol): void | T {
-    const isMethodDecoratorTarget =
-      propertyKey !== undefined &&
-      target !== null &&
-      target !== undefined &&
-      typeof (target as Record<PropertyKey, unknown>)[propertyKey] === 'function';
-
+  const decorateRoute = <T extends HttpMiddleware>(target: object | T, propertyKey?: string | symbol): void | T => {
+    const isMethodDecoratorTarget = isMethodTarget(target, propertyKey);
     const handler = attachRouteToTarget(route, target, propertyKey);
 
-    if (!isMethodDecoratorTarget) {
-      return handler as T;
+    if (isMethodDecoratorTarget) {
+      return;
     }
-  } as RouteDecorator;
+
+    return handler as T;
+  };
+
+  return decorateRoute as RouteDecorator;
 }
 
 export function getRoutes(): RouteMetadata[] {
@@ -84,4 +83,12 @@ function resolveRouteMiddleware(route: RouteDefinition): RouteRegistration['midd
   const middlewareStack = [...route.middleware, route.handler];
 
   return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
+}
+
+function isMethodTarget(target: object | HttpMiddleware, propertyKey?: string | symbol): boolean {
+  if (propertyKey === undefined || target === null || target === undefined) {
+    return false;
+  }
+
+  return typeof (target as Record<PropertyKey, unknown>)[propertyKey] === 'function';
 }
