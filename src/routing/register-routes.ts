@@ -23,8 +23,11 @@ export function registerRoutes(app: Application, routes: RouteDefinition[] = [])
 
 function createRouter(routes: RouteDefinition[]): RouterInstance {
   const router = new Router();
+  const registrations = expandRouteDefinitions(routes);
 
-  for (const route of expandRouteDefinitions(routes)) {
+  validateUniqueRouteSignatures(registrations);
+
+  for (const route of registrations) {
     router[route.method](route.path, ...(route.middleware as Middleware<DefaultState, DefaultContext & HttpScope>[]));
   }
 
@@ -55,4 +58,18 @@ function resolveRouteMiddleware(route: RouteDefinition): RouteRegistration['midd
   const middlewareStack = [...route.middleware, route.handler];
 
   return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
+}
+
+function validateUniqueRouteSignatures(registrations: RouteRegistration[]): void {
+  const signatures = new Set<string>();
+
+  for (const registration of registrations) {
+    const signature = `${registration.method} ${registration.path}`;
+
+    if (signatures.has(signature)) {
+      throw new Error(`Duplicate route signature detected: ${registration.method.toUpperCase()} ${registration.path}.`);
+    }
+
+    signatures.add(signature);
+  }
 }

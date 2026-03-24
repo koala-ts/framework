@@ -79,4 +79,27 @@ describe('register routes', () => {
     expect(response.headers['x-route-middleware']).toBe('applied');
     expect(response.body).toEqual({ bodyType: 'undefined' });
   });
+
+  test('it rejects duplicate route signatures', () => {
+    const app = new Koa() as Application;
+
+    expect(() =>
+      registerRoutes(app, [
+        Route({
+          method: 'GET',
+          path: '/users',
+          handler: async scope => {
+            scope.response.body = [{ id: 1 }];
+          },
+        }),
+        Route({
+          method: 'GET',
+          path: '/users',
+          handler: async scope => {
+            scope.response.body = [{ id: 2 }];
+          },
+        }),
+      ]),
+    ).toThrow('Duplicate route signature detected: GET /users.');
+  });
 });
