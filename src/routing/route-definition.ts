@@ -1,5 +1,5 @@
 import type { HttpMiddleware } from '@/Http';
-import type { RouteOptions } from '@/routing/route-options';
+import type { KoaBodyMiddlewareOptions } from 'koa-body';
 import type { RouterMethod } from '@/routing/router-method';
 
 export interface RouteDefinition {
@@ -9,5 +9,5 @@ export interface RouteDefinition {
   handler: HttpMiddleware;
   middleware: HttpMiddleware[];
   parseBody: boolean;
-  bodyOptions: Partial<RouteOptions>;
+  bodyOptions: Partial<KoaBodyMiddlewareOptions>;
 }

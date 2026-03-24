@@ -42,7 +42,31 @@ describe('create route definition', () => {
       handler,
     });
 
-    expect(routeDefinition.methods).toEqual(['all', 'all']);
+    expect(routeDefinition.methods).toEqual(['all']);
+  });
+
+  test('it treats all as overriding specific methods', () => {
+    const handler = vi.fn(async () => undefined);
+
+    const routeDefinition = createRouteDefinition({
+      method: ['ANY', 'GET'],
+      path: '/users',
+      handler,
+    });
+
+    expect(routeDefinition.methods).toEqual(['all']);
+  });
+
+  test('it removes duplicate specific methods', () => {
+    const handler = vi.fn(async () => undefined);
+
+    const routeDefinition = createRouteDefinition({
+      method: ['GET', 'get', 'POST'],
+      path: '/users',
+      handler,
+    });
+
+    expect(routeDefinition.methods).toEqual(['get', 'post']);
   });
 
   test('it keeps request body options separate from the parse body flag', () => {

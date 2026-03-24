@@ -34,12 +34,13 @@ export function createRouteDefinition({
 
 function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
   const methods = Array.isArray(method) ? method : [method];
-
-  return methods.map(method => {
+  const qualifiedMethods: RouterMethod[] = methods.map(method => {
     const lower = method.toLowerCase() as RouterMethod;
 
     return ['any', 'all'].includes(lower) ? 'all' : lower;
   });
+
+  return qualifiedMethods.includes('all') ? ['all'] : [...new Set<RouterMethod>(qualifiedMethods)];
 }
 
 function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
