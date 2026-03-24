@@ -25,6 +25,7 @@ function createRouter(routes: RouteDefinition[]): RouterInstance {
   const router = new Router();
   const registrations = expandRouteDefinitions(routes);
 
+  validateUniqueRouteNames(routes);
   validateUniqueRouteSignatures(registrations);
 
   for (const route of registrations) {
@@ -71,5 +72,21 @@ function validateUniqueRouteSignatures(registrations: RouteRegistration[]): void
     }
 
     signatures.add(signature);
+  }
+}
+
+function validateUniqueRouteNames(routes: RouteDefinition[]): void {
+  const routeNames = new Set<string>();
+
+  for (const route of routes) {
+    if (route.name === undefined) {
+      continue;
+    }
+
+    if (routeNames.has(route.name)) {
+      throw new Error(`Duplicate route name detected: ${route.name}.`);
+    }
+
+    routeNames.add(route.name);
   }
 }

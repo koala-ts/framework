@@ -102,4 +102,29 @@ describe('register routes', () => {
       ]),
     ).toThrow('Duplicate route signature detected: GET /users.');
   });
+
+  test('it rejects duplicate route names', () => {
+    const app = new Koa() as Application;
+
+    expect(() =>
+      registerRoutes(app, [
+        Route({
+          name: 'users.list',
+          method: 'GET',
+          path: '/users',
+          handler: async scope => {
+            scope.response.body = [{ id: 1 }];
+          },
+        }),
+        Route({
+          name: 'users.list',
+          method: 'POST',
+          path: '/users',
+          handler: async scope => {
+            scope.response.body = [{ id: 2 }];
+          },
+        }),
+      ]),
+    ).toThrow('Duplicate route name detected: users.list.');
+  });
 });
