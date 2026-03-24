@@ -5,11 +5,15 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
+    "./routing": "./dist/routing/index.js",
     "./validator": "./dist/validator/index.js",
     "./validator/constraints": "./dist/validator/constraints/index.js"
   },
   "typesVersions": {
     "*": {
+      "routing": [
+        "dist/routing/index.d.ts"
+      ],
       "validator": [
         "dist/validator/index.d.ts"
       ],

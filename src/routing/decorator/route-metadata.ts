@@ -1,7 +1,10 @@
 import type { HttpMiddleware } from '@/Http';
-import type { RouteOptions } from './route-options';
-import type { RouterMethod } from './router-method';
+import type { RouteOptions } from '@/routing/route-options';
+import type { RouterMethod } from '@/routing/router-method';
 
+/**
+ * @deprecated Legacy decorator routing metadata. Use `@koala-ts/framework/routing` instead.
+ */
 export interface RouteMetadata {
   path: string;
   methods: RouterMethod[];

@@ -1,8 +1,11 @@
 import type { HttpMiddleware } from '@/Http';
-import type { HttpMethod } from './http-method';
-import type { RouteOptions } from './route-options';
-import { createRouteDecorator } from './router';
+import type { HttpMethod } from '@/routing/http-method';
+import type { RouteOptions } from '@/routing/route-options';
+import { createLegacyRouteDecorator } from './legacy-router';
 
+/**
+ * @deprecated Use `Route` from `@koala-ts/framework/routing` for function-first route declarations.
+ */
 export interface Route {
   path: string;
   method: HttpMethod | HttpMethod[];
@@ -10,4 +13,7 @@ export interface Route {
   options?: RouteOptions;
 }
 
-export const Route = createRouteDecorator;
+/**
+ * @deprecated Use `Route` from `@koala-ts/framework/routing` for function-first route declarations.
+ */
+export const Route = createLegacyRouteDecorator;
