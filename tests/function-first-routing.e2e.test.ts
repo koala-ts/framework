@@ -267,4 +267,44 @@ describe('Function First Routing E2E Test', () => {
     expect(patchResponse.body).toEqual({ method: 'PATCH' });
     expect(deleteResponse.body).toEqual({ method: 'DELETE' });
   });
+
+  test('it should reject duplicate route signatures through the test agent', () => {
+    expect(() =>
+      createTestAgent({
+        ...koalaDefaultConfig,
+        routes: [
+          Route({
+            method: 'GET',
+            path: '/users',
+            handler: async (scope: HttpScope) => {
+              scope.response.body = [{ id: 1 }];
+            },
+          }),
+          Route({
+            method: 'GET',
+            path: '/users',
+            handler: async (scope: HttpScope) => {
+              scope.response.body = [{ id: 2 }];
+            },
+          }),
+        ],
+      }),
+    ).toThrow('Duplicate route signature detected: GET /users.');
+  });
+
+  test('it should reject duplicate route names through the test agent', () => {
+    expect(() =>
+      createTestAgent({
+        ...koalaDefaultConfig,
+        routes: [
+          Get('/users', 'users.list', async (scope: HttpScope) => {
+            scope.response.body = [{ id: 1 }];
+          }),
+          Get('/admins', 'users.list', async (scope: HttpScope) => {
+            scope.response.body = [{ id: 2 }];
+          }),
+        ],
+      }),
+    ).toThrow('Duplicate route name detected: users.list.');
+  });
 });
