@@ -233,6 +233,21 @@ describe('Function First Routing E2E Test', () => {
     expect(response.body).toEqual([{ id: 1 }]);
   });
 
+  test('it should keep the route name when using a named verb helper', async () => {
+    const agent = createTestAgent({
+      routes: [
+        Get('/users', 'users.list', async (scope: HttpScope) => {
+          scope.response.body = [{ id: 1 }];
+        }),
+      ],
+    });
+
+    const response = await agent.get('/users');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([{ id: 1 }]);
+  });
+
   test('it should dispatch routes declared with the any helper', async () => {
     const agent = createTestAgent({
       routes: [

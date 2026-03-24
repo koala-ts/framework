@@ -4,14 +4,47 @@ import { Route } from './route';
 import type { RouteDefinition } from './route-definition';
 
 type RouteHandler = HttpMiddleware;
+interface VerbHelperArguments {
+  path: string;
+  name?: string;
+  handler: RouteHandler;
+}
 
-function createVerbHelper(method: HttpMethod): (path: string, handler: RouteHandler) => RouteDefinition {
-  return (path, handler) =>
+type NamedVerbHelper = {
+  (path: string, handler: RouteHandler): RouteDefinition;
+  (path: string, name: string, handler: RouteHandler): RouteDefinition;
+};
+
+function createVerbHelper(method: HttpMethod): NamedVerbHelper {
+  return (path: string, nameOrHandler: string | RouteHandler, maybeHandler?: RouteHandler) =>
     Route({
       method,
-      path,
-      handler,
+      ...resolveVerbHelperArguments(path, nameOrHandler, maybeHandler),
     });
+}
+
+function resolveVerbHelperArguments(
+  path: string,
+  nameOrHandler: string | RouteHandler,
+  maybeHandler?: RouteHandler,
+): VerbHelperArguments {
+  const isNamedRoute = typeof nameOrHandler === 'string';
+  const name = isNamedRoute ? nameOrHandler : undefined;
+  const handler = isNamedRoute ? requireNamedVerbHelperHandler(maybeHandler) : nameOrHandler;
+
+  return {
+    path,
+    name,
+    handler,
+  };
+}
+
+function requireNamedVerbHelperHandler(handler?: RouteHandler): RouteHandler {
+  if (handler === undefined) {
+    throw new Error('Named verb helpers require a handler.');
+  }
+
+  return handler;
 }
 
 export const Get = createVerbHelper('GET');
