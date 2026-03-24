@@ -1,6 +1,7 @@
 import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, type UploadedFile } from '../src';
+import { koalaDefaultConfig } from '../src/Config';
 import { Any, Get, Route } from '../src/routing';
 import { exclusiveRoutingModeError } from '../src/routing/verify-routing-mode';
 
@@ -220,6 +221,7 @@ describe('Function First Routing E2E Test', () => {
 
   test('it should dispatch routes declared with a verb helper', async () => {
     const agent = createTestAgent({
+      ...koalaDefaultConfig,
       routes: [
         Get('/users', async (scope: HttpScope) => {
           scope.response.body = [{ id: 1 }];
@@ -235,6 +237,7 @@ describe('Function First Routing E2E Test', () => {
 
   test('it should keep the route name when using a named verb helper', async () => {
     const agent = createTestAgent({
+      ...koalaDefaultConfig,
       routes: [
         Get('/users', 'users.list', async (scope: HttpScope) => {
           scope.response.body = [{ id: 1 }];
@@ -250,6 +253,7 @@ describe('Function First Routing E2E Test', () => {
 
   test('it should dispatch routes declared with the any helper', async () => {
     const agent = createTestAgent({
+      ...koalaDefaultConfig,
       routes: [
         Any('/users', async (scope: HttpScope) => {
           scope.response.body = { method: scope.request.method };
