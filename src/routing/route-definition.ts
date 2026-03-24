@@ -2,11 +2,12 @@ import type { HttpMiddleware } from '@/Http';
 import type { RouteOptions } from '@/routing/route-options';
 import type { RouterMethod } from '@/routing/router-method';
 
-export interface RouteMetadata {
+export interface RouteDefinition {
+  name?: string;
   path: string;
   methods: RouterMethod[];
   handler: HttpMiddleware;
-  parseBody: boolean;
   middleware: HttpMiddleware[];
+  parseBody: boolean;
   bodyOptions: Partial<RouteOptions>;
 }

@@ -1,7 +1,7 @@
 import type { HttpMiddleware } from '@/Http';
-import type { HttpMethod } from './http-method';
-import type { RouteOptions } from './route-options';
-import { createRouteDecorator } from './router';
+import type { HttpMethod } from '@/routing/http-method';
+import type { RouteOptions } from '@/routing/route-options';
+import { createLegacyRouteDecorator } from './legacy-router';
 
 export interface Route {
   path: string;
@@ -10,4 +10,4 @@ export interface Route {
   options?: RouteOptions;
 }
 
-export const Route = createRouteDecorator;
+export const Route = createLegacyRouteDecorator;

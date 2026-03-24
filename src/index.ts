@@ -9,11 +9,14 @@ export * from '@/Kernel';
 
 // Routing
 export * from '@/routing/decorator/route';
-export { getRoutes, registerRoutes } from '@/routing/decorator/router';
-export type { HttpMethod } from '@/routing/decorator/http-method';
+export {
+  getLegacyRoutes as getRoutes,
+  registerLegacyRoutes as registerRoutes,
+} from '@/routing/decorator/legacy-router';
+export type { HttpMethod } from '@/routing/http-method';
 export type { RouteMetadata } from '@/routing/decorator/route-metadata';
-export type { RouteOptions } from '@/routing/decorator/route-options';
-export type { RouterMethod } from '@/routing/decorator/router-method';
+export type { RouteOptions } from '@/routing/route-options';
+export type { RouterMethod } from '@/routing/router-method';
 
 // Security
 export * from '@/Security';
