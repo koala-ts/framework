@@ -1,7 +1,7 @@
 import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, type UploadedFile } from '../src';
-import { Route } from '../src/routing';
+import { Any, Get, Route } from '../src/routing';
 import { exclusiveRoutingModeError } from '../src/routing/verify-routing-mode';
 
 interface FunctionFirstRoutingRequest extends HttpRequest {
@@ -216,5 +216,36 @@ describe('Function First Routing E2E Test', () => {
         ],
       }),
     ).toThrow(exclusiveRoutingModeError);
+  });
+
+  test('it should dispatch routes declared with a verb helper', async () => {
+    const agent = createTestAgent({
+      routes: [
+        Get('/users', async (scope: HttpScope) => {
+          scope.response.body = [{ id: 1 }];
+        }),
+      ],
+    });
+
+    const response = await agent.get('/users');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([{ id: 1 }]);
+  });
+
+  test('it should dispatch routes declared with the any helper', async () => {
+    const agent = createTestAgent({
+      routes: [
+        Any('/users', async (scope: HttpScope) => {
+          scope.response.body = { method: scope.request.method };
+        }),
+      ],
+    });
+
+    const patchResponse = await agent.patch('/users');
+    const deleteResponse = await agent.delete('/users');
+
+    expect(patchResponse.body).toEqual({ method: 'PATCH' });
+    expect(deleteResponse.body).toEqual({ method: 'DELETE' });
   });
 });
