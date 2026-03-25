@@ -2,7 +2,9 @@ import Koa from 'koa';
 import supertest from 'supertest';
 import { describe, expect, test } from 'vitest';
 import { type Application } from '@/application/application';
+import { Get } from './http-verb-helpers';
 import { registerRoutes } from './register-routes';
+import { RouteGroup } from './route-group';
 import { Route } from './route';
 
 describe('register routes', () => {
@@ -126,5 +128,49 @@ describe('register routes', () => {
         }),
       ]),
     ).toThrow('Duplicate route name detected: users.list.');
+  });
+
+  test('it registers grouped route sources through the modern registrar', async () => {
+    const app = new Koa() as Application;
+
+    registerRoutes(app, [
+      RouteGroup(
+        {
+          prefix: '/api',
+          namePrefix: 'api.',
+        },
+        () => [
+          Get('/users', 'users.list', async scope => {
+            scope.response.body = [{ id: 1 }];
+          }),
+        ],
+      ),
+    ]);
+
+    const response = await supertest(app.callback()).get('/api/users');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([{ id: 1 }]);
+  });
+
+  test('it rejects duplicate grouped route signatures after normalization', () => {
+    const app = new Koa() as Application;
+
+    expect(() =>
+      registerRoutes(app, [
+        RouteGroup(
+          {
+            prefix: '/api',
+          },
+          () => [Get('/users', async () => undefined)],
+        ),
+        RouteGroup(
+          {
+            prefix: '/api',
+          },
+          () => [Get('/users', async () => undefined)],
+        ),
+      ]),
+    ).toThrow('Duplicate route signature detected: GET /api/users.');
   });
 });

@@ -1,6 +1,7 @@
 import type { HttpMiddleware } from '@/Http';
 import type { HttpMethod } from '@/routing/http-method';
 import type { RouteOptions } from '@/routing/route-options';
+import { resolveRouteOptions } from '@/routing/resolve-route-options';
 import type { RouterMethod } from '@/routing/router-method';
 import type { RouteDefinition } from './route-definition';
 
@@ -21,14 +22,15 @@ export function createRouteDefinition({
   middleware = [],
   options = {},
 }: RouteDefinitionInput): RouteDefinition {
+  const routeOptions = resolveRouteOptions(options);
+
   return {
     name,
     path,
     methods: qualifyMethods(method),
     handler,
-    parseBody: options.parseBody ?? true,
     middleware,
-    bodyOptions: extractBodyOptions(options),
+    ...routeOptions,
   };
 }
 
@@ -41,10 +43,4 @@ function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
   });
 
   return qualifiedMethods.includes('all') ? ['all'] : [...new Set<RouterMethod>(qualifiedMethods)];
-}
-
-function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
-  const { parseBody: _parseBody, ...bodyOptions } = options;
-
-  return bodyOptions as RouteDefinition['bodyOptions'];
 }

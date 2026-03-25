@@ -1,6 +1,6 @@
 import { create } from '@/application/create-application';
 import { koalaDefaultConfig } from '@/Config';
-import { Route } from '@/routing';
+import { Get, Route, RouteGroup } from '@/routing';
 import { exclusiveRoutingModeError } from '@/routing/verify-routing-mode';
 import { expect, test } from 'vitest';
 
@@ -21,6 +21,26 @@ test('create app with explicit routes', () => {
           scope.response.body = [];
         },
       }),
+    ],
+  });
+
+  expect(app).toBeDefined();
+});
+
+test('create app with grouped routes', () => {
+  const app = create({
+    ...koalaDefaultConfig,
+    routes: [
+      RouteGroup(
+        {
+          prefix: '/api',
+        },
+        () => [
+          Get('/users', async scope => {
+            scope.response.body = [];
+          }),
+        ],
+      ),
     ],
   });
 
