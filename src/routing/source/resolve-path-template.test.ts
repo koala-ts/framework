@@ -1,11 +1,17 @@
 import { describe, expect, test } from 'vitest';
-import { resolvePathTemplate } from './resolve-path-template';
+import { createPathTemplateResolver, resolvePathTemplate } from './resolve-path-template';
 
 describe('resolve path template', () => {
   test('it returns a static path unchanged', () => {
     const path = resolvePathTemplate('/users');
 
     expect(path).toBe('/users');
+  });
+
+  test('it returns an empty path template unchanged', () => {
+    const path = resolvePathTemplate('');
+
+    expect(path).toBe('');
   });
 
   test('it replaces a path parameter with its value', () => {
@@ -23,7 +29,24 @@ describe('resolve path template', () => {
     expect(path).toBe('/teams/alpha/users/42');
   });
 
+  test('it resolves a template that starts with a path parameter', () => {
+    const path = resolvePathTemplate(':id/details', { id: '42' });
+
+    expect(path).toBe('42/details');
+  });
+
   test('it throws when a required path parameter is missing', () => {
     expect(() => resolvePathTemplate('/users/:id')).toThrow('Missing required path parameter: id.');
+  });
+
+  test('it creates a reusable resolver for a path template', () => {
+    const resolvePath = createPathTemplateResolver('/teams/:teamId/users/:userId');
+
+    const path = resolvePath({
+      teamId: 'alpha',
+      userId: '42',
+    });
+
+    expect(path).toBe('/teams/alpha/users/42');
   });
 });
