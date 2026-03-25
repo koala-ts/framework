@@ -1,7 +1,7 @@
 import type { HttpMiddleware } from '@/Http';
 import type { HttpMethod } from '@/routing/http-method';
 import type { RouteOptions } from '@/routing/route-options';
-import { resolveRouteOptions } from '@/routing/resolve-route-options';
+import { resolveRouteOptions } from '@/routing/definition/resolve-route-options';
 import type { RouterMethod } from '@/routing/router-method';
 import type { RouteDefinition } from './route-definition';
 

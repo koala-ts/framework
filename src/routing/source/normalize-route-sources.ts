@@ -1,7 +1,7 @@
-import type { RouteDefinition } from '@/routing/route-definition';
-import type { RouteGroupDefinition } from '@/routing/route-group';
-import { mergeRouteOptions } from '@/routing/resolve-route-options';
-import type { RouteSource } from '@/routing/route-source';
+import type { RouteDefinition } from '@/routing/definition/route-definition';
+import { mergeRouteOptions } from '@/routing/definition/resolve-route-options';
+import type { RouteGroupDefinition } from '@/routing/helpers/route-group';
+import type { RouteSource } from './route-source';
 
 interface NormalizationContext {
   prefix: string;

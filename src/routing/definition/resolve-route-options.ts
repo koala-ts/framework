@@ -1,5 +1,5 @@
-import type { RouteDefinition } from '@/routing/route-definition';
 import type { RouteOptions } from '@/routing/route-options';
+import type { RouteDefinition } from './route-definition';
 
 export function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
   return {

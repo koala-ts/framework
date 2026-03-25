@@ -1,7 +1,7 @@
 import type { HttpMiddleware } from '@/Http';
 import type { HttpMethod } from '@/routing/http-method';
-import { Route } from './route';
-import type { RouteDefinition } from './route-definition';
+import type { RouteDefinition } from '@/routing/definition/route-definition';
+import { Route } from '@/routing/route';
 
 type RouteHandler = HttpMiddleware;
 interface VerbHelperArguments {

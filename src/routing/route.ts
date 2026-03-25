@@ -1,8 +1,8 @@
 import type { HttpMiddleware } from '@/Http';
+import { createRouteDefinition } from '@/routing/definition/create-route-definition';
+import type { RouteDefinition } from '@/routing/definition/route-definition';
 import type { HttpMethod } from '@/routing/http-method';
 import type { RouteOptions } from '@/routing/route-options';
-import { createRouteDefinition } from './create-route-definition';
-import type { RouteDefinition } from './route-definition';
 
 export interface RouteDeclaration {
   name?: string;

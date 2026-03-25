@@ -1,4 +1,4 @@
-import type { RouteDefinition } from '@/routing/route-definition';
+import type { RouteDefinition } from '@/routing/definition/route-definition';
 import type { RouterMethod } from '@/routing/router-method';
 
 export interface RouteRegistration {

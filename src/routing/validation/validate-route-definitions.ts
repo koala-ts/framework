@@ -1,5 +1,5 @@
-import type { RouteDefinition } from '@/routing/route-definition';
-import type { RouteRegistration } from '@/routing/route-registration';
+import type { RouteDefinition } from '@/routing/definition/route-definition';
+import type { RouteRegistration } from '@/routing/registration/route-registration';
 
 export function validateRouteDefinitions(routes: RouteDefinition[], registrations: RouteRegistration[]): void {
   validateUniqueRouteNames(routes);
