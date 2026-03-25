@@ -35,9 +35,11 @@ test('create app with grouped routes', () => {
         {
           prefix: '/api',
         },
-        () => [Get('/users', async scope => {
-          scope.response.body = [];
-        })],
+        () => [
+          Get('/users', async scope => {
+            scope.response.body = [];
+          }),
+        ],
       ),
     ],
   });

@@ -139,9 +139,11 @@ describe('register routes', () => {
           prefix: '/api',
           namePrefix: 'api.',
         },
-        () => [Get('/users', 'users.list', async scope => {
-          scope.response.body = [{ id: 1 }];
-        })],
+        () => [
+          Get('/users', 'users.list', async scope => {
+            scope.response.body = [{ id: 1 }];
+          }),
+        ],
       ),
     ]);
 

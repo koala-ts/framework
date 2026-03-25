@@ -2,7 +2,7 @@ import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, type UploadedFile } from '../src';
 import { koalaDefaultConfig } from '../src/Config';
-import { Any, Get, Route } from '../src/routing';
+import { Any, Get, Route, RouteGroup } from '../src/routing';
 import { exclusiveRoutingModeError } from '../src/routing/verify-routing-mode';
 
 interface FunctionFirstRoutingRequest extends HttpRequest {
@@ -306,5 +306,197 @@ describe('Function First Routing E2E Test', () => {
         ],
       }),
     ).toThrow('Duplicate route name detected: users.list.');
+  });
+
+  test('it should dispatch grouped routes through the test agent', async () => {
+    const agent = createTestAgent({
+      ...koalaDefaultConfig,
+      routes: [
+        RouteGroup(
+          {
+            prefix: '/api',
+          },
+          () => [
+            Get('/users', async (scope: HttpScope) => {
+              scope.response.body = [{ id: 1 }];
+            }),
+          ],
+        ),
+      ],
+    });
+
+    const response = await agent.get('/api/users');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([{ id: 1 }]);
+  });
+
+  test('it should apply grouped middleware before route overlays and route middleware', async () => {
+    const agent = createTestAgent({
+      ...koalaDefaultConfig,
+      routes: [
+        RouteGroup(
+          {
+            prefix: '/api',
+            middleware: [
+              async (scope, next) => {
+                scope.response.append('x-middleware-order', 'group');
+                await next();
+              },
+            ],
+            routeConfig: {
+              create: {
+                middleware: [
+                  async (scope, next) => {
+                    scope.response.append('x-middleware-order', 'overlay');
+                    await next();
+                  },
+                ],
+              },
+            },
+          },
+          () => [
+            Route({
+              name: 'create',
+              method: 'POST',
+              path: '/posts',
+              middleware: [
+                async (scope, next) => {
+                  scope.response.append('x-middleware-order', 'route');
+                  await next();
+                },
+              ],
+              handler: async (scope: HttpScope) => {
+                scope.response.body = { ok: true };
+              },
+            }),
+          ],
+        ),
+      ],
+    });
+
+    const response = await agent.post('/api/posts');
+    const middlewareOrder = response.headers['x-middleware-order']?.split(', ');
+
+    expect(middlewareOrder).toEqual(['group', 'overlay', 'route']);
+    expect(response.body).toEqual({ ok: true });
+  });
+
+  test('it should apply grouped route config to named helper routes', async () => {
+    const agent = createTestAgent({
+      ...koalaDefaultConfig,
+      routes: [
+        RouteGroup(
+          {
+            routeConfig: {
+              upload: {
+                options: { multipart: true },
+              },
+            },
+          },
+          () => [
+            Get('/users', async (scope: HttpScope) => {
+              scope.response.body = [];
+            }),
+            Route({
+              name: 'upload',
+              method: 'POST',
+              path: '/upload-avatar',
+              handler: async (scope: HttpScope) => {
+                const request = scope.request as FunctionFirstRoutingRequest;
+
+                scope.response.body = {
+                  uploadedFileName: request.files.avatar.originalFilename,
+                };
+              },
+            }),
+          ],
+        ),
+      ],
+    });
+
+    const response = await agent.post('/upload-avatar').attach('avatar', 'tests/fixtures/avatar.png');
+
+    expect(response.body).toEqual({
+      uploadedFileName: 'avatar.png',
+    });
+  });
+
+  test('it should compose nested route groups through the test agent', async () => {
+    const agent = createTestAgent({
+      ...koalaDefaultConfig,
+      routes: [
+        RouteGroup(
+          {
+            prefix: '/api',
+            namePrefix: 'api.',
+          },
+          () => [
+            RouteGroup(
+              {
+                prefix: '/posts',
+                namePrefix: 'posts.',
+              },
+              () => [
+                Get('/', 'list', async (scope: HttpScope) => {
+                  scope.response.body = [{ id: 1 }];
+                }),
+              ],
+            ),
+          ],
+        ),
+      ],
+    });
+
+    const response = await agent.get('/api/posts');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([{ id: 1 }]);
+  });
+
+  test('it should reject duplicate grouped route signatures after flattening', () => {
+    expect(() =>
+      createTestAgent({
+        ...koalaDefaultConfig,
+        routes: [
+          RouteGroup(
+            {
+              prefix: '/api',
+            },
+            () => [Get('/users', async () => undefined)],
+          ),
+          RouteGroup(
+            {
+              prefix: '/api',
+            },
+            () => [Get('/users', async () => undefined)],
+          ),
+        ],
+      }),
+    ).toThrow('Duplicate route signature detected: GET /api/users.');
+  });
+
+  test('it should reject duplicate grouped route names after flattening', () => {
+    expect(() =>
+      createTestAgent({
+        ...koalaDefaultConfig,
+        routes: [
+          RouteGroup(
+            {
+              prefix: '/api',
+              namePrefix: 'api.',
+            },
+            () => [Get('/users', 'users.list', async () => undefined)],
+          ),
+          RouteGroup(
+            {
+              prefix: '/admins',
+              namePrefix: 'api.',
+            },
+            () => [Get('/users', 'users.list', async () => undefined)],
+          ),
+        ],
+      }),
+    ).toThrow('Duplicate route name detected: api.users.list.');
   });
 });
