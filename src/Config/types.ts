@@ -1,7 +1,7 @@
 import { type HttpMiddleware } from '@/Http';
 import { type StaticFilesOptions } from '@/Http/Files';
 import { type EventSubscriber } from '@/Kernel';
-import type { RouteSource } from '@/routing/route-source';
+import type { RouteSource } from '@/routing';
 
 /**
  * @deprecated Use function-first routes from `@koala-ts/framework/routing` with `KoalaConfig.routes` instead.

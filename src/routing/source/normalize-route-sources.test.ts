@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
-import { Get } from './http-verb-helpers';
+import { Get } from '@/routing/helpers/http-verb-helpers';
+import { RouteGroup } from '@/routing/helpers/route-group';
 import { normalizeRouteSources } from './normalize-route-sources';
-import { RouteGroup } from './route-group';
 
 describe('normalize route sources', () => {
   test('it composes group prefixes and middleware into child routes', () => {

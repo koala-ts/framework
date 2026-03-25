@@ -1,6 +1,6 @@
 import type { HttpMiddleware } from '@/Http';
-import type { KoaBodyMiddlewareOptions } from 'koa-body';
 import type { RouterMethod } from '@/routing/router-method';
+import type { KoaBodyMiddlewareOptions } from 'koa-body';
 
 export interface RouteDefinition {
   name?: string;

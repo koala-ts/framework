@@ -1,6 +1,6 @@
 import type { HttpMiddleware } from '@/Http';
 import type { RouteDeclaration } from '@/routing/route';
-import type { RouteSource } from '@/routing/route-source';
+import type { RouteSource } from '@/routing/source/route-source';
 
 export type RouteConfigOverlay = Pick<RouteDeclaration, 'middleware' | 'options'>;
 

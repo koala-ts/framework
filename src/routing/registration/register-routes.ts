@@ -1,9 +1,9 @@
 import { type Application } from '@/application/application';
 import { type HttpScope } from '@/Http';
-import { expandRouteDefinitions } from '@/routing/expand-route-definitions';
-import { normalizeRouteSources } from '@/routing/normalize-route-sources';
-import type { RouteSource } from '@/routing/route-source';
-import { validateRouteDefinitions } from '@/routing/validate-route-definitions';
+import { expandRouteDefinitions } from '@/routing/registration/expand-route-definitions';
+import { normalizeRouteSources } from '@/routing/source/normalize-route-sources';
+import type { RouteSource } from '@/routing/source/route-source';
+import { validateRouteDefinitions } from '@/routing/validation/validate-route-definitions';
 import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
 import Router, { type RouterInstance } from '@koa/router';
 
