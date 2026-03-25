@@ -116,5 +116,5 @@ function trimTrailingSlash(value: string): string {
 
   const normalized = value.replace(/\/+$/, '');
 
-  return normalized === '' ? '/' : normalized;
+  return normalized === '' ? '' : normalized;
 }

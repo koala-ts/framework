@@ -88,6 +88,30 @@ describe('normalize route sources', () => {
     ]);
   });
 
+  test('it treats a root group prefix as no prefix for non-root child paths', () => {
+    const handler = vi.fn(async () => undefined);
+
+    const routes = normalizeRouteSources([
+      RouteGroup(
+        {
+          prefix: '/',
+        },
+        () => [Get('/users', handler)],
+      ),
+    ]);
+
+    expect(routes).toEqual([
+      {
+        bodyOptions: {},
+        handler,
+        methods: ['get'],
+        middleware: [],
+        parseBody: true,
+        path: '/users',
+      },
+    ]);
+  });
+
   test('it keeps the normalized group prefix when the child path is empty', () => {
     const handler = vi.fn(async () => undefined);
 
