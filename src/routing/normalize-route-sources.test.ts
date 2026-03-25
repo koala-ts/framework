@@ -144,4 +144,172 @@ describe('normalize route sources', () => {
       },
     ]);
   });
+
+  test('it applies route overlays to direct child routes by local name', () => {
+    const groupMiddleware = vi.fn(async () => undefined);
+    const overlayMiddleware = vi.fn(async () => undefined);
+    const routeMiddleware = vi.fn(async () => undefined);
+    const handler = vi.fn(async () => undefined);
+    const route = Get('/posts', 'create', handler);
+    route.middleware = [routeMiddleware];
+
+    const routes = normalizeRouteSources([
+      RouteGroup(
+        {
+          middleware: [groupMiddleware],
+          routeConfig: {
+            create: {
+              middleware: [overlayMiddleware],
+              options: {
+                multipart: true,
+                parseBody: false,
+              },
+            },
+          },
+        },
+        () => [route],
+      ),
+    ]);
+
+    expect(routes).toEqual([
+      {
+        ...route,
+        middleware: [groupMiddleware, overlayMiddleware, routeMiddleware],
+        parseBody: false,
+        bodyOptions: {
+          multipart: true,
+        },
+      },
+    ]);
+  });
+
+  test('it does not apply parent route overlays to nested child routes', () => {
+    const overlayMiddleware = vi.fn(async () => undefined);
+    const handler = vi.fn(async () => undefined);
+
+    const routes = normalizeRouteSources([
+      RouteGroup(
+        {
+          routeConfig: {
+            create: {
+              middleware: [overlayMiddleware],
+            },
+          },
+        },
+        () => [
+          RouteGroup(
+            {
+              prefix: '/posts',
+            },
+            () => [Get('/', 'create', handler)],
+          ),
+        ],
+      ),
+    ]);
+
+    expect(routes).toEqual([
+      {
+        bodyOptions: {},
+        handler,
+        methods: ['get'],
+        middleware: [],
+        name: 'create',
+        parseBody: true,
+        path: '/posts',
+      },
+    ]);
+  });
+
+  test('it keeps unnamed direct child routes unchanged when route config is present', () => {
+    const overlayMiddleware = vi.fn(async () => undefined);
+    const handler = vi.fn(async () => undefined);
+
+    const routes = normalizeRouteSources([
+      RouteGroup(
+        {
+          routeConfig: {
+            create: {
+              middleware: [overlayMiddleware],
+            },
+          },
+        },
+        () => [Get('/posts', handler)],
+      ),
+    ]);
+
+    expect(routes).toEqual([
+      {
+        bodyOptions: {},
+        handler,
+        methods: ['get'],
+        middleware: [],
+        parseBody: true,
+        path: '/posts',
+      },
+    ]);
+  });
+
+  test('it applies middleware-only route overlays without changing route options', () => {
+    const overlayMiddleware = vi.fn(async () => undefined);
+    const handler = vi.fn(async () => undefined);
+
+    const routes = normalizeRouteSources([
+      RouteGroup(
+        {
+          routeConfig: {
+            create: {
+              middleware: [overlayMiddleware],
+            },
+          },
+        },
+        () => [Get('/posts', 'create', handler)],
+      ),
+    ]);
+
+    expect(routes).toEqual([
+      {
+        bodyOptions: {},
+        handler,
+        methods: ['get'],
+        middleware: [overlayMiddleware],
+        name: 'create',
+        parseBody: true,
+        path: '/posts',
+      },
+    ]);
+  });
+
+  test('it applies options-only route overlays without changing middleware', () => {
+    const handler = vi.fn(async () => undefined);
+
+    const routes = normalizeRouteSources([
+      RouteGroup(
+        {
+          routeConfig: {
+            create: {
+              options: {
+                multipart: true,
+                parseBody: false,
+              },
+            },
+          },
+        },
+        () => [Get('/posts', 'create', handler)],
+      ),
+    ]);
+
+    expect(routes).toEqual([
+      {
+        bodyOptions: {
+          multipart: true,
+        },
+        handler,
+        methods: ['get'],
+        middleware: [],
+        name: 'create',
+        parseBody: false,
+        path: '/posts',
+      },
+    ]);
+  });
 });

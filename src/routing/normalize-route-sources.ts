@@ -1,5 +1,6 @@
 import type { RouteDefinition } from '@/routing/route-definition';
 import type { RouteGroupDefinition } from '@/routing/route-group';
+import { mergeRouteOptions } from '@/routing/resolve-route-options';
 import type { RouteSource } from '@/routing/route-source';
 
 interface NormalizationContext {
@@ -35,12 +36,15 @@ export function normalizeRouteSources(
 function normalizeRouteGroup(group: RouteGroupDefinition, parentContext: NormalizationContext): RouteDefinition[] {
   const context = createChildContext(group, parentContext);
 
-  return normalizeRouteSources(group.resolveRoutes(), context);
+  return normalizeRouteSources(applyRouteConfig(group.resolveRoutes(), group), context);
 }
 
 function createChildContext(group: RouteGroupDefinition, parentContext: NormalizationContext): NormalizationContext {
   return {
-    prefix: joinRoutePath(parentContext.prefix, group.options.prefix),
+    prefix:
+      group.options.prefix === undefined
+        ? parentContext.prefix
+        : joinRoutePath(parentContext.prefix, group.options.prefix),
     namePrefix: `${parentContext.namePrefix}${group.options.namePrefix ?? ''}`,
     middleware: [...parentContext.middleware, ...(group.options.middleware ?? [])],
   };
@@ -55,13 +59,40 @@ function normalizeRouteDefinition(route: RouteDefinition, context: Normalization
   };
 }
 
+function applyRouteConfig(routeSources: RouteSource[], group: RouteGroupDefinition): RouteSource[] {
+  return routeSources.map(routeSource => {
+    if (isRouteGroupDefinition(routeSource)) {
+      return routeSource;
+    }
+
+    const routeConfig = routeSource.name ? group.options.routeConfig?.[routeSource.name] : undefined;
+
+    if (!routeConfig) {
+      return routeSource;
+    }
+
+    return {
+      ...routeSource,
+      middleware: [...(routeConfig.middleware ?? []), ...routeSource.middleware],
+      ...resolveRouteConfigOptions(routeSource, routeConfig),
+    };
+  });
+}
+
+function resolveRouteConfigOptions(
+  route: RouteDefinition,
+  routeConfig: NonNullable<RouteGroupDefinition['options']['routeConfig']>[string],
+): Partial<Pick<RouteDefinition, 'parseBody' | 'bodyOptions'>> {
+  return routeConfig.options ? mergeRouteOptions(route, routeConfig.options) : {};
+}
+
 function isRouteGroupDefinition(routeSource: RouteSource): routeSource is RouteGroupDefinition {
   return 'kind' in routeSource && routeSource.kind === 'route-group';
 }
 
-function joinRoutePath(prefix: string, path: string | undefined): string {
+function joinRoutePath(prefix: string, path: string): string {
   const normalizedPrefix = trimTrailingSlash(prefix);
-  const normalizedPath = trimLeadingSlash(path ?? '');
+  const normalizedPath = trimLeadingSlash(path);
 
   if (normalizedPrefix === '') {
     return normalizedPath === '' ? '/' : `/${normalizedPath}`;
