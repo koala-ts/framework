@@ -69,4 +69,32 @@ describe('create path catalog', () => {
 
     expect(catalog).toEqual(new Map([['users.show', '/users/:id']]));
   });
+
+  test('it throws when normalized route names are duplicated', () => {
+    const routes = [
+      RouteGroup(
+        {
+          prefix: '/api',
+          namePrefix: 'api.',
+        },
+        () => [
+          Get(
+            '/users',
+            'users.index',
+            vi.fn(async () => undefined),
+          ),
+        ],
+      ),
+      Route({
+        name: 'api.users.index',
+        method: 'GET',
+        path: '/members',
+        handler: vi.fn(async () => undefined),
+      }),
+    ];
+
+    const createCatalog = () => createPathCatalog(routes);
+
+    expect(createCatalog).toThrow('Duplicate route name detected: api.users.index.');
+  });
 });

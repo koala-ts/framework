@@ -9,6 +9,10 @@ export function createPathCatalog(routeSources: RouteSource[]): Map<string, stri
       continue;
     }
 
+    if (catalog.has(route.name)) {
+      throw new Error(`Duplicate route name detected: ${route.name}.`);
+    }
+
     catalog.set(route.name, route.path);
   }
 
