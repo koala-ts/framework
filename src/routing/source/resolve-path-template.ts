@@ -8,7 +8,6 @@ type PathSegment =
   | {
       kind: 'param';
       key: string;
-      placeholder: string;
     };
 
 export function resolvePathTemplate(pathTemplate: string, params: PathParams = {}): string {
@@ -60,7 +59,6 @@ function parsePathTemplate(pathTemplate: string): PathSegment[] {
     segments.push({
       kind: 'param',
       key,
-      placeholder,
     });
 
     lastIndex = index + placeholder.length;
