@@ -13,113 +13,105 @@ describe('load env config', () => {
     expandSpy.mockReturnValue({ parsed: {} });
   });
 
-  test('loads environment files in development order', () => {
-    loadEnvConfig('development');
+  describe('file selection', () => {
+    test('loads environment files in development order', () => {
+      loadEnvConfig('development');
 
-    expect(configSpy).toHaveBeenNthCalledWith(1, {
-      path: expect.stringContaining('.env'),
-      override: true,
-      quiet: true,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(2, {
-      path: expect.stringContaining('.env.local'),
-      override: true,
-      quiet: true,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(3, {
-      path: expect.stringContaining('.env.development'),
-      override: true,
-      quiet: true,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(4, {
-      path: expect.stringContaining('.env.development.local'),
-      override: true,
-      quiet: true,
-    });
-  });
-
-  test('skips the shared local file in the test environment', () => {
-    loadEnvConfig('test');
-
-    expect(configSpy).toHaveBeenCalledTimes(3);
-
-    expect(configSpy).toHaveBeenNthCalledWith(1, {
-      path: expect.stringContaining('.env'),
-      override: true,
-      quiet: true,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(2, {
-      path: expect.stringContaining('.env.test'),
-      override: true,
-      quiet: true,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(3, {
-      path: expect.stringContaining('.env.test.local'),
-      override: true,
-      quiet: true,
-    });
-  });
-
-  test('uses the framework dotenv defaults for every file', () => {
-    loadEnvConfig('development');
-
-    expect(configSpy).toHaveBeenCalledTimes(4);
-
-    expect(configSpy.mock.calls).toEqual([
-      [{ path: expect.stringContaining('.env'), override: true, quiet: true }],
-      [{ path: expect.stringContaining('.env.local'), override: true, quiet: true }],
-      [{ path: expect.stringContaining('.env.development'), override: true, quiet: true }],
-      [{ path: expect.stringContaining('.env.development.local'), override: true, quiet: true }],
-    ]);
-  });
-
-  test('uses the provided dotenv options for every file', () => {
-    loadEnvConfig('development', {
-      debug: true,
-      encoding: 'latin1',
-      override: false,
-      quiet: false,
+      expect(configSpy).toHaveBeenNthCalledWith(1, {
+        path: expect.stringContaining('.env'),
+        override: true,
+        quiet: true,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(2, {
+        path: expect.stringContaining('.env.local'),
+        override: true,
+        quiet: true,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(3, {
+        path: expect.stringContaining('.env.development'),
+        override: true,
+        quiet: true,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(4, {
+        path: expect.stringContaining('.env.development.local'),
+        override: true,
+        quiet: true,
+      });
     });
 
-    expect(configSpy).toHaveBeenCalledTimes(4);
+    test('skips the shared local file in the test environment', () => {
+      loadEnvConfig('test');
 
-    expect(configSpy).toHaveBeenNthCalledWith(1, {
-      debug: true,
-      encoding: 'latin1',
-      override: false,
-      path: expect.stringContaining('.env'),
-      quiet: false,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(2, {
-      debug: true,
-      encoding: 'latin1',
-      override: false,
-      path: expect.stringContaining('.env.local'),
-      quiet: false,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(3, {
-      debug: true,
-      encoding: 'latin1',
-      override: false,
-      path: expect.stringContaining('.env.development'),
-      quiet: false,
-    });
-    expect(configSpy).toHaveBeenNthCalledWith(4, {
-      debug: true,
-      encoding: 'latin1',
-      override: false,
-      path: expect.stringContaining('.env.development.local'),
-      quiet: false,
+      expect(configSpy).toHaveBeenCalledTimes(3);
+
+      expect(configSpy).toHaveBeenNthCalledWith(1, {
+        path: expect.stringContaining('.env'),
+        override: true,
+        quiet: true,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(2, {
+        path: expect.stringContaining('.env.test'),
+        override: true,
+        quiet: true,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(3, {
+        path: expect.stringContaining('.env.test.local'),
+        override: true,
+        quiet: true,
+      });
     });
   });
 
-  test('preserves framework defaults when no dotenv options are provided', () => {
-    loadEnvConfig('development', undefined);
+  describe('dotenv options', () => {
+    test('uses the provided dotenv options for every file', () => {
+      loadEnvConfig('development', {
+        debug: true,
+        encoding: 'latin1',
+        override: false,
+        quiet: false,
+      });
 
-    expect(configSpy).toHaveBeenNthCalledWith(1, {
-      path: expect.stringContaining('.env'),
-      override: true,
-      quiet: true,
+      expect(configSpy).toHaveBeenCalledTimes(4);
+
+      expect(configSpy).toHaveBeenNthCalledWith(1, {
+        debug: true,
+        encoding: 'latin1',
+        override: false,
+        path: expect.stringContaining('.env'),
+        quiet: false,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(2, {
+        debug: true,
+        encoding: 'latin1',
+        override: false,
+        path: expect.stringContaining('.env.local'),
+        quiet: false,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(3, {
+        debug: true,
+        encoding: 'latin1',
+        override: false,
+        path: expect.stringContaining('.env.development'),
+        quiet: false,
+      });
+      expect(configSpy).toHaveBeenNthCalledWith(4, {
+        debug: true,
+        encoding: 'latin1',
+        override: false,
+        path: expect.stringContaining('.env.development.local'),
+        quiet: false,
+      });
+    });
+
+    test('preserves the framework defaults when dotenv options are omitted', () => {
+      loadEnvConfig('development');
+
+      expect(configSpy.mock.calls).toEqual([
+        [{ path: expect.stringContaining('.env'), override: true, quiet: true }],
+        [{ path: expect.stringContaining('.env.local'), override: true, quiet: true }],
+        [{ path: expect.stringContaining('.env.development'), override: true, quiet: true }],
+        [{ path: expect.stringContaining('.env.development.local'), override: true, quiet: true }],
+      ]);
     });
   });
 
