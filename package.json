@@ -53,7 +53,7 @@
   },
   "scripts": {
     "test": "vitest run --coverage",
-    "build": "tsc && tsc-alias",
+    "build": "rm -rf dist && tsc && tsc-alias",
     "start": "tsx watch playground/main.ts",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
     "lint": "eslint .",

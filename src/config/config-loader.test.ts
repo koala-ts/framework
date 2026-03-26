@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { loadEnvConfig } from '@/Config';
+import { loadEnvConfig } from '@/config';
 
 describe('load env config', () => {
   const configSpy = vi.spyOn(dotenv, 'config');

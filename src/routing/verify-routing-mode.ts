@@ -1,4 +1,4 @@
-import type { KoalaConfig } from '@/Config';
+import type { KoalaConfig } from '@/config';
 
 export const exclusiveRoutingModeError =
   'Koala routing mode is exclusive. Use either legacy controllers from @koala-ts/framework or routes from @koala-ts/framework/routing.';

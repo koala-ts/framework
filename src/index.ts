@@ -5,7 +5,7 @@ import { getLegacyRoutes, registerLegacyRoutes } from '@/routing/decorator/legac
 import type { RouteMetadata as LegacyRouteMetadata } from '@/routing/decorator/route-metadata';
 
 // Core modules
-export * from '@/Config';
+export * from '@/config';
 export * from '@/Http';
 export * from '@/Kernel';
 

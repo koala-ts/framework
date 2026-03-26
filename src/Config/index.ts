@@ -1,3 +1,3 @@
-export type * from '@/Config/types';
-export * from '@/Config/DefaultConfig';
-export * from '@/Config/ConfigLoader';
+export type * from '@/config/koala-config';
+export * from '@/config/default-config';
+export * from '@/config/config-loader';
