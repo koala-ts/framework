@@ -73,6 +73,56 @@ describe('load env config', () => {
     ]);
   });
 
+  test('uses the provided dotenv options for every file', () => {
+    loadEnvConfig('development', {
+      debug: true,
+      encoding: 'latin1',
+      override: false,
+      quiet: false,
+    });
+
+    expect(configSpy).toHaveBeenCalledTimes(4);
+
+    expect(configSpy).toHaveBeenNthCalledWith(1, {
+      debug: true,
+      encoding: 'latin1',
+      override: false,
+      path: expect.stringContaining('.env'),
+      quiet: false,
+    });
+    expect(configSpy).toHaveBeenNthCalledWith(2, {
+      debug: true,
+      encoding: 'latin1',
+      override: false,
+      path: expect.stringContaining('.env.local'),
+      quiet: false,
+    });
+    expect(configSpy).toHaveBeenNthCalledWith(3, {
+      debug: true,
+      encoding: 'latin1',
+      override: false,
+      path: expect.stringContaining('.env.development'),
+      quiet: false,
+    });
+    expect(configSpy).toHaveBeenNthCalledWith(4, {
+      debug: true,
+      encoding: 'latin1',
+      override: false,
+      path: expect.stringContaining('.env.development.local'),
+      quiet: false,
+    });
+  });
+
+  test('preserves framework defaults when no dotenv options are provided', () => {
+    loadEnvConfig('development', undefined);
+
+    expect(configSpy).toHaveBeenNthCalledWith(1, {
+      path: expect.stringContaining('.env'),
+      override: true,
+      quiet: true,
+    });
+  });
+
   test('expands variables after each file is loaded', () => {
     loadEnvConfig('development');
 
