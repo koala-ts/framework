@@ -1,5 +1,5 @@
 import { create } from '@/application/create-application';
-import { koalaDefaultConfig } from '@/Config';
+import { koalaDefaultConfig } from '@/config/default-config';
 import { Get, Route, RouteGroup } from '@/routing';
 import { exclusiveRoutingModeError } from '@/routing/verify-routing-mode';
 import { expect, test } from 'vitest';

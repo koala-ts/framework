@@ -5,7 +5,9 @@ import { getLegacyRoutes, registerLegacyRoutes } from '@/routing/decorator/legac
 import type { RouteMetadata as LegacyRouteMetadata } from '@/routing/decorator/route-metadata';
 
 // Core modules
-export * from '@/Config';
+export type * from '@/config/koala-config';
+export * from '@/config/default-config';
+export * from '@/config/config-loader';
 export * from '@/Http';
 export * from '@/Kernel';
 

@@ -1,4 +1,4 @@
-import { type KoalaConfig } from './types';
+import { type KoalaConfig } from './koala-config';
 
 export const koalaDefaultConfig: KoalaConfig = {
   controllers: [],

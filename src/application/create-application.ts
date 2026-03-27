@@ -1,4 +1,4 @@
-import { type KoalaConfig } from '@/Config';
+import { type KoalaConfig } from '@/config/koala-config';
 import { initializeScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files';
 import { applyConfiguredGlobalMiddleware } from '@/Http/middleware/apply-configured-global-middleware';
