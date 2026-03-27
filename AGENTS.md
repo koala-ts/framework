@@ -71,6 +71,15 @@
 - Run commands on the docker container named `koalats-framework-container`.
 - Start the container if it's not running using the make file.
 
+## File and Module Renames
+
+- Treat the filesystem as case-sensitive when renaming files or directories.
+- Do not rely on case-only renames or mixed-case import paths.
+- Do not rely on module-local directory imports such as `@/feature` resolving through `feature/index.ts` during
+  internal refactors. Prefer explicit file imports such as `@/feature/specific-file`.
+- After renaming files or directories, clean generated build output and rerun the full validation pipeline to catch
+  stale artifact and path-casing issues before opening the PR.
+
 ## Refactorings
 
 - Refactorings MUST not introduce any breaking changes to the public API or types.
