@@ -1,7 +1,7 @@
 import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
 import { createTestAgent, type HttpRequest, type HttpScope, type UploadedFile } from '../src';
-import { koalaDefaultConfig } from '../src/config';
+import { koalaDefaultConfig } from '../src/config/default-config';
 import { Any, Get, Route, RouteGroup } from '../src/routing';
 import { exclusiveRoutingModeError } from '../src/routing/verify-routing-mode';
 

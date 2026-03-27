@@ -1,5 +1,5 @@
 import { create } from '@/application/create-application';
-import { type KoalaConfig } from '@/config';
+import { type KoalaConfig } from '@/config/koala-config';
 import { type HttpMiddleware, type HttpScope, type NextMiddleware } from '@/Http';
 import { type User } from '@/Security/types';
 import supertest from 'supertest';
