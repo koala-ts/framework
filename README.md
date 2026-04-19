@@ -1,9 +1,8 @@
 # KoalaTs Framework 🐨
 
-KoalaTs is a NodeJs, TypeScript-first framework with expressive syntax. KoalaTS is crafted for the laziest backend
-developers because nothing pairs better with clean APIs than a good nap. The NodeJs ecosystem is vast and full of
-sparse solutions that doesn't always play well together. KoalaTs aims to provide a cohesive and opinionated solution
-that is easy to use and understand.
+KoalaTs is a TypeScript framework for backend developers who want explicit HTTP primitives, predictable request flow, and a structure that stays readable as applications grow.
+
+Instead of assembling a backend stack from unrelated libraries and conventions, KoalaTs gives you a coherent starting point for function-first routing, middleware, request and response handling, configuration, and request-scoped context.
 
 ## Documentation
 
