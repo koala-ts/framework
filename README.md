@@ -1,13 +1,22 @@
 # KoalaTs Framework 🐨
 
-KoalaTs is a TypeScript framework for backend developers who want explicit HTTP primitives, predictable request flow, and a structure that stays readable as applications grow.
+KoalaTS is a batteries-included framework that brings structure, scalability, and functional programming into real-world backend development.
 
-Instead of assembling a backend stack from unrelated libraries and conventions, KoalaTs gives you a coherent starting point for function-first routing, middleware, request and response handling, configuration, and request-scoped context.
+### Why teams reach for it
 
-## Documentation
+KoalaTS gives backend projects a clear starting point: function-first routes, middleware for request flow, explicit request and response handling, and utilities like request scope storage when context needs to follow async work.
 
-You can find the documentation [here](https://koala-ts.github.io/docs/)
+* Clear entry points for HTTP and application code
+* Practical defaults instead of repeated framework assembly
+* Patterns that stay readable as features and teams grow
+
+## Want to know more about KoalaTS
+Check out the [documentation](https://koala-ts.github.io/).
+
+## Where to go next
+* Start with the [Quick Start](https://koala-ts.github.io/docs/2.x/getting-started/quick-start_) if you want to create a project and run it immediately.
+* Read [Routing](https://koala-ts.github.io/docs/2.x/fundamentals/routing/), [Request](https://koala-ts.github.io/docs/2.x/fundamentals/request/), and [Response](https://koala-ts.github.io/docs/2.x/fundamentals/response/) to understand the core HTTP model.
+* Use [Configuration](https://koala-ts.github.io/docs/2.x/guides/configuration/) when you need to adapt the application to different environments.
 
 ## License
-
-KoalaTs is [MIT licensed](/LICENSE).
+KoalaTS is [MIT licensed](/LICENSE).
