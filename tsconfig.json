@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@Tests/*": ["tests/*"]
+      "@/*": ["./src/*"],
+      "@Tests/*": ["./tests/*"]
     },
     "esModuleInterop": true,
     "target": "ESNext",
@@ -17,6 +16,7 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noImplicitAny": true,
+    "rootDir": "./src",
     "outDir": "./dist",
     "sourceMap": true,
     "strictNullChecks": true,
@@ -33,6 +33,5 @@
   "tsc-alias": {
     "resolveFullPaths": true,
     "verbose": false
-  },
-  "types": ["@types/jest"]
+  }
 }
