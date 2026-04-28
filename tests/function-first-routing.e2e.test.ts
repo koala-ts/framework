@@ -1,8 +1,9 @@
 import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
-import { createTestAgent, type HttpRequest, type HttpScope, type UploadedFile } from '../src';
 import { koalaDefaultConfig } from '../src/config/default-config';
-import { Any, Get, Route, RouteGroup } from '../src/routing';
+import type { HttpMiddleware, HttpRequest, HttpScope, NextMiddleware, UploadedFile } from '../src/Http';
+import { Any, Get, Post, Route, RouteGroup } from '../src/routing';
+import { createTestAgent } from '../src/Testing';
 import { exclusiveRoutingModeError } from '../src/routing/verify-routing-mode';
 
 interface FunctionFirstRoutingRequest extends HttpRequest {
@@ -37,7 +38,7 @@ describe('Function First Routing E2E Test', () => {
     const agent = createTestAgent({
       controllers: [],
       globalMiddleware: [
-        async (scope, next) => {
+        async (scope: HttpScope, next: NextMiddleware) => {
           scope.response.set('x-global-middleware', 'applied');
           await next();
         },
@@ -109,7 +110,7 @@ describe('Function First Routing E2E Test', () => {
           method: 'GET',
           path: '/users',
           middleware: [
-            async (scope, next) => {
+            async (scope: HttpScope, next: NextMiddleware) => {
               scope.response.set('x-route-middleware', 'applied');
               await next();
             },
@@ -251,6 +252,31 @@ describe('Function First Routing E2E Test', () => {
     expect(response.body).toEqual([{ id: 1 }]);
   });
 
+  test('it should apply middleware declared through a verb helper in order', async () => {
+    const authMiddleware: HttpMiddleware = async (scope: HttpScope, next: NextMiddleware) => {
+      scope.response.append('x-middleware-order', 'auth');
+      await next();
+    };
+    const auditMiddleware: HttpMiddleware = async (scope: HttpScope, next: NextMiddleware) => {
+      scope.response.append('x-middleware-order', 'audit');
+      await next();
+    };
+    const agent = createTestAgent({
+      ...koalaDefaultConfig,
+      routes: [
+        Get('/users', authMiddleware, auditMiddleware, async (scope: HttpScope) => {
+          scope.response.body = { ok: true };
+        }),
+      ],
+    });
+
+    const response = await agent.get('/users');
+
+    expect(response.status).toBe(200);
+    expect(response.headers['x-middleware-order']?.split(', ')).toEqual(['auth', 'audit']);
+    expect(response.body).toEqual({ ok: true });
+  });
+
   test('it should dispatch routes declared with the any helper', async () => {
     const agent = createTestAgent({
       ...koalaDefaultConfig,
@@ -339,7 +365,7 @@ describe('Function First Routing E2E Test', () => {
           {
             prefix: '/api',
             middleware: [
-              async (scope, next) => {
+              async (scope: HttpScope, next: NextMiddleware) => {
                 scope.response.append('x-middleware-order', 'group');
                 await next();
               },
@@ -347,7 +373,7 @@ describe('Function First Routing E2E Test', () => {
             routeConfig: {
               create: {
                 middleware: [
-                  async (scope, next) => {
+                  async (scope: HttpScope, next: NextMiddleware) => {
                     scope.response.append('x-middleware-order', 'overlay');
                     await next();
                   },
@@ -361,7 +387,7 @@ describe('Function First Routing E2E Test', () => {
               method: 'POST',
               path: '/posts',
               middleware: [
-                async (scope, next) => {
+                async (scope: HttpScope, next: NextMiddleware) => {
                   scope.response.append('x-middleware-order', 'route');
                   await next();
                 },
@@ -395,20 +421,12 @@ describe('Function First Routing E2E Test', () => {
             },
           },
           () => [
-            Get('/users', async (scope: HttpScope) => {
-              scope.response.body = [];
-            }),
-            Route({
-              name: 'upload',
-              method: 'POST',
-              path: '/upload-avatar',
-              handler: async (scope: HttpScope) => {
-                const request = scope.request as FunctionFirstRoutingRequest;
+            Post('/upload-avatar', 'upload', async (scope: HttpScope) => {
+              const request = scope.request as FunctionFirstRoutingRequest;
 
-                scope.response.body = {
-                  uploadedFileName: request.files.avatar.originalFilename,
-                };
-              },
+              scope.response.body = {
+                uploadedFileName: request.files.avatar.originalFilename,
+              };
             }),
           ],
         ),
