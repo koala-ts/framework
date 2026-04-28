@@ -32,3 +32,5 @@ export type ValidateOptions = { groups?: string[] };
 export type Payload = Record<string, unknown>;
 
 export type Validator = (payload: Payload, rules: ValidationRules, options?: ValidateOptions) => Violation[];
+
+export type ViolationMapper = (violations: Violation[]) => Record<string, string[]>;

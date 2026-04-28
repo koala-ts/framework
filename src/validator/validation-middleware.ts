@@ -1,7 +1,5 @@
 import { type HttpMiddleware } from '@/Http';
-import { type ValidationRules, type Validator, type Violation } from '@/validator/types';
-
-export type ViolationMapper = (violations: Violation[]) => Record<string, string[]>;
+import { type ValidationRules, type Validator, type ViolationMapper } from '@/validator/types';
 
 export function validationMiddleware(
   validate: Validator,
