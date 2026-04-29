@@ -5,7 +5,7 @@ import { flattenViolations } from '@/validator/flatten-violations';
 export function createValidationMiddleware(
   validate: Validator,
   mapViolations: ViolationMapper = flattenViolations,
-): (constraints: ValidationRules) => HttpMiddleware {
+): (validationRules: ValidationRules) => HttpMiddleware {
   return function createMiddleware(constraints: ValidationRules): HttpMiddleware {
     return async function middleware(scope, next): Promise<void> {
       const violations = validate(scope.request.body ?? {}, constraints);
