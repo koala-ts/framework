@@ -2,7 +2,7 @@ import { type HttpMiddleware } from '@/Http';
 import { type ValidationRules, type Validator, type ViolationMapper } from '@/validator/types';
 import { flattenViolations } from '@/validator/flatten-violations';
 
-export function validationMiddleware(
+export function createValidationMiddleware(
   validate: Validator,
   mapViolations: ViolationMapper = flattenViolations,
 ): (constraints: ValidationRules) => HttpMiddleware {

@@ -1,13 +1,13 @@
 import { HttpMiddleware, type HttpScope } from '@/Http';
 import { flattenViolations } from '@/validator/flatten-violations';
 import { describe, expect, test, vi } from 'vitest';
-import { validationMiddleware } from './validation-middleware';
+import { createValidationMiddleware } from './create-validation-middleware';
 import { Validator } from '@/validator/types';
 
 describe('Validation middleware', () => {
   test('continues to the next middleware when no constrains are violated', async () => {
     const validate: Validator = vi.fn().mockReturnValue([]);
-    const middleware: HttpMiddleware = validationMiddleware(validate, flattenViolations)({ name: ['notBlank'] });
+    const middleware: HttpMiddleware = createValidationMiddleware(validate, flattenViolations)({ name: ['notBlank'] });
     const scope = {
       request: { body: { name: 'koala-example-name' } },
       response: { status: 200 },
@@ -31,7 +31,7 @@ describe('Validation middleware', () => {
       },
     ];
     const validate: Validator = vi.fn().mockReturnValue(violations);
-    const middleware: HttpMiddleware = validationMiddleware(validate, flattenViolations)({ name: ['notBlank'] });
+    const middleware: HttpMiddleware = createValidationMiddleware(validate, flattenViolations)({ name: ['notBlank'] });
     const scope = {
       request: { body: { name: '' } },
       response: { status: 404, body: {} },
@@ -55,7 +55,7 @@ describe('Validation middleware', () => {
       },
     ];
     const validate: Validator = vi.fn().mockReturnValue(violations);
-    const middleware: HttpMiddleware = validationMiddleware(validate)({ name: ['notBlank'] });
+    const middleware: HttpMiddleware = createValidationMiddleware(validate)({ name: ['notBlank'] });
     const scope = {
       request: { body: { name: '' } },
       response: { status: 404, body: {} },
