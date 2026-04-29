@@ -8,9 +8,9 @@ export function createValidationMiddleware(
   validate: Validator,
   mapViolations: ViolationMapper = flattenViolations,
 ): (validationRules: ValidationRules) => HttpMiddleware {
-  return function (constraints: ValidationRules): HttpMiddleware {
+  return function (validationRules: ValidationRules): HttpMiddleware {
     return async function middleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
-      const violations = validate(scope.request.body ?? {}, constraints);
+      const violations = validate(scope.request.body ?? {}, validationRules);
 
       if (violations.length > 0) {
         scope.response.status = 400;
