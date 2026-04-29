@@ -6,7 +6,7 @@ import { Validator } from '@/validator/types';
 
 describe('Validation middleware', () => {
   test('continues to the next middleware when no constrains are violated', async () => {
-    const validate: Validator = vi.fn().mockReturnValue({});
+    const validate: Validator = vi.fn().mockReturnValue([]);
     const middleware: HttpMiddleware = validationMiddleware(validate, flattenViolations)({ name: ['notBlank'] });
     const scope = {
       request: { body: { name: 'koala-example-name' } },
