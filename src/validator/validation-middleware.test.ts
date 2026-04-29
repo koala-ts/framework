@@ -44,4 +44,26 @@ describe('Validation middleware', () => {
     expect(scope.response.body).toEqual({ errors: { name: ['This value should not be blank.'] } });
     expect(next).not.toHaveBeenCalled();
   });
+
+  test('it flats the violation by default', async () => {
+    const violations = [
+      {
+        path: 'name',
+        message: 'This value should not be blank.',
+        constraint: 'notBlank',
+        value: '',
+      },
+    ];
+    const validate: Validator = vi.fn().mockReturnValue(violations);
+    const middleware: HttpMiddleware = validationMiddleware(validate)({ name: ['notBlank'] });
+    const scope = {
+      request: { body: { name: '' } },
+      response: { status: 404, body: {} },
+    } as unknown as HttpScope;
+    const next = vi.fn();
+
+    await middleware(scope, next);
+
+    expect(scope.response.body).toEqual({ errors: { name: ['This value should not be blank.'] } });
+  });
 });

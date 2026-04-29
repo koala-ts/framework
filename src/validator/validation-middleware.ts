@@ -1,9 +1,10 @@
 import { type HttpMiddleware } from '@/Http';
 import { type ValidationRules, type Validator, type ViolationMapper } from '@/validator/types';
+import { flattenViolations } from '@/validator/flatten-violations';
 
 export function validationMiddleware(
   validate: Validator,
-  mapViolations: ViolationMapper,
+  mapViolations: ViolationMapper = flattenViolations,
 ): (constraints: ValidationRules) => HttpMiddleware {
   return function createMiddleware(constraints: ValidationRules): HttpMiddleware {
     return async function middleware(scope, next): Promise<void> {
