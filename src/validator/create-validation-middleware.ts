@@ -8,7 +8,7 @@ export function createValidationMiddleware(
   validate: Validator,
   mapViolations: ViolationMapper = flattenViolations,
 ): (validationRules: ValidationRules) => HttpMiddleware {
-  return function createMiddleware(constraints: ValidationRules): HttpMiddleware {
+  return function (constraints: ValidationRules): HttpMiddleware {
     return async function middleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
       const violations = validate(scope.request.body ?? {}, constraints);
 
