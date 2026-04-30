@@ -7,7 +7,9 @@ import { Validator } from '@/validator/types';
 describe('Validation middleware', () => {
   test('continues to the next middleware when no constrains are violated', async () => {
     const validate: Validator = vi.fn().mockReturnValue([]);
-    const middleware: HttpMiddleware = createValidationMiddleware(validate, flattenViolations)({ name: ['notBlank'] });
+    const middleware: HttpMiddleware = createValidationMiddleware({ validate, mapViolations: flattenViolations })({
+      name: ['notBlank'],
+    });
     const scope = {
       request: { body: { name: 'koala-example-name' } },
       response: { status: 200 },
@@ -31,7 +33,9 @@ describe('Validation middleware', () => {
       },
     ];
     const validate: Validator = vi.fn().mockReturnValue(violations);
-    const middleware: HttpMiddleware = createValidationMiddleware(validate, flattenViolations)({ name: ['notBlank'] });
+    const middleware: HttpMiddleware = createValidationMiddleware({ validate, mapViolations: flattenViolations })({
+      name: ['notBlank'],
+    });
     const scope = {
       request: { body: { name: '' } },
       response: { status: 404, body: {} },
@@ -55,7 +59,7 @@ describe('Validation middleware', () => {
       },
     ];
     const validate: Validator = vi.fn().mockReturnValue(violations);
-    const middleware: HttpMiddleware = createValidationMiddleware(validate)({ name: ['notBlank'] });
+    const middleware: HttpMiddleware = createValidationMiddleware({ validate })({ name: ['notBlank'] });
     const scope = {
       request: { body: { name: '' } },
       response: { status: 404, body: {} },

@@ -4,10 +4,15 @@ import { flattenViolations } from '@/validator/flatten-violations';
 
 export type ViolationMapper = (violations: Violation[]) => Record<string, string[]>;
 
-export function createValidationMiddleware(
-  validate: Validator,
-  mapViolations: ViolationMapper = flattenViolations,
-): (validationRules: ValidationRules) => HttpMiddleware {
+type ValidationMiddlewareOptions = {
+  validate: Validator;
+  mapViolations?: ViolationMapper;
+};
+
+export function createValidationMiddleware({
+  validate,
+  mapViolations = flattenViolations,
+}: ValidationMiddlewareOptions): (validationRules: ValidationRules) => HttpMiddleware {
   return function (validationRules: ValidationRules): HttpMiddleware {
     return async function middleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
       const violations = validate(scope.request.body ?? {}, validationRules);
