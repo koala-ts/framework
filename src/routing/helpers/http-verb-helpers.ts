@@ -4,44 +4,66 @@ import type { RouteDefinition } from '@/routing/definition/route-definition';
 import { Route } from '@/routing/route';
 
 type RouteHandler = HttpMiddleware;
+type MiddlewareAndHandler = [...middleware: HttpMiddleware[], handler: RouteHandler];
+type NamedMiddlewareAndHandler = [name: string, ...middlewareAndHandler: MiddlewareAndHandler];
+type VerbHelperRouteArguments = MiddlewareAndHandler | NamedMiddlewareAndHandler;
+type UnsafeVerbHelperRouteArguments = VerbHelperRouteArguments | [name: string] | [];
+
 interface VerbHelperArguments {
   path: string;
   name?: string;
+  middleware: HttpMiddleware[];
   handler: RouteHandler;
 }
 
 type NamedVerbHelper = {
-  (path: string, handler: RouteHandler): RouteDefinition;
-  (path: string, name: string, handler: RouteHandler): RouteDefinition;
+  (path: string, ...middlewareAndHandler: MiddlewareAndHandler): RouteDefinition;
+  (path: string, name: string, ...middlewareAndHandler: MiddlewareAndHandler): RouteDefinition;
 };
 
 function createVerbHelper(method: HttpMethod): NamedVerbHelper {
-  return (path: string, nameOrHandler: string | RouteHandler, maybeHandler?: RouteHandler) =>
+  return (path: string, ...routeArguments: UnsafeVerbHelperRouteArguments) =>
     Route({
       method,
-      ...resolveVerbHelperArguments(path, nameOrHandler, maybeHandler),
+      ...resolveVerbHelperArguments(path, routeArguments),
     });
 }
 
-function resolveVerbHelperArguments(
-  path: string,
-  nameOrHandler: string | RouteHandler,
-  maybeHandler?: RouteHandler,
-): VerbHelperArguments {
-  const isNamedRoute = typeof nameOrHandler === 'string';
-  const name = isNamedRoute ? nameOrHandler : undefined;
-  const handler = isNamedRoute ? requireNamedVerbHelperHandler(maybeHandler) : nameOrHandler;
+function resolveVerbHelperArguments(path: string, routeArguments: UnsafeVerbHelperRouteArguments): VerbHelperArguments {
+  const isNamedRoute = isNamedVerbHelperRouteArguments(routeArguments);
+  const name = isNamedRoute ? routeArguments[0] : undefined;
+  const routeMiddlewareAndHandler = isNamedRoute
+    ? (routeArguments.slice(1) as MiddlewareAndHandler | [])
+    : routeArguments;
+  const handler = requireVerbHelperHandler(routeMiddlewareAndHandler, isNamedRoute);
+  const middleware = routeMiddlewareAndHandler.slice(0, -1) as HttpMiddleware[];
 
   return {
     path,
     name,
+    middleware,
     handler,
   };
 }
 
-function requireNamedVerbHelperHandler(handler?: RouteHandler): RouteHandler {
-  if (handler === undefined) {
+function isNamedVerbHelperRouteArguments(
+  routeArguments: UnsafeVerbHelperRouteArguments,
+): routeArguments is NamedMiddlewareAndHandler | [name: string] {
+  return typeof routeArguments[0] === 'string';
+}
+
+function requireVerbHelperHandler(
+  middlewareAndHandler: MiddlewareAndHandler | [],
+  isNamedRoute: boolean,
+): RouteHandler {
+  const handler = middlewareAndHandler.at(-1) as RouteHandler | undefined;
+
+  if (handler === undefined && isNamedRoute) {
     throw new Error('Named verb helpers require a handler.');
+  }
+
+  if (handler === undefined) {
+    throw new Error('Verb helpers require a handler.');
   }
 
   return handler;
