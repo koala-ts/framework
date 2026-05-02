@@ -51,9 +51,38 @@ describe('routing http verb helpers', () => {
     });
   });
 
+  test('it creates an unnamed route with middleware before the handler', () => {
+    const firstMiddleware = vi.fn(async () => undefined);
+    const secondMiddleware = vi.fn(async () => undefined);
+    const handler = vi.fn(async () => undefined);
+
+    const route = Get('/users', firstMiddleware, secondMiddleware, handler);
+
+    expect(route.handler).toBe(handler);
+    expect(route.middleware).toEqual([firstMiddleware, secondMiddleware]);
+  });
+
+  test('it creates a named route with middleware before the handler', () => {
+    const firstMiddleware = vi.fn(async () => undefined);
+    const secondMiddleware = vi.fn(async () => undefined);
+    const handler = vi.fn(async () => undefined);
+
+    const route = Get('/users', 'users.list', firstMiddleware, secondMiddleware, handler);
+
+    expect(route.name).toBe('users.list');
+    expect(route.handler).toBe(handler);
+    expect(route.middleware).toEqual([firstMiddleware, secondMiddleware]);
+  });
+
   test('it rejects a named helper call without a handler', () => {
     const get = Get as unknown as (path: string, name: string) => unknown;
 
     expect(() => get('/users', 'users.list')).toThrow('Named verb helpers require a handler.');
+  });
+
+  test('it rejects an unnamed helper call without a handler', () => {
+    const get = Get as unknown as (path: string) => unknown;
+
+    expect(() => get('/users')).toThrow('Verb helpers require a handler.');
   });
 });
