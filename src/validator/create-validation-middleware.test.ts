@@ -5,7 +5,7 @@ import { createValidationMiddleware } from './create-validation-middleware';
 import { Validator } from '@/validator/types';
 
 describe('Validation middleware', () => {
-  test('continues to the next middleware when no constrains are violated', async () => {
+  test('continues to the next middleware when validation passes', async () => {
     const validate: Validator = vi.fn().mockReturnValue([]);
     const middleware: HttpMiddleware = createValidationMiddleware({ validate, mapViolations: flattenViolations })({
       name: ['notBlank'],
@@ -49,7 +49,7 @@ describe('Validation middleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('it flats the violation by default', async () => {
+  test('flattens violations by default', async () => {
     const violations = [
       {
         path: 'name',
