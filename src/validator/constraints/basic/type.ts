@@ -11,6 +11,10 @@ export function type(value: unknown, context: ConstraintContext): Violation[] {
   const options = context.options as TypeOptions;
   const expectedTypes = Array.isArray(options.type) ? options.type : [options.type];
 
+  if (value === undefined) {
+    return [];
+  }
+
   if (expectedTypes.includes(getValueType(value))) {
     return [];
   }

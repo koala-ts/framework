@@ -75,4 +75,19 @@ describe('type', () => {
 
     expect(violations).toHaveLength(0);
   });
+
+  it('returns no violations when the value is undefined', () => {
+    const context: ConstraintContext = {
+      path: 'age',
+      root: { age: undefined },
+      value: undefined,
+      constraint: 'type',
+      options: { type: 'number' },
+      runNestedRules: () => [],
+    };
+
+    const violations = typeConstraint(undefined, context);
+
+    expect(violations).toHaveLength(0);
+  });
 });
