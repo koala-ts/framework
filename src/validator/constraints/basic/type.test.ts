@@ -76,6 +76,27 @@ describe('type', () => {
     expect(violations).toHaveLength(0);
   });
 
+  it('returns a violation with all expected types when no expected type matches', () => {
+    const context: ConstraintContext = {
+      path: 'identifier',
+      root: { identifier: false },
+      value: false,
+      constraint: 'type',
+      options: { type: ['string', 'number'] },
+      runNestedRules: () => [],
+    };
+
+    const violations = typeConstraint(false, context);
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'identifier',
+      constraint: 'type',
+      message: 'This value should be of type string or number.',
+      value: false,
+    });
+  });
+
   it('returns no violations when the value is undefined', () => {
     const context: ConstraintContext = {
       path: 'age',
