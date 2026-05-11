@@ -34,4 +34,30 @@ describe('type', () => {
       value,
     });
   });
+
+  it.each([
+    { expectedType: 'string', value: 'Koala' },
+    { expectedType: 'number', value: 42 },
+    { expectedType: 'boolean', value: true },
+    { expectedType: 'bigint', value: 42n },
+    { expectedType: 'symbol', value: Symbol('koala') },
+    { expectedType: 'function', value: () => 'koala' },
+    { expectedType: 'object', value: { name: 'Koala' } },
+    { expectedType: 'array', value: ['Koala'] },
+    { expectedType: 'null', value: null },
+    { expectedType: 'undefined', value: undefined },
+  ])('returns no violations when the value matches $expectedType', ({ expectedType, value }) => {
+    const context: ConstraintContext = {
+      path: 'name',
+      root: { name: value },
+      value,
+      constraint: 'type',
+      options: { type: expectedType },
+      runNestedRules: () => [],
+    };
+
+    const violations = typeConstraint(value, context);
+
+    expect(violations).toHaveLength(0);
+  });
 });

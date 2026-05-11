@@ -10,6 +10,10 @@ export type TypeOptions = ConstraintOptions & {
 export function type(value: unknown, context: ConstraintContext): Violation[] {
   const options = context.options as TypeOptions;
 
+  if (getValueType(value) === options.type) {
+    return [];
+  }
+
   return [
     {
       path: context.path,
@@ -18,4 +22,16 @@ export function type(value: unknown, context: ConstraintContext): Violation[] {
       value,
     },
   ];
+}
+
+function getValueType(value: unknown): string {
+  if (value === null) {
+    return 'null';
+  }
+
+  if (Array.isArray(value)) {
+    return 'array';
+  }
+
+  return typeof value;
 }
