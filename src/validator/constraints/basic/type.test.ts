@@ -60,4 +60,19 @@ describe('type', () => {
 
     expect(violations).toHaveLength(0);
   });
+
+  it('returns no violations when the value matches one expected type', () => {
+    const context: ConstraintContext = {
+      path: 'identifier',
+      root: { identifier: 42 },
+      value: 42,
+      constraint: 'type',
+      options: { type: ['string', 'number'] },
+      runNestedRules: () => [],
+    };
+
+    const violations = typeConstraint(42, context);
+
+    expect(violations).toHaveLength(0);
+  });
 });
