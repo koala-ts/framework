@@ -23,7 +23,7 @@ export function type(value: unknown, context: ConstraintContext): Violation[] {
     {
       path: context.path,
       constraint: context.constraint,
-      message: DEFAULT_MESSAGE.replace('{type}', String(options.type)),
+      message: options.message ?? DEFAULT_MESSAGE.replace('{type}', String(options.type)),
       value,
     },
   ];

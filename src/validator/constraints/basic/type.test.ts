@@ -90,4 +90,25 @@ describe('type', () => {
 
     expect(violations).toHaveLength(0);
   });
+
+  it('uses a custom message when provided', () => {
+    const context: ConstraintContext = {
+      path: 'age',
+      root: { age: '42' },
+      value: '42',
+      constraint: 'type',
+      options: { type: 'number', message: 'Age must be numeric' },
+      runNestedRules: () => [],
+    };
+
+    const violations = typeConstraint('42', context);
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'age',
+      constraint: 'type',
+      message: 'Age must be numeric',
+      value: '42',
+    });
+  });
 });
