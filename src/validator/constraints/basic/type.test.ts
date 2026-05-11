@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ConstraintContext } from '../../types';
-import { type as typeConstraint } from './type';
+import { type } from './type';
 
 describe('type', () => {
   it.each([
@@ -24,7 +24,7 @@ describe('type', () => {
       runNestedRules: () => [],
     };
 
-    const violations = typeConstraint(value, context);
+    const violations = type(value, context);
 
     expect(violations).toHaveLength(1);
     expect(violations[0]).toEqual({
@@ -56,7 +56,7 @@ describe('type', () => {
       runNestedRules: () => [],
     };
 
-    const violations = typeConstraint(value, context);
+    const violations = type(value, context);
 
     expect(violations).toHaveLength(0);
   });
@@ -71,7 +71,7 @@ describe('type', () => {
       runNestedRules: () => [],
     };
 
-    const violations = typeConstraint(42, context);
+    const violations = type(42, context);
 
     expect(violations).toHaveLength(0);
   });
@@ -86,7 +86,7 @@ describe('type', () => {
       runNestedRules: () => [],
     };
 
-    const violations = typeConstraint(false, context);
+    const violations = type(false, context);
 
     expect(violations).toHaveLength(1);
     expect(violations[0]).toEqual({
@@ -107,7 +107,7 @@ describe('type', () => {
       runNestedRules: () => [],
     };
 
-    const violations = typeConstraint(undefined, context);
+    const violations = type(undefined, context);
 
     expect(violations).toHaveLength(0);
   });
@@ -122,7 +122,7 @@ describe('type', () => {
       runNestedRules: () => [],
     };
 
-    const violations = typeConstraint('42', context);
+    const violations = type('42', context);
 
     expect(violations).toHaveLength(1);
     expect(violations[0]).toEqual({
