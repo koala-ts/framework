@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ConstraintContext } from '../../types';
-import { type } from './type';
+import { type, TypeOptions } from './type';
+import { ConstraintContext } from '@/validator/constraint-validator';
 
 describe('type', () => {
   it.each([
@@ -15,7 +15,7 @@ describe('type', () => {
     { expectedType: 'null', value: { name: 'Koala' } },
     { expectedType: 'undefined', value: 'Koala' },
   ])('returns a violation when the value does not match $expectedType', ({ expectedType, value }) => {
-    const context: ConstraintContext = {
+    const context: ConstraintContext<TypeOptions> = {
       path: 'name',
       root: { name: value },
       value,
@@ -47,7 +47,7 @@ describe('type', () => {
     { expectedType: 'null', value: null },
     { expectedType: 'undefined', value: undefined },
   ])('returns no violations when the value matches $expectedType', ({ expectedType, value }) => {
-    const context: ConstraintContext = {
+    const context: ConstraintContext<TypeOptions> = {
       path: 'name',
       root: { name: value },
       value,
@@ -62,7 +62,7 @@ describe('type', () => {
   });
 
   it('returns no violations when the value matches one expected type', () => {
-    const context: ConstraintContext = {
+    const context: ConstraintContext<TypeOptions> = {
       path: 'identifier',
       root: { identifier: 42 },
       value: 42,
@@ -77,7 +77,7 @@ describe('type', () => {
   });
 
   it('returns a violation with all expected types when no expected type matches', () => {
-    const context: ConstraintContext = {
+    const context: ConstraintContext<TypeOptions> = {
       path: 'identifier',
       root: { identifier: false },
       value: false,
@@ -98,7 +98,7 @@ describe('type', () => {
   });
 
   it('returns no violations when the value is undefined', () => {
-    const context: ConstraintContext = {
+    const context: ConstraintContext<TypeOptions> = {
       path: 'age',
       root: { age: undefined },
       value: undefined,
@@ -113,7 +113,7 @@ describe('type', () => {
   });
 
   it('uses a custom message when provided', () => {
-    const context: ConstraintContext = {
+    const context: ConstraintContext<TypeOptions> = {
       path: 'age',
       root: { age: '42' },
       value: '42',

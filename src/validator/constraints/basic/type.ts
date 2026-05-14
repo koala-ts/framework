@@ -1,18 +1,20 @@
-import type { ConstraintContext, ConstraintOptions, Violation } from '../../types';
+import { ConstraintOptions } from '@/validator/constraint';
+import { ConstraintContext } from '@/validator/constraint-validator';
+import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value should be of type {type}.';
 
-type TypeOptions = ConstraintOptions & {
+export type TypeOptions = ConstraintOptions & {
   type: string | string[];
   message?: string;
 };
 
-export function type(value: unknown, context: ConstraintContext): Violation[] {
+export function type(value: unknown, context: ConstraintContext<TypeOptions>): Violation[] {
   if (value === undefined) {
     return [];
   }
 
-  const options = context.options as TypeOptions;
+  const options = context.options;
   const expectedTypes = Array.isArray(options.type) ? options.type : [options.type];
 
   if (matchesExpectedType(value, expectedTypes)) return [];
@@ -20,8 +22,8 @@ export function type(value: unknown, context: ConstraintContext): Violation[] {
   return [
     {
       path: context.path,
-      constraint: context.constraint,
       message: options.message ?? getDefaultMessageWith(expectedTypes),
+      constraint: context.constraint,
       value,
     },
   ];
