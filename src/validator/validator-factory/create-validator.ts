@@ -1,4 +1,4 @@
-import { UnknownConstraintError } from './errors';
+import { UnknownConstraintError } from '../errors';
 import {
   ConstraintContext,
   ConstraintOptions,
@@ -7,7 +7,7 @@ import {
   Payload,
   ValidationRules,
   Validator,
-} from './types';
+} from '../types';
 
 type FieldEntry = [string, FieldRules];
 type ConstraintsMap = Record<string, ConstraintValidator>;
