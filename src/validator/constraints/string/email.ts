@@ -1,17 +1,17 @@
-import { Violation } from '@/validator/violation';
-import { ConstraintContext } from '../../constraint-validator';
+import { ConstraintOptions } from '@/validator/constraint';
+import { ConstraintContext } from '@/validator/constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid email address.';
 
-type EmailOptions = {
+type EmailOptions = ConstraintOptions & {
   message?: string;
   normalizer?: (value: string) => string;
 };
 
 const strictEmailRegex = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
 
-export function email(value: unknown, context: ConstraintContext): Violation[] {
-  const options = context.options as EmailOptions;
+export function email(value: unknown, context: ConstraintContext<EmailOptions>) {
+  const options = context.options;
   const message = options.message ?? DEFAULT_MESSAGE;
 
   if (value === undefined) {

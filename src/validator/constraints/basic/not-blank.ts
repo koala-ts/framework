@@ -1,15 +1,15 @@
-import { Violation } from '@/validator/violation';
-import { ConstraintContext } from '../../constraint-validator';
+import { ConstraintOptions } from '@/validator/constraint';
+import { ConstraintContext } from '@/validator/constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value should not be blank.';
 
-type NotBlankOptions = {
+type NotBlankOptions = ConstraintOptions & {
   message?: string;
   normalizer?: (value: string) => string;
 };
 
-export function notBlank(value: unknown, context: ConstraintContext): Violation[] {
-  const options = context.options as NotBlankOptions;
+export function notBlank(value: unknown, context: ConstraintContext<NotBlankOptions>) {
+  const options = context.options;
   const message = options.message ?? DEFAULT_MESSAGE;
 
   const normalizedValue =

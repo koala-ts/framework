@@ -1,9 +1,9 @@
-import { UnknownConstraintError } from '../errors';
-import { ConstraintOptions } from '../constraint';
-import { ConstraintContext, ConstraintValidator } from '../constraint-validator';
+import { ConstraintOptions } from '@/validator/constraint';
+import { UnknownConstraintError } from '@/validator/errors';
 import { FieldSchema } from '@/validator/schema';
 import { Validator } from '@/validator/validator';
-import { Payload } from '@/validator';
+import { ConstraintContext, ConstraintValidator } from '@/validator/constraint-validator';
+import { Payload } from '@/validator/payload';
 
 type FieldSchemaEntry = [string, FieldSchema];
 type ConstraintsMap = Record<string, ConstraintValidator>;

@@ -2,13 +2,16 @@ import { Violation } from './violation';
 import { ConstraintOptions } from './constraint';
 import { FieldSchema } from './schema';
 
-export type ConstraintContext = {
+export type ConstraintContext<TOptions extends ConstraintOptions = ConstraintOptions> = {
   path: string;
   root: unknown;
   value: unknown;
   constraint: string;
-  options: ConstraintOptions;
+  options: TOptions;
   runNestedRules: (value: unknown, schema: FieldSchema, path: string) => Violation[];
 };
 
-export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];
+export type ConstraintValidator<TOptions extends ConstraintOptions = ConstraintOptions> = (
+  value: unknown,
+  context: ConstraintContext<TOptions>,
+) => Violation[];
