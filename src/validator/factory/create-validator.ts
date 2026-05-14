@@ -1,47 +1,48 @@
 import { UnknownConstraintError } from '../errors';
-import { ConstraintContext, ConstraintOptions, ConstraintValidator, FieldRules } from '@/validator/constraint';
+import { ConstraintContext, ConstraintValidator } from '@/validator/constraint';
+import { ConstraintOptions, FieldSchema } from '@/validator/schema';
 import { Validator } from '@/validator/validator';
 import { Payload } from '@/validator';
 
-type FieldEntry = [string, FieldRules];
+type FieldSchemaEntry = [string, FieldSchema];
 type ConstraintsMap = Record<string, ConstraintValidator>;
 type ValidatorOptions = { constraints: ConstraintsMap };
 
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
 
-  return function validate(payload, rules, options?) {
-    const ruleEntries: FieldEntry[] = Object.entries(rules);
+  return function validate(payload, schema, options?) {
+    const schemaEntries: FieldSchemaEntry[] = Object.entries(schema);
 
     // If no groups are provided, implicitly validate against "Default".
     const activeGroups = options?.groups && options.groups.length > 0 ? options.groups : ['Default'];
 
-    // Apply all field rules and aggregate results.
-    return ruleEntries.flatMap(function (fieldEntry: FieldEntry) {
-      return applyFieldRules(constraints, payload, fieldEntry, activeGroups);
+    // Apply all field schemas and aggregate results.
+    return schemaEntries.flatMap(function (fieldSchemaEntry: FieldSchemaEntry) {
+      return applyFieldSchema(constraints, payload, fieldSchemaEntry, activeGroups);
     });
   };
 };
 
-function applyFieldRules(
+function applyFieldSchema(
   constraintsByName: ConstraintsMap,
   payload: Payload,
-  [field, rulesForField]: FieldEntry,
+  [field, schemaForField]: FieldSchemaEntry,
   activeGroups: string[],
   currentValue?: unknown,
 ): ReturnType<ConstraintValidator> {
   const isGroupActive = (groups: string[]) => groups.length === 0 || groups.some(group => activeGroups.includes(group));
 
-  const normalizedFieldRules = normalizeFieldRules(rulesForField);
+  const normalizedFieldSchema = normalizeFieldSchema(schemaForField);
 
-  return normalizedFieldRules.flatMap(([constraintName, options]) => {
+  return normalizedFieldSchema.flatMap(([constraintName, options]) => {
     // Check if the constraint should be applied based on groups.
     const groups = options?.groups ?? [];
     if (!isGroupActive(groups)) return [];
 
     // Helper function to apply nested rules.
-    const applyNestedRules = (nextValue: unknown, rules: FieldRules, path: string) =>
-      applyFieldRules(constraintsByName, payload, [path, rules], activeGroups, nextValue);
+    const applyNestedRules = (nextValue: unknown, schema: FieldSchema, path: string) =>
+      applyFieldSchema(constraintsByName, payload, [path, schema], activeGroups, nextValue);
 
     // Find the constraint, build the context, and apply it.
     const constraintValidator = resolveConstraint(constraintsByName, field, constraintName);
@@ -73,21 +74,21 @@ function resolveConstraint(
   return constraintValidator;
 }
 
-function normalizeFieldRules(fieldRules: FieldRules): Array<[string, ConstraintOptions]> {
-  // Normalize rule shapes (array or map) into a consistent tuple list.
-  if (Array.isArray(fieldRules)) {
-    return fieldRules.flatMap(entry => normalizeFieldRuleEntry(entry));
+function normalizeFieldSchema(fieldSchema: FieldSchema): Array<[string, ConstraintOptions]> {
+  // Normalize schema shapes (array or map) into a consistent tuple list.
+  if (Array.isArray(fieldSchema)) {
+    return fieldSchema.flatMap(entry => normalizeFieldSchemaEntry(entry));
   }
-  return Object.entries(fieldRules).map(([constraintName, options]) => [constraintName, options]);
+  return Object.entries(fieldSchema).map(([constraintName, options]) => [constraintName, options]);
 }
 
-type FieldRuleEntry =
+type FieldSchemaDeclaration =
   | string
   | {
       [constraint: string]: ConstraintOptions;
     };
-function normalizeFieldRuleEntry(entry: FieldRuleEntry): Array<[string, ConstraintOptions]> {
-  // Convert shorthand rule declarations into a full [name, options] tuple.
+function normalizeFieldSchemaEntry(entry: FieldSchemaDeclaration): Array<[string, ConstraintOptions]> {
+  // Convert shorthand schema declarations into a full [name, options] tuple.
   if (typeof entry === 'string') {
     return [[entry, {}]];
   }

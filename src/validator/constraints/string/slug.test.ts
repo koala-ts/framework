@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { slug } from './slug';
-import { ConstraintContext, ConstraintOptions } from '@/validator/constraint';
+import { ConstraintContext } from '@/validator/constraint';
+import { ConstraintOptions } from '@/validator/schema';
 
 describe('slug', () => {
   it('accepts valid slug with lowercase, digits and hyphens', () => {

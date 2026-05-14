@@ -1,23 +1,5 @@
 import { Violation } from './violation';
-
-export type ConstraintOptions = {
-  groups?: string[];
-  [key: string]: unknown;
-};
-
-type ConstraintRule = {
-  [constraint: string]: ConstraintOptions;
-};
-
-type FieldRule = string | ConstraintRule;
-
-type FieldRuleList = FieldRule[];
-
-type FieldRuleMap = {
-  [constraint: string]: ConstraintOptions;
-};
-
-export type FieldRules = FieldRuleList | FieldRuleMap;
+import { ConstraintOptions, FieldSchema } from './schema';
 
 export type ConstraintContext = {
   path: string;
@@ -25,7 +7,7 @@ export type ConstraintContext = {
   value: unknown;
   constraint: string;
   options: ConstraintOptions;
-  runNestedRules: (value: unknown, rules: FieldRules, path: string) => Violation[];
+  runNestedRules: (value: unknown, schema: FieldSchema, path: string) => Violation[];
 };
 
 export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];
