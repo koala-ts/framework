@@ -2,12 +2,12 @@ import { Violation } from './violation';
 import { ConstraintOptions } from './constraint';
 import { FieldSchema } from './schema';
 
-export type ConstraintContext = {
+export type ConstraintContext<TOptions extends ConstraintOptions = ConstraintOptions> = {
   path: string;
   root: unknown;
   value: unknown;
   constraint: string;
-  options: ConstraintOptions;
+  options: TOptions;
   runNestedRules: (value: unknown, schema: FieldSchema, path: string) => Violation[];
 };
 
