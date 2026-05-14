@@ -4,10 +4,10 @@ import {
   ConstraintOptions,
   ConstraintValidator,
   FieldRules,
-  Payload,
   ValidationRules,
   Validator,
 } from '../types';
+import { Payload } from '../payload';
 
 type FieldEntry = [string, FieldRules];
 type ConstraintsMap = Record<string, ConstraintValidator>;
