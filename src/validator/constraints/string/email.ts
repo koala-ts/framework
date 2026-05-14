@@ -1,9 +1,10 @@
 import { Violation } from '@/validator/violation';
+import { ConstraintOptions } from '../../constraint';
 import { ConstraintContext } from '../../constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid email address.';
 
-type EmailOptions = {
+type EmailOptions = ConstraintOptions & {
   message?: string;
   normalizer?: (value: string) => string;
 };

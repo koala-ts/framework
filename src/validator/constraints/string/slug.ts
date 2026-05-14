@@ -1,9 +1,10 @@
 import { Violation } from '@/validator/violation';
+import { ConstraintOptions } from '../../constraint';
 import { ConstraintContext } from '../../constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid slug.';
 
-type SlugOptions = {
+type SlugOptions = ConstraintOptions & {
   message?: string;
   normalizer?: (value: string) => string;
 };

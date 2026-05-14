@@ -1,9 +1,10 @@
 import { Violation } from '@/validator/violation';
+import { ConstraintOptions } from '../../constraint';
 import { ConstraintContext } from '../../constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value should not be blank.';
 
-type NotBlankOptions = {
+type NotBlankOptions = ConstraintOptions & {
   message?: string;
   normalizer?: (value: string) => string;
 };
