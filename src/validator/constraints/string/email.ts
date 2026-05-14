@@ -1,5 +1,5 @@
 import { ConstraintOptions } from '@/validator';
-import { ConstraintValidator } from '@/validator';
+import { ConstraintContext } from '@/validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid email address.';
 
@@ -10,7 +10,7 @@ type EmailOptions = ConstraintOptions & {
 
 const strictEmailRegex = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
 
-export const email: ConstraintValidator<EmailOptions> = (value, context) => {
+export function email(value: unknown, context: ConstraintContext<EmailOptions>) {
   const options = context.options;
   const message = options.message ?? DEFAULT_MESSAGE;
 
@@ -43,4 +43,4 @@ export const email: ConstraintValidator<EmailOptions> = (value, context) => {
   }
 
   return [];
-};
+}

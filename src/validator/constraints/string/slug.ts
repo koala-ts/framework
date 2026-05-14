@@ -1,5 +1,5 @@
 import { ConstraintOptions } from '@/validator';
-import { ConstraintValidator } from '@/validator';
+import { ConstraintContext } from '@/validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid slug.';
 
@@ -10,7 +10,7 @@ type SlugOptions = ConstraintOptions & {
 
 const strictSlugRegex = /^(?!-)(?!.*--)[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-export const slug: ConstraintValidator<SlugOptions> = (value, context) => {
+export function slug(value: unknown, context: ConstraintContext<SlugOptions>) {
   const options = context.options;
   const message = options.message ?? DEFAULT_MESSAGE;
 
@@ -43,4 +43,4 @@ export const slug: ConstraintValidator<SlugOptions> = (value, context) => {
   }
 
   return [];
-};
+}
