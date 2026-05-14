@@ -1,5 +1,5 @@
 import { Violation } from '@/validator/violation';
-import { ConstraintContext } from '../../constraint-validator';
+import { ConstraintContext } from '@/validator';
 import { FieldSchema } from '@/validator/schema';
 
 export function compound(schema: FieldSchema) {
