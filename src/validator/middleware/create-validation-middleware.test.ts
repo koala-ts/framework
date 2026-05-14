@@ -1,8 +1,9 @@
 import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { flattenViolations } from '@/validator/flatten-violations';
-import { type Validator, type Violation } from '@/validator/types';
+import { type Validator } from '@/validator/types';
 import { describe, expect, test, vi } from 'vitest';
 import { createValidationMiddleware } from './create-validation-middleware';
+import { Violation } from '@/validator/violation';
 
 describe('createValidationMiddleware', () => {
   test('continues to the next middleware when validation passes', async () => {

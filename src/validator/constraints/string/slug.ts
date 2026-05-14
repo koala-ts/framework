@@ -1,4 +1,5 @@
-import type { ConstraintContext, Violation } from '../../types';
+import type { ConstraintContext } from '../../types';
+import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value is not a valid slug.';
 

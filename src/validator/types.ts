@@ -1,9 +1,4 @@
-export type Violation = {
-  path: string;
-  message: string;
-  constraint: string;
-  value: unknown;
-};
+import { Violation } from '@/validator/violation';
 
 export type ConstraintOptions = { groups?: string[] } & Record<string, unknown>;
 export type ConstraintContext = {
@@ -14,7 +9,6 @@ export type ConstraintContext = {
   options: ConstraintOptions;
   runNestedRules: (value: unknown, rules: FieldRules, path: string) => Violation[];
 };
-
 export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];
 
 export type FieldRuleEntry = string | Record<string, ConstraintOptions>;

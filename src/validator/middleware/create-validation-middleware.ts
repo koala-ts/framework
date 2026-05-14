@@ -1,6 +1,7 @@
 import { type HttpMiddleware, HttpScope, NextMiddleware } from '@/Http';
-import { type ValidationRules, type Validator, Violation } from '@/validator/types';
+import { type ValidationRules, type Validator } from '@/validator/types';
 import { flattenViolations } from '@/validator/flatten-violations';
+import { Violation } from '@/validator/violation';
 
 type ViolationMapper = (violations: Violation[]) => Record<string, string[]>;
 

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ConstraintContext, Violation } from '../../types';
+import type { ConstraintContext } from '../../types';
 import { compound } from './compound';
+import { Violation } from '@/validator/violation';
 
 describe('compound', () => {
   it('creates a constraint that applies nested constraints from arrays', () => {
