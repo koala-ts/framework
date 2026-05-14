@@ -81,7 +81,11 @@ function normalizeFieldRules(fieldRules: FieldRules): Array<[string, ConstraintO
   return Object.entries(fieldRules).map(([constraintName, options]) => [constraintName, options]);
 }
 
-type FieldRuleEntry = string | Record<string, ConstraintOptions>;
+type FieldRuleEntry =
+  | string
+  | {
+      [constraint: string]: ConstraintOptions;
+    };
 function normalizeFieldRuleEntry(entry: FieldRuleEntry): Array<[string, ConstraintOptions]> {
   // Convert shorthand rule declarations into a full [name, options] tuple.
   if (typeof entry === 'string') {

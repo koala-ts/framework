@@ -5,8 +5,19 @@ export type ConstraintOptions = {
   [key: string]: unknown;
 };
 
-type FieldRuleEntry = string | Record<string, ConstraintOptions>;
-export type FieldRules = Record<string, ConstraintOptions> | FieldRuleEntry[];
+type ConstraintRule = {
+  [constraint: string]: ConstraintOptions;
+};
+
+type FieldRule = string | ConstraintRule;
+
+type FieldRuleList = FieldRule[];
+
+type FieldRuleMap = {
+  [constraint: string]: ConstraintOptions;
+};
+
+export type FieldRules = FieldRuleList | FieldRuleMap;
 
 export type ConstraintContext = {
   path: string;
@@ -16,4 +27,5 @@ export type ConstraintContext = {
   options: ConstraintOptions;
   runNestedRules: (value: unknown, rules: FieldRules, path: string) => Violation[];
 };
+
 export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];
