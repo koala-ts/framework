@@ -1,9 +1,10 @@
-export * from './factory/create-validator';
-export * from './types';
 export * from './constraints';
-export * from './flatten-violations';
+
+export { flattenViolations } from './flatten-violations';
+export { createValidator } from './factory/create-validator';
 export { createValidationMiddleware } from './middleware/create-validation-middleware';
-export type { Violation } from './violation';
+
+export type { Validator } from './validator';
 export type { Payload } from './payload';
-export type { Options } from './options';
 export type { ConstraintValidator, ConstraintContext, ConstraintOptions } from './constraint';
+export type { Violation } from './violation';

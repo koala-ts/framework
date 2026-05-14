@@ -1,17 +1,16 @@
 import { UnknownConstraintError } from '../errors';
-import { FieldRules, ValidationRules, Validator } from '../types';
-import { Payload } from '../payload';
-import { ConstraintContext, ConstraintOptions, ConstraintValidator } from '@/validator/constraint';
+import { ConstraintContext, ConstraintOptions, ConstraintValidator, FieldRules } from '@/validator/constraint';
+import { Validator } from '@/validator/validator';
+import { Payload } from '@/validator';
 
 type FieldEntry = [string, FieldRules];
 type ConstraintsMap = Record<string, ConstraintValidator>;
 type ValidatorOptions = { constraints: ConstraintsMap };
-type ValidateOptions = { groups?: string[] };
 
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
 
-  return function validate(payload: Payload, rules: ValidationRules, options?: ValidateOptions) {
+  return function validate(payload, rules, options?) {
     const ruleEntries: FieldEntry[] = Object.entries(rules);
 
     // If no groups are provided, implicitly validate against "Default".

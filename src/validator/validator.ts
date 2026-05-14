@@ -1,11 +1,8 @@
 import { Violation } from './violation';
 import { Payload } from './payload';
-import { Options } from './options';
-import { ConstraintOptions } from './constraint';
+import { FieldRules } from './constraint';
 
-export type FieldRuleEntry = string | Record<string, ConstraintOptions>;
-
-export type FieldRules = Record<string, ConstraintOptions> | FieldRuleEntry[];
+type Options = { groups?: string[] };
 
 export type ValidationRules = Record<string, FieldRules>;
 
