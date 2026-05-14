@@ -1,6 +1,6 @@
 import { Violation } from '@/validator/violation';
 import { ConstraintOptions } from '../../constraint';
-import { ConstraintContext } from '../../constraint-validator';
+import { ConstraintValidator } from '../../constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value should not be blank.';
 
@@ -9,8 +9,8 @@ type NotBlankOptions = ConstraintOptions & {
   normalizer?: (value: string) => string;
 };
 
-export function notBlank(value: unknown, context: ConstraintContext): Violation[] {
-  const options = context.options as NotBlankOptions;
+export const notBlank: ConstraintValidator<NotBlankOptions> = (value, context) => {
+  const options = context.options;
   const message = options.message ?? DEFAULT_MESSAGE;
 
   const normalizedValue =
@@ -28,7 +28,7 @@ export function notBlank(value: unknown, context: ConstraintContext): Violation[
   }
 
   return [];
-}
+};
 
 function isBlank(value: unknown): boolean {
   return value === '' || value === null || value === undefined || (Array.isArray(value) && value.length === 0);
