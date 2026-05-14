@@ -5,3 +5,4 @@ export * from './flatten-violations';
 export { createValidationMiddleware } from './middleware/create-validation-middleware';
 export type { Violation } from './violation';
 export type { Payload } from './payload';
+export type { Options } from '@/validator/options';

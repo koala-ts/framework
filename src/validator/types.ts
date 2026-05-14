@@ -1,5 +1,6 @@
 import { Violation } from './violation';
 import { Payload } from './payload';
+import { Options } from '@/validator/options';
 
 export type ConstraintOptions = { groups?: string[] } & Record<string, unknown>;
 export type ConstraintContext = {
@@ -18,6 +19,4 @@ export type FieldRules = Record<string, ConstraintOptions> | FieldRuleEntry[];
 
 export type ValidationRules = Record<string, FieldRules>;
 
-export type ValidateOptions = { groups?: string[] };
-
-export type Validator = (payload: Payload, rules: ValidationRules, options?: ValidateOptions) => Violation[];
+export type Validator = (payload: Payload, rules: ValidationRules, options?: Options) => Violation[];
