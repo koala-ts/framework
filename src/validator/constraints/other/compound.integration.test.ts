@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createValidator } from '../../validator';
+import { createValidator } from '../../create-validator';
 import { notBlank } from '../basic/not-blank';
 import { email } from '../string/email';
 import { compound } from './compound';

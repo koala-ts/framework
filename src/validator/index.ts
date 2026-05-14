@@ -1,4 +1,4 @@
-export * from './validator';
+export * from './create-validator';
 export * from './types';
 export * from './constraints';
 export * from './flatten-violations';
