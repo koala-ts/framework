@@ -1,6 +1,6 @@
 import { flattenViolations } from '@/validator/flatten-violations';
-import { Violation } from '@/validator/types';
 import { describe, expect, test } from 'vitest';
+import { Violation } from '@/validator/violation';
 
 describe('Flatten violations', () => {
   test('it should flatten violations into JSON API format', () => {

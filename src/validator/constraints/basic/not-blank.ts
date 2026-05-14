@@ -1,4 +1,5 @@
-import type { ConstraintContext, Violation } from '../../types';
+import { Violation } from '@/validator/violation';
+import { ConstraintContext } from '../../constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value should not be blank.';
 

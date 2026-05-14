@@ -1,4 +1,4 @@
-import { Violation } from '@/validator/types';
+import { Violation } from '@/validator/violation';
 
 export function flattenViolations(violations: Violation[]): Record<string, string[]> {
   const groupedViolations = Object.groupBy(violations, violation => violation.path) as Record<string, Violation[]>;
