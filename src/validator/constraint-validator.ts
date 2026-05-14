@@ -11,4 +11,7 @@ export type ConstraintContext<TOptions extends ConstraintOptions = ConstraintOpt
   runNestedRules: (value: unknown, schema: FieldSchema, path: string) => Violation[];
 };
 
-export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];
+export type ConstraintValidator<TOptions extends ConstraintOptions = ConstraintOptions> = (
+  value: unknown,
+  context: ConstraintContext<TOptions>,
+) => Violation[];
