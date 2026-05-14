@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { email } from './email';
-import { ConstraintContext } from '../../constraint-validator';
+import { ConstraintContext } from '@/validator/constraint-validator';
 
 describe('email', () => {
   it('rejects invalid email by default', () => {

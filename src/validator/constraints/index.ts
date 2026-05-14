@@ -1,6 +1,6 @@
-import { notBlank } from './basic/not-blank';
-import { email } from './string/email';
-import { slug } from './string/slug';
+import { notBlank } from '@/validator/constraints/basic/not-blank';
+import { email } from '@/validator/constraints/string/email';
+import { slug } from '@/validator/constraints/string/slug';
 
 export const builtInConstraints = {
   // Basic
