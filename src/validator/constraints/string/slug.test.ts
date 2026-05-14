@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ConstraintContext, ConstraintOptions } from '../../types';
 import { slug } from './slug';
+import { ConstraintContext, ConstraintOptions } from '@/validator/constraint';
 
 describe('slug', () => {
   it('accepts valid slug with lowercase, digits and hyphens', () => {

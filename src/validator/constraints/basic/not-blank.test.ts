@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ConstraintContext } from '../../types';
 import { notBlank } from './not-blank';
+import { ConstraintContext } from '@/validator/constraint';
 
 describe('notBlank', () => {
   it.each([
