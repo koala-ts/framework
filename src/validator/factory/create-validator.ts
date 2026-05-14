@@ -1,6 +1,7 @@
 import { UnknownConstraintError } from '../errors';
+import { ConstraintOptions } from '../constraint';
 import { ConstraintContext, ConstraintValidator } from '../constraint-validator';
-import { ConstraintOptions, FieldSchema } from '@/validator/schema';
+import { FieldSchema } from '@/validator/schema';
 import { Validator } from '@/validator/validator';
 import { Payload } from '@/validator';
 

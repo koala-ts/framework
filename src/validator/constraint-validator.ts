@@ -1,5 +1,6 @@
 import { Violation } from './violation';
-import { ConstraintOptions, FieldSchema } from './schema';
+import { ConstraintOptions } from './constraint';
+import { FieldSchema } from './schema';
 
 export type ConstraintContext = {
   path: string;
