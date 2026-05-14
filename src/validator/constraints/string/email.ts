@@ -1,5 +1,5 @@
 import { Violation } from '@/validator/violation';
-import { ConstraintContext } from '@/validator/constraint';
+import { ConstraintContext } from '../../constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid email address.';
 
