@@ -17,15 +17,11 @@ export type ConstraintContext = {
 
 export type ConstraintValidator = (value: unknown, context: ConstraintContext) => Violation[];
 
-export type ConstraintsMap = Record<string, ConstraintValidator>;
-
 export type FieldRuleEntry = string | Record<string, ConstraintOptions>;
 
 export type FieldRules = Record<string, ConstraintOptions> | FieldRuleEntry[];
 
 export type ValidationRules = Record<string, FieldRules>;
-
-export type ValidatorOptions = { constraints: ConstraintsMap };
 
 export type ValidateOptions = { groups?: string[] };
 

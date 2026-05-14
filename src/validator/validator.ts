@@ -2,18 +2,17 @@ import { UnknownConstraintError } from './errors';
 import {
   ConstraintContext,
   ConstraintOptions,
-  ConstraintsMap,
   ConstraintValidator,
-  FieldRuleEntry,
   FieldRules,
   Payload,
-  ValidateOptions,
   ValidationRules,
   Validator,
-  ValidatorOptions,
 } from './types';
 
 type FieldEntry = [string, FieldRules];
+type ConstraintsMap = Record<string, ConstraintValidator>;
+type ValidatorOptions = { constraints: ConstraintsMap };
+type ValidateOptions = { groups?: string[] };
 
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
@@ -86,10 +85,10 @@ function normalizeFieldRules(fieldRules: FieldRules): Array<[string, ConstraintO
   if (Array.isArray(fieldRules)) {
     return fieldRules.flatMap(entry => normalizeFieldRuleEntry(entry));
   }
-
   return Object.entries(fieldRules).map(([constraintName, options]) => [constraintName, options]);
 }
 
+type FieldRuleEntry = string | Record<string, ConstraintOptions>;
 function normalizeFieldRuleEntry(entry: FieldRuleEntry): Array<[string, ConstraintOptions]> {
   // Convert shorthand rule declarations into a full [name, options] tuple.
   if (typeof entry === 'string') {
