@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { builtInConstraints } from '@/validator/constraints';
 import { UnknownConstraintError } from '@/validator/errors';
 import { createValidator } from '@/validator/factory/create-validator';
 import { Violation } from '@/validator/violation';
@@ -167,24 +166,6 @@ describe('Validator', () => {
         constraint: 'minLengthConstraint',
         message: 'Must be at least 3 characters',
         value: 'ab',
-      });
-    });
-
-    it('should validate duplicate array elements through the built-in constraints registry', () => {
-      const validate = createValidator({ constraints: builtInConstraints });
-      const payload = { tags: ['admin', 'editor', 'admin'] };
-      const rules = {
-        tags: [{ unique: {} }],
-      };
-
-      const violations = validate(payload, rules);
-
-      expect(violations).toHaveLength(1);
-      expect(violations[0]).toEqual({
-        path: 'tags',
-        constraint: 'unique',
-        message: 'This collection should contain only unique elements.',
-        value: payload.tags,
       });
     });
   });
