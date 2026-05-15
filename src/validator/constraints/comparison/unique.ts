@@ -1,15 +1,16 @@
 import { ConstraintOptions } from '@/validator/constraint';
 import { ConstraintContext } from '@/validator/constraint-validator';
+import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This collection should contain only unique elements.';
 
-type UniqueOptions = ConstraintOptions & {
+export type UniqueOptions = ConstraintOptions & {
   message?: string;
   normalizer?: (value: unknown) => unknown;
   fields?: string[];
 };
 
-export function unique(value: unknown, context: ConstraintContext<UniqueOptions>) {
+export function unique(value: unknown, context: ConstraintContext<UniqueOptions>): Violation[] {
   const options = context.options;
   const message = options.message ?? DEFAULT_MESSAGE;
   const fields = options.fields;
