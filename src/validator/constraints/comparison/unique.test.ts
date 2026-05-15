@@ -62,4 +62,20 @@ describe('unique', () => {
       value,
     });
   });
+
+  it('returns no violations when the value is undefined', () => {
+    const value = undefined;
+    const context: ConstraintContext = {
+      path: 'tags',
+      root: {},
+      value,
+      constraint: 'unique',
+      options: {},
+      runNestedRules: () => [],
+    };
+
+    const violations = unique(value, context);
+
+    expect(violations).toHaveLength(0);
+  });
 });
