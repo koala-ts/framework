@@ -18,4 +18,26 @@ describe('unique', () => {
 
     expect(violations).toHaveLength(0);
   });
+
+  it('returns one violation when an array contains duplicate elements', () => {
+    const value = ['admin', 'editor', 'admin'];
+    const context: ConstraintContext = {
+      path: 'tags',
+      root: { tags: value },
+      value,
+      constraint: 'unique',
+      options: {},
+      runNestedRules: () => [],
+    };
+
+    const violations = unique(value, context);
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'tags',
+      constraint: 'unique',
+      message: 'This collection should contain only unique elements.',
+      value,
+    });
+  });
 });
