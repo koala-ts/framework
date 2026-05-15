@@ -40,4 +40,26 @@ describe('unique', () => {
       value,
     });
   });
+
+  it('uses a custom message when provided', () => {
+    const value = ['admin', 'admin'];
+    const context: ConstraintContext = {
+      path: 'tags',
+      root: { tags: value },
+      value,
+      constraint: 'unique',
+      options: { message: 'Tags must be unique' },
+      runNestedRules: () => [],
+    };
+
+    const violations = unique(value, context);
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'tags',
+      constraint: 'unique',
+      message: 'Tags must be unique',
+      value,
+    });
+  });
 });
