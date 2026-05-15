@@ -100,4 +100,29 @@ describe('unique', () => {
       value,
     });
   });
+
+  it('normalizes each array element before checking uniqueness', () => {
+    const value = [' admin ', 'admin'];
+    const context: ConstraintContext = {
+      path: 'tags',
+      root: { tags: value },
+      value,
+      constraint: 'unique',
+      options: {
+        normalizer: (element: unknown) => (typeof element === 'string' ? element.trim() : element),
+      },
+      runNestedRules: () => [],
+    };
+
+    const violations = unique(value, context);
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toEqual({
+      path: 'tags',
+      constraint: 'unique',
+      message: 'This collection should contain only unique elements.',
+      value,
+    });
+  });
+
 });
