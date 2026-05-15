@@ -10,7 +10,11 @@ type UniqueOptions = ConstraintOptions & {
 export function unique(value: unknown, context: ConstraintContext<UniqueOptions>) {
   const message = context.options.message ?? DEFAULT_MESSAGE;
 
-  if (Array.isArray(value) && new Set(value).size !== value.length) {
+  if (value === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(value) || !hasUniqueElements(value)) {
     return [
       {
         path: context.path,
@@ -22,4 +26,8 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
   }
 
   return [];
+}
+
+function hasUniqueElements(value: unknown[]): boolean {
+  return new Set(value).size === value.length;
 }
