@@ -23,7 +23,7 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
   return [
     {
       path: context.path,
-      message: options.message ?? getDefaultMessageWith(options.type),
+      message: options.message ?? getDefaultMessageWith(expectedTypes),
       constraint: context.constraint,
       value,
     },
@@ -40,12 +40,10 @@ function getValueType(value: unknown): string {
   return typeof value;
 }
 
-function getDefaultMessageWith(type: string | string[]): string {
-  const expectedTypes = Array.isArray(type) ? type : [type];
-
-  if (expectedTypes.length > 1) {
-    return DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES.replace('{types}', expectedTypes.join(', '));
+function getDefaultMessageWith(types: string[]): string {
+  if (Array.isArray(types) && types.length > 1) {
+    return DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES.replace('{types}', types.join(', '));
   }
 
-  return DEFAULT_MESSAGE.replace('{type}', expectedTypes[0]);
+  return DEFAULT_MESSAGE.replace('{type}', types[0] as string);
 }
