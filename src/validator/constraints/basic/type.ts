@@ -15,6 +15,7 @@ export type AllowedTypes =
   | 'object'
   | 'array'
   | 'null';
+
 export type TypeOptions = ConstraintOptions & {
   type: AllowedTypes | AllowedTypes[];
   message?: string;

@@ -61,7 +61,7 @@ describe('type', () => {
     expect(violations).toHaveLength(0);
   });
 
-  it('returns no violations for undefined value', () => {
+  it('it should bypass undefined value', () => {
     const context: ConstraintContext<TypeOptions> = {
       path: 'name',
       root: { name: undefined },
