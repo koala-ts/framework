@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { type, TypeOptions } from './type';
 import { ConstraintContext } from '@/validator/constraint-validator';
+import {email} from "@/validator";
 
 describe('type', () => {
   it.each([
@@ -57,6 +58,21 @@ describe('type', () => {
     };
 
     const violations = type(value, context);
+
+    expect(violations).toHaveLength(0);
+  });
+
+  it('returns no violations for undefined values', () => {
+    const context: ConstraintContext<TypeOptions> = {
+      path: 'name',
+      root: { name: undefined },
+      value: undefined,
+      constraint: 'type',
+      options: { type: 'undefined' },
+      runNestedRules: () => [],
+    };
+
+    const violations = type(undefined, context);
 
     expect(violations).toHaveLength(0);
   });
