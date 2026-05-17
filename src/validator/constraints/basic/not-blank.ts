@@ -3,10 +3,10 @@ import { ConstraintContext } from '@/validator/constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value should not be blank.';
 
-type NotBlankOptions = ConstraintOptions & {
+type NotBlankOptions = ConstraintOptions<{
   message?: string;
   normalizer?: (value: string) => string;
-};
+}>;
 
 export function notBlank(value: unknown, context: ConstraintContext<NotBlankOptions>) {
   const options = context.options;
