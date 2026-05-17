@@ -29,7 +29,7 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
     ? context.options.type
     : [context.options.type];
 
-  if (matchesExpectedType(value, normalizedTypes)) return [];
+  if (normalizedTypes.includes(getTypeOf(value))) return [];
 
   return [
     {
@@ -41,11 +41,7 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
   ];
 }
 
-function matchesExpectedType(value: unknown, expectedTypes: AllowedTypes[]): boolean {
-  return expectedTypes.includes(getValueType(value));
-}
-
-function getValueType(value: unknown): AllowedTypes {
+function getTypeOf(value: unknown): AllowedTypes {
   if (value === null) return 'null';
   if (Array.isArray(value)) return 'array';
   return typeof value as AllowedTypes;
