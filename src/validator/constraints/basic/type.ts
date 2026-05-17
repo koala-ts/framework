@@ -25,9 +25,7 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
     return [];
   }
 
-  const normalizedTypes: AllowedType[] = Array.isArray(context.options.type)
-    ? context.options.type
-    : [context.options.type];
+  const normalizedTypes: AllowedType[] = [context.options.type].flat();
 
   if (normalizedTypes.includes(getTypeOf(value))) return [];
 
