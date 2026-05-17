@@ -42,9 +42,9 @@ function getValueType(value: unknown): string {
 }
 
 function getDefaultMessageWith(types: AllowedTypes[]): string {
-  if (Array.isArray(types) && types.length > 1) {
-    return DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES.replace('{types}', types.join(', '));
+  if (types.length === 1) {
+    return DEFAULT_MESSAGE.replace('{type}', types[0] as string);
   }
 
-  return DEFAULT_MESSAGE.replace('{type}', types[0] as string);
+  return DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES.replace('{types}', types.join(', '));
 }
