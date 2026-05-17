@@ -1,6 +1,5 @@
-export type ConstraintOptions = {
+export type ConstraintOptions<TOptions extends object = { [option: string]: unknown }> = TOptions & {
   groups?: string[];
-  [key: string]: unknown;
 };
 
 export type ConstraintSchema = {

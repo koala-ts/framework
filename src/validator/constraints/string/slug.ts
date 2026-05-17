@@ -3,10 +3,10 @@ import { ConstraintContext } from '@/validator/constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid slug.';
 
-type SlugOptions = ConstraintOptions & {
+type SlugOptions = ConstraintOptions<{
   message?: string;
   normalizer?: (value: string) => string;
-};
+}>;
 
 const strictSlugRegex = /^(?!-)(?!.*--)[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
