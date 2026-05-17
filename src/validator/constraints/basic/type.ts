@@ -4,9 +4,10 @@ import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value should be of type {type}.';
 const DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES = 'This value should match at least one of these types [{types}].';
+type AllowedTypes = string | number | boolean | bigint | symbol | 'function' | object | 'array' | null | undefined;
 
 export type TypeOptions = ConstraintOptions & {
-  type: string | string[];
+  type: AllowedTypes | AllowedTypes[];
   message?: string;
 };
 
@@ -15,22 +16,22 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
     return [];
   }
 
-  const options = context.options;
-  const expectedTypes = Array.isArray(options.type) ? options.type : [options.type];
+  const options: TypeOptions = context.options;
+  const normalizedTypes: AllowedTypes[] = Array.isArray(options.type) ? options.type : [options.type];
 
-  if (matchesExpectedType(value, expectedTypes)) return [];
+  if (matchesExpectedType(value, normalizedTypes)) return [];
 
   return [
     {
       path: context.path,
-      message: options.message ?? getDefaultMessageWith(expectedTypes),
+      message: options.message ?? getDefaultMessageWith(normalizedTypes),
       constraint: context.constraint,
       value,
     },
   ];
 }
 
-function matchesExpectedType(value: unknown, expectedTypes: string[]): boolean {
+function matchesExpectedType(value: unknown, expectedTypes: AllowedTypes[]): boolean {
   return expectedTypes.includes(getValueType(value));
 }
 
@@ -40,7 +41,7 @@ function getValueType(value: unknown): string {
   return typeof value;
 }
 
-function getDefaultMessageWith(types: string[]): string {
+function getDefaultMessageWith(types: AllowedTypes[]): string {
   if (Array.isArray(types) && types.length > 1) {
     return DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES.replace('{types}', types.join(', '));
   }
