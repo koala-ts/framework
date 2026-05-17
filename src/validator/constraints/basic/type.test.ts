@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AllowedTypes, type, TypeOptions } from './type';
+import { AllowedType, type, TypeOptions } from './type';
 import { ConstraintContext } from '@/validator/constraint-validator';
 
 describe('type', () => {
@@ -20,7 +20,7 @@ describe('type', () => {
       root: { name: value },
       value,
       constraint: 'type',
-      options: { type: expectedType as AllowedTypes },
+      options: { type: expectedType as AllowedType },
       runNestedRules: () => [],
     };
 
@@ -52,7 +52,7 @@ describe('type', () => {
       root: { name: value },
       value,
       constraint: 'type',
-      options: { type: expectedType as AllowedTypes },
+      options: { type: expectedType as AllowedType },
       runNestedRules: () => [],
     };
 

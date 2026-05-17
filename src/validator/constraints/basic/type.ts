@@ -4,7 +4,7 @@ import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value should match at least one of these types [{types}].';
 
-export type AllowedTypes =
+export type AllowedType =
   | 'string'
   | 'number'
   | 'boolean'
@@ -16,7 +16,7 @@ export type AllowedTypes =
   | 'null';
 
 export type TypeOptions = ConstraintOptions & {
-  type: AllowedTypes | AllowedTypes[];
+  type: AllowedType | AllowedType[];
   message?: string;
 };
 
@@ -25,7 +25,7 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
     return [];
   }
 
-  const normalizedTypes: AllowedTypes[] = Array.isArray(context.options.type)
+  const normalizedTypes: AllowedType[] = Array.isArray(context.options.type)
     ? context.options.type
     : [context.options.type];
 
@@ -41,12 +41,12 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
   ];
 }
 
-function getTypeOf(value: unknown): AllowedTypes {
+function getTypeOf(value: unknown): AllowedType {
   if (value === null) return 'null';
   if (Array.isArray(value)) return 'array';
-  return typeof value as AllowedTypes;
+  return typeof value as AllowedType;
 }
 
-function getDefaultMessageWith(types: AllowedTypes[]): string {
+function getDefaultMessageWith(types: AllowedType[]): string {
   return DEFAULT_MESSAGE.replace('{types}', types.join(', '));
 }
