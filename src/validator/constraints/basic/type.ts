@@ -5,7 +5,16 @@ import { Violation } from '@/validator/violation';
 const DEFAULT_MESSAGE = 'This value should be of type {type}.';
 const DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES = 'This value should match at least one of these types [{types}].';
 
-type AllowedTypes = string | number | boolean | bigint | symbol | 'function' | object | 'array' | null | undefined;
+export type AllowedTypes =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'bigint'
+  | 'symbol'
+  | 'function'
+  | 'object'
+  | 'array'
+  | 'null';
 export type TypeOptions = ConstraintOptions & {
   type: AllowedTypes | AllowedTypes[];
   message?: string;
@@ -35,10 +44,10 @@ function matchesExpectedType(value: unknown, expectedTypes: AllowedTypes[]): boo
   return expectedTypes.includes(getValueType(value));
 }
 
-function getValueType(value: unknown): string {
+function getValueType(value: unknown): AllowedTypes {
   if (value === null) return 'null';
   if (Array.isArray(value)) return 'array';
-  return typeof value;
+  return typeof value as AllowedTypes;
 }
 
 function getDefaultMessageWith(types: AllowedTypes[]): string {
