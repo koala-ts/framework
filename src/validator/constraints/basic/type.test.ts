@@ -82,7 +82,7 @@ describe('type', () => {
       root: { identifier: false },
       value: false,
       constraint: 'type',
-      options: { type: ['string', 'number'] },
+      options: { type: ['string', 'number', 'object'] },
       runNestedRules: () => [],
     };
 
@@ -92,7 +92,7 @@ describe('type', () => {
     expect(violations[0]).toEqual({
       path: 'identifier',
       constraint: 'type',
-      message: 'This value should be of type string or number.',
+      message: 'This value should match at least one of these types [string, number, object].',
       value: false,
     });
   });

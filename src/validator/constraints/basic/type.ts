@@ -3,6 +3,7 @@ import { ConstraintContext } from '@/validator/constraint-validator';
 import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value should be of type {type}.';
+const DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES = 'This value should match at least one of these types [{types}].';
 
 export type TypeOptions = ConstraintOptions & {
   type: string | string[];
@@ -22,7 +23,7 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
   return [
     {
       path: context.path,
-      message: options.message ?? getDefaultMessageWith(expectedTypes),
+      message: options.message ?? getDefaultMessageWith(options.type),
       constraint: context.constraint,
       value,
     },
@@ -39,6 +40,12 @@ function getValueType(value: unknown): string {
   return typeof value;
 }
 
-function getDefaultMessageWith(expectedTypes: string[]): string {
-  return DEFAULT_MESSAGE.replace('{type}', expectedTypes.join(' or '));
+function getDefaultMessageWith(type: string | string[]): string {
+  const expectedTypes = Array.isArray(type) ? type : [type];
+
+  if (expectedTypes.length > 1) {
+    return DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES.replace('{types}', expectedTypes.join(', '));
+  }
+
+  return DEFAULT_MESSAGE.replace('{type}', expectedTypes[0]);
 }
