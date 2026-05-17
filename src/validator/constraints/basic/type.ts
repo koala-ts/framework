@@ -17,7 +17,7 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
   const actualType = getTypeOf(value);
   const expectedTypes = getExpectedTypes(context.options.type);
 
-  if (expectedTypes.includes(actualType)) return [];
+  if (expectedTypes.some(expectedType => actualType === expectedType)) return [];
 
   return [
     {
