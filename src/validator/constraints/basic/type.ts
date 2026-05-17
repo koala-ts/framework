@@ -25,15 +25,16 @@ export function type(value: unknown, context: ConstraintContext<TypeOptions>): V
     return [];
   }
 
-  const options: TypeOptions = context.options;
-  const normalizedTypes: AllowedTypes[] = Array.isArray(options.type) ? options.type : [options.type];
+  const normalizedTypes: AllowedTypes[] = Array.isArray(context.options.type)
+    ? context.options.type
+    : [context.options.type];
 
   if (matchesExpectedType(value, normalizedTypes)) return [];
 
   return [
     {
       path: context.path,
-      message: options.message ?? getDefaultMessageWith(normalizedTypes),
+      message: context.options.message ?? getDefaultMessageWith(normalizedTypes),
       constraint: context.constraint,
       value,
     },
