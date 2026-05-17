@@ -1,6 +1,6 @@
-import { ConstraintContext } from '@/validator/constraint-validator';
 import { describe, expect, it } from 'vitest';
 import { type, TypeOptions } from './type';
+import { ConstraintContext } from '@/validator/constraint-validator';
 
 describe('type', () => {
   it.each([

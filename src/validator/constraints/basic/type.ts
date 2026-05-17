@@ -12,32 +12,29 @@ export type TypeOptions = ConstraintOptions<{
 }>;
 
 export function type(value: unknown, context: ConstraintContext<TypeOptions>): Violation[] {
-  if (value === undefined) {
-    return [];
-  }
+  if (value === undefined) return [];
 
-  const normalizedTypes: readonly AllowedType[] = Array.isArray(context.options.type)
-    ? context.options.type
-    : [context.options.type];
+  const actualType = getTypeOf(value);
+  const expectedTypes = getExpectedTypes(context.options.type);
 
-  if (normalizedTypes.includes(getTypeOf(value))) return [];
+  if (expectedTypes.includes(actualType)) return [];
 
   return [
     {
       path: context.path,
-      message: context.options.message ?? getDefaultMessageWith(normalizedTypes),
+      message: context.options.message ?? DEFAULT_MESSAGE.replace('{types}', expectedTypes.join(', ')),
       constraint: context.constraint,
       value,
     },
   ];
 }
 
-function getTypeOf(value: unknown): AllowedType {
+function getTypeOf(value: unknown): string {
   if (value === null) return 'null';
   if (Array.isArray(value)) return 'array';
-  return typeof value as AllowedType;
+  return typeof value;
 }
 
-function getDefaultMessageWith(types: readonly AllowedType[]): string {
-  return DEFAULT_MESSAGE.replace('{types}', types.join(', '));
+function getExpectedTypes(type: TypeOptions['type']): readonly AllowedType[] {
+  return typeof type === 'string' ? [type] : type;
 }
