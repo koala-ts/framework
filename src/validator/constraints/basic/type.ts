@@ -4,28 +4,21 @@ import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value should match at least one of these types [{types}].';
 
-export type AllowedType =
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'bigint'
-  | 'symbol'
-  | 'function'
-  | 'object'
-  | 'array'
-  | 'null';
+type AllowedType = 'string' | 'number' | 'boolean' | 'bigint' | 'symbol' | 'function' | 'object' | 'array' | 'null';
 
-export type TypeOptions = ConstraintOptions & {
-  type: AllowedType | AllowedType[];
+export type TypeOptions = ConstraintOptions<{
+  type: AllowedType | readonly AllowedType[];
   message?: string;
-};
+}>;
 
 export function type(value: unknown, context: ConstraintContext<TypeOptions>): Violation[] {
   if (value === undefined) {
     return [];
   }
 
-  const normalizedTypes: AllowedType[] = [context.options.type].flat();
+  const normalizedTypes: readonly AllowedType[] = Array.isArray(context.options.type)
+    ? context.options.type
+    : [context.options.type];
 
   if (normalizedTypes.includes(getTypeOf(value))) return [];
 
@@ -45,6 +38,6 @@ function getTypeOf(value: unknown): AllowedType {
   return typeof value as AllowedType;
 }
 
-function getDefaultMessageWith(types: AllowedType[]): string {
+function getDefaultMessageWith(types: readonly AllowedType[]): string {
   return DEFAULT_MESSAGE.replace('{types}', types.join(', '));
 }
