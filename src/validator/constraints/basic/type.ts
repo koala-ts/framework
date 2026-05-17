@@ -4,8 +4,8 @@ import { Violation } from '@/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value should be of type {type}.';
 const DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES = 'This value should match at least one of these types [{types}].';
-type AllowedTypes = string | number | boolean | bigint | symbol | 'function' | object | 'array' | null | undefined;
 
+type AllowedTypes = string | number | boolean | bigint | symbol | 'function' | object | 'array' | null | undefined;
 export type TypeOptions = ConstraintOptions & {
   type: AllowedTypes | AllowedTypes[];
   message?: string;
