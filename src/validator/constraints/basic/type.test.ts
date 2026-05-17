@@ -61,7 +61,7 @@ describe('type', () => {
     expect(violations).toHaveLength(0);
   });
 
-  it('returns no violations for undefined values', () => {
+  it('returns no violations for undefined value', () => {
     const context: ConstraintContext<TypeOptions> = {
       path: 'name',
       root: { name: undefined },
@@ -110,21 +110,6 @@ describe('type', () => {
       message: 'This value should match at least one of these types [string, number, object].',
       value: false,
     });
-  });
-
-  it('returns no violations when the value is undefined', () => {
-    const context: ConstraintContext<TypeOptions> = {
-      path: 'age',
-      root: { age: undefined },
-      value: undefined,
-      constraint: 'type',
-      options: { type: 'number' },
-      runNestedRules: () => [],
-    };
-
-    const violations = type(undefined, context);
-
-    expect(violations).toHaveLength(0);
   });
 
   it('uses a custom message when provided', () => {
