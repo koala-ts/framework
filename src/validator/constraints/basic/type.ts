@@ -2,8 +2,7 @@ import { ConstraintOptions } from '@/validator/constraint';
 import { ConstraintContext } from '@/validator/constraint-validator';
 import { Violation } from '@/validator/violation';
 
-const DEFAULT_MESSAGE = 'This value should be of type {type}.';
-const DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES = 'This value should match at least one of these types [{types}].';
+const DEFAULT_MESSAGE = 'This value should match at least one of these types [{types}].';
 
 export type AllowedTypes =
   | 'string'
@@ -53,9 +52,5 @@ function getValueType(value: unknown): AllowedTypes {
 }
 
 function getDefaultMessageWith(types: AllowedTypes[]): string {
-  if (types.length === 1) {
-    return DEFAULT_MESSAGE.replace('{type}', types[0] as string);
-  }
-
-  return DEFAULT_MESSAGE_FOR_MULTIPLE_TYPES.replace('{types}', types.join(', '));
+  return DEFAULT_MESSAGE.replace('{types}', types.join(', '));
 }

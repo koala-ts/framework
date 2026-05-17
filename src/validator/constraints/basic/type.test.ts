@@ -30,7 +30,7 @@ describe('type', () => {
     expect(violations[0]).toEqual({
       path: 'name',
       constraint: 'type',
-      message: `This value should be of type ${expectedType}.`,
+      message: `This value should match at least one of these types [${expectedType}].`,
       value,
     });
   });
