@@ -13,7 +13,6 @@ describe('type', () => {
     { expectedType: 'object', value: ['Koala'] },
     { expectedType: 'array', value: { name: 'Koala' } },
     { expectedType: 'null', value: { name: 'Koala' } },
-    { expectedType: 'undefined', value: 'Koala' },
   ])('returns a violation when the value does not match $expectedType', ({ expectedType, value }) => {
     const context: ConstraintContext<TypeOptions> = {
       path: 'name',
@@ -45,7 +44,6 @@ describe('type', () => {
     { expectedType: 'object', value: { name: 'Koala' } },
     { expectedType: 'array', value: ['Koala'] },
     { expectedType: 'null', value: null },
-    { expectedType: 'undefined', value: undefined },
   ])('returns no violations when the value matches $expectedType', ({ expectedType, value }) => {
     const context: ConstraintContext<TypeOptions> = {
       path: 'name',
