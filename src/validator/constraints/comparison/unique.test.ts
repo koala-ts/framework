@@ -63,14 +63,14 @@ describe('unique', () => {
     });
   });
 
-  it('returns no violations when the value is undefined', () => {
+  it('should bypass undefined value', () => {
     const value = undefined;
     const context: ConstraintContext = {
       path: 'tags',
       root: {},
       value,
       constraint: 'unique',
-      options: {},
+      options: { message: 'Tags must be unique' },
       runNestedRules: () => [],
     };
 
