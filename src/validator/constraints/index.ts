@@ -20,7 +20,6 @@ export const builtInConstraints = {
 export * from './string/email';
 export * from './string/slug';
 export * from './basic/not-blank';
-export { unique, type UniqueOptions } from './comparison/unique';
 export * from './basic/type';
 export { unique, type UniqueOptions } from './comparison/unique';
 export * from './basic/type';
