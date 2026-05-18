@@ -27,18 +27,10 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
 
   const normalizer = context.options.normalizer;
   const fields = context.options.fields;
+  let banana: unknown[];
+  banana = getValu(fields, normalizer, value, banana);
 
-  if (fields === undefined) {
-    const normalized = normalizer ? value.map(element => normalizer(element)) : value;
-    if (isUnique(normalized)) return [];
-  } else if (fields.length > 0) {
-    const fieldsValues = value.map(valueElement => fields.map(field => valueElement[field]));
-    const normalizedValues = normalizer
-      ? fieldsValues.map(fieldsValues => fieldsValues.map(fieldsValue => normalizer(fieldsValue)))
-      : value;
-    const serialized = normalizedValues.map(normalizedValue => JSON.stringify(normalizedValue));
-    if (isUnique(serialized)) return [];
-  }
+  if (isUnique(banana)) return [];
 
   return [
     {
@@ -48,6 +40,17 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
       value,
     },
   ];
+}
+
+function getValu(fields: string[] | undefined, normalizer: ((value: unknown) => unknown) | undefined, value: unknown) {
+  if (fields !== undefined && fields.length > 0) {
+    const fieldsValues = value.map(valueElement => fields.map(field => valueElement[field]));
+    const normalizedValues = normalizer
+      ? fieldsValues.map(fieldsValues => fieldsValues.map(fieldsValue => normalizer(fieldsValue)))
+      : value;
+    return normalizedValues.map(normalizedValue => JSON.stringify(normalizedValue));
+  }
+  return normalizer ? value.map(element => normalizer(element)) : value;
 }
 
 function isUnique(value: unknown[]): boolean {
