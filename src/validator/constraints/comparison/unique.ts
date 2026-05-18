@@ -26,13 +26,21 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
   }
 
   const normalizer = context.options.normalizer;
+  const fields = context.options.fields;
 
-  if (context.options.fields === undefined) {
+  if (fields === undefined) {
     const normalized = normalizer ? value.map(element => normalizer(element)) : value;
-    if (isUnique(serializedValues(normalized))) return [];
+    if (isUnique(normalized)) return [];
   }
 
-  if (hasUniqueValues(value, context.options.fields, normalizer)) return [];
+  if (fields !== undefined && fields.length > 0) {
+    const fieldsValues = value.map(valueElement => fields.map(field => valueElement[field]));
+    const normalizedValues = normalizer
+      ? fieldsValues.map(fieldsValues => fieldsValues.map(fieldsValue => normalizer(fieldsValue)))
+      : value;
+    const serialized = normalizedValues.map(normalizedValue => JSON.stringify(normalizedValue));
+    if (isUnique(serialized)) return [];
+  }
 
   return [
     {
@@ -42,54 +50,6 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
       value,
     },
   ];
-}
-
-function hasUniqueValues(
-  value: Record<string, unknown>[] | unknown[],
-  fields: string[] | undefined,
-  normalizer?: ((value: unknown) => unknown) | undefined,
-): boolean {
-  let normalizedValues: unknown[] | unknown[][];
-
-  if (Array.isArray(fields) && fields.length > 0) {
-    const fieldsValues = getFieldsValues(value, fields);
-    normalizedValues = normalizeFieldsValues(fieldsValues, normalizer);
-  } else {
-    normalizedValues = normalizeFieldsValues(value, normalizer);
-  }
-
-  return isUnique(serializedValues(normalizedValues));
-}
-
-function getFieldsValues(arrayElements: Record<string, unknown>[], fieldNames: string[]): unknown[][] {
-  return arrayElements.map(arrayElement => fieldNames.map(fieldName => getFieldValue(arrayElement, fieldName)));
-
-  function getFieldValue(arrayElement: Record<string, unknown>, fieldName: string): unknown {
-    return typeof arrayElement === 'object' && arrayElement !== null ? arrayElement[fieldName] : undefined;
-  }
-}
-
-function normalizeFieldsValues<TValue>(
-  fieldsValues: TValue[] | TValue[][],
-  normalizer?: (value: TValue) => TValue,
-): TValue[] | TValue[][] {
-  if (typeof normalizer !== 'function') {
-    return fieldsValues;
-  }
-
-  if (fieldsValues.every(fieldValue => Array.isArray(fieldValue))) {
-    return fieldsValues.map(fieldValues => fieldValues.map(fieldValue => normalizer(fieldValue as TValue)));
-  }
-
-  return fieldsValues.map(fieldValue => normalizer(fieldValue as TValue));
-}
-
-function serializedValues(values: unknown[] | unknown[][]): unknown[] {
-  if (values.every(value => Array.isArray(value))) {
-    return values.map(value => JSON.stringify(value));
-  }
-
-  return values;
 }
 
 function isUnique(value: unknown[]): boolean {
