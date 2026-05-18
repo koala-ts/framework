@@ -25,7 +25,14 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
     ];
   }
 
-  if (hasUniqueValues(value, context.options.fields, context.options.normalizer)) return [];
+  const normalizer = context.options.normalizer;
+
+  if (context.options.fields === undefined) {
+    const normalized = normalizer ? value.map(element => normalizer(element)) : value;
+    if (isUnique(serializedValues(normalized))) return [];
+  }
+
+  if (hasUniqueValues(value, context.options.fields, normalizer)) return [];
 
   return [
     {
