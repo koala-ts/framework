@@ -31,9 +31,7 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
   if (fields === undefined) {
     const normalized = normalizer ? value.map(element => normalizer(element)) : value;
     if (isUnique(normalized)) return [];
-  }
-
-  if (fields !== undefined && fields.length > 0) {
+  } else if (fields.length > 0) {
     const fieldsValues = value.map(valueElement => fields.map(field => valueElement[field]));
     const normalizedValues = normalizer
       ? fieldsValues.map(fieldsValues => fieldsValues.map(fieldsValue => normalizer(fieldsValue)))
