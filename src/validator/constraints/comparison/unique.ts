@@ -30,11 +30,11 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
   let normalized: unknown[];
 
   if (fields !== undefined && fields.length > 0) {
-    const fieldsValues = value.map(valueElement => fields.map(field => valueElement[field]));
-    const normalizedValues = normalizer
-      ? fieldsValues.map(fieldsValues => fieldsValues.map(fieldsValue => normalizer(fieldsValue)))
-      : fieldsValues;
-    normalized = normalizedValues.map(normalizedValue => JSON.stringify(normalizedValue));
+    const fieldCombinations: unknown[][] = value.map(element => fields.map(field => element[field]));
+    const normalizedCombinations: unknown[][] = fieldCombinations.map(fieldCombination =>
+      fieldCombination.map(fieldValue => (normalizer ? normalizer(fieldValue) : fieldValue)),
+    );
+    normalized = normalizedCombinations.map(combination => JSON.stringify(combination));
   } else normalized = normalizer ? value.map(element => normalizer(element)) : value;
 
   if (isUnique(normalized)) return [];
