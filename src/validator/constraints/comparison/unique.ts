@@ -33,7 +33,7 @@ export function unique(value: unknown, context: ConstraintContext<UniqueOptions>
     const fieldsValues = value.map(valueElement => fields.map(field => valueElement[field]));
     const normalizedValues = normalizer
       ? fieldsValues.map(fieldsValues => fieldsValues.map(fieldsValue => normalizer(fieldsValue)))
-      : value;
+      : fieldsValues;
     normalized = normalizedValues.map(normalizedValue => JSON.stringify(normalizedValue));
   } else normalized = normalizer ? value.map(element => normalizer(element)) : value;
 

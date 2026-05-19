@@ -125,31 +125,60 @@ describe('unique', () => {
     });
   });
 
-  it('checks uniqueness using the configured field combination', () => {
-    const value = [
-      { latitude: 10, longitude: 20, label: '     first', name: 'first-location' },
-      { latitude: 10, longitude: 20, label: 'first', name: 'last-location' },
-    ];
-    const context: ConstraintContext = {
-      path: 'coordinates',
-      root: { coordinates: value },
-      value,
-      constraint: 'unique',
-      options: {
-        fields: ['latitude', 'longitude', 'label'],
-        normalizer: (fieldValue: unknown) => (typeof fieldValue === 'string' ? fieldValue.trim() : fieldValue),
-      },
-      runNestedRules: () => [],
-    };
+  describe('checks uniqueness using the configured field combination', () => {
+    it('with normalizer', () => {
+      const value = [
+        { latitude: 10, longitude: 20, label: '     first', name: 'first-location' },
+        { latitude: 10, longitude: 20, label: 'first', name: 'last-location' },
+      ];
+      const context: ConstraintContext = {
+        path: 'coordinates',
+        root: { coordinates: value },
+        value,
+        constraint: 'unique',
+        options: {
+          fields: ['latitude', 'longitude', 'label'],
+          normalizer: (fieldValue: unknown) => (typeof fieldValue === 'string' ? fieldValue.trim() : fieldValue),
+        },
+        runNestedRules: () => [],
+      };
 
-    const violations = unique(value, context);
+      const violations = unique(value, context);
 
-    expect(violations).toHaveLength(1);
-    expect(violations[0]).toEqual({
-      path: 'coordinates',
-      constraint: 'unique',
-      message: 'This collection should contain only unique elements.',
-      value,
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toEqual({
+        path: 'coordinates',
+        constraint: 'unique',
+        message: 'This collection should contain only unique elements.',
+        value,
+      });
+    });
+
+    it('without normalizer', () => {
+      const value = [
+        { latitude: 10, longitude: 20, label: 'first', name: 'first-location' },
+        { latitude: 10, longitude: 20, label: 'first', name: 'last-location' },
+      ];
+      const context: ConstraintContext = {
+        path: 'coordinates',
+        root: { coordinates: value },
+        value,
+        constraint: 'unique',
+        options: {
+          fields: ['latitude', 'longitude', 'label'],
+        },
+        runNestedRules: () => [],
+      };
+
+      const violations = unique(value, context);
+
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toEqual({
+        path: 'coordinates',
+        constraint: 'unique',
+        message: 'This collection should contain only unique elements.',
+        value,
+      });
     });
   });
 });
