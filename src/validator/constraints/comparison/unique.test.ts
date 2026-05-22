@@ -15,7 +15,7 @@ describe('unique', () => {
 
     test('validation fails when the value is null', () => {
       const value = null;
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -30,7 +30,7 @@ describe('unique', () => {
 
     test('validation fails when the value is not an array', () => {
       const value = 'admin';
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -47,7 +47,7 @@ describe('unique', () => {
   describe('arrays of scalars', () => {
     test('validation passes when array elements are unique', () => {
       const value = ['7', 7, true, null, undefined];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -56,7 +56,7 @@ describe('unique', () => {
 
     test('validation passes when the array contains a null value', () => {
       const value = [null];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -65,7 +65,7 @@ describe('unique', () => {
 
     test('validation passes when the array contains an undefined value', () => {
       const value = [undefined];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -74,7 +74,7 @@ describe('unique', () => {
 
     test('validation fails when an array contains duplicate null values', () => {
       const value = [null, null];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -89,7 +89,7 @@ describe('unique', () => {
 
     test('validation fails when an array contains duplicate undefined values', () => {
       const value = [undefined, undefined];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -104,7 +104,7 @@ describe('unique', () => {
 
     test('validation fails when an array contains duplicate elements', () => {
       const value = ['admin', 'editor', 'admin'];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -121,7 +121,7 @@ describe('unique', () => {
   describe('arrays of arrays', () => {
     test('validation passes when nested arrays have different values', () => {
       const value = [['admin'], ['editor']];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -130,7 +130,7 @@ describe('unique', () => {
 
     test('validation fails when nested arrays have the same values', () => {
       const value = [['admin'], ['admin']];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -147,7 +147,7 @@ describe('unique', () => {
   describe('arrays of objects', () => {
     test('validation passes when objects have different values', () => {
       const value = [{ id: 1 }, { id: 2 }];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
@@ -156,7 +156,7 @@ describe('unique', () => {
 
     test('validation fails when objects have the same values', () => {
       const value = [{ id: 1 }, { id: 1 }];
-      const context: ConstraintContext = createContext('tags', value, {} as UniqueOptions);
+      const context: ConstraintContext = createContext('tags', value, {});
 
       const violations = unique(value, context);
 
