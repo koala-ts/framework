@@ -111,6 +111,21 @@ describe('all (integration)', () => {
         value: null,
       });
     });
+
+    test('validation appends indexed paths to bracketed field paths', () => {
+      const validate = createValidator({ constraints: { all, email } });
+      const rules = { 'user[emails]': [{ all: { constraints: ['email'] } }] };
+
+      const violations = validate({ 'user[emails]': ['invalid'] }, rules);
+
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toEqual({
+        path: 'user[emails][0]',
+        constraint: 'email',
+        message: 'This value is not a valid email address.',
+        value: 'invalid',
+      });
+    });
   });
 
   describe('groups', () => {
