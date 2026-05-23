@@ -6,8 +6,12 @@ import { ConstraintContext, ConstraintValidator } from '@/validator/constraint-v
 import { Payload } from '@/validator/payload';
 
 type FieldSchemaEntry = [string, FieldSchema];
-type ConstraintsMap = Record<string, ConstraintValidator>;
+type RegisteredConstraintValidator = {
+  validate(value: unknown, context: ConstraintContext): ReturnType<ConstraintValidator>;
+}['validate'];
+type ConstraintsMap = Record<string, RegisteredConstraintValidator>;
 type ValidatorOptions = { constraints: ConstraintsMap };
+type CurrentValue = { value: unknown };
 
 export const createValidator = (options: ValidatorOptions): Validator => {
   const { constraints } = options;
@@ -30,7 +34,7 @@ function applyFieldSchema(
   payload: Payload,
   [field, schemaForField]: FieldSchemaEntry,
   activeGroups: string[],
-  currentValue?: unknown,
+  currentValue?: CurrentValue,
 ): ReturnType<ConstraintValidator> {
   const isGroupActive = (groups: string[]) => groups.length === 0 || groups.some(group => activeGroups.includes(group));
 
@@ -43,11 +47,11 @@ function applyFieldSchema(
 
     // Helper function to apply nested rules.
     const applyNestedRules = (nextValue: unknown, schema: FieldSchema, path: string) =>
-      applyFieldSchema(constraintsByName, payload, [path, schema], activeGroups, nextValue);
+      applyFieldSchema(constraintsByName, payload, [path, schema], activeGroups, { value: nextValue });
 
     // Find the constraint, build the context, and apply it.
     const constraintValidator = resolveConstraint(constraintsByName, field, constraintName);
-    const value = currentValue ?? payload[field];
+    const value = currentValue === undefined ? payload[field] : currentValue.value;
     const context: ConstraintContext = {
       path: field,
       root: payload,
@@ -65,7 +69,7 @@ function resolveConstraint(
   constraintValidatorMap: ConstraintsMap,
   field: string,
   constraintName: string,
-): ConstraintValidator {
+): RegisteredConstraintValidator {
   const constraintValidator = constraintValidatorMap[constraintName];
 
   if (!constraintValidator) {
