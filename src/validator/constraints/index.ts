@@ -33,7 +33,7 @@ export { unique, type UniqueOptions } from './comparison/unique';
 // ## String ##
 export { email } from './string/email';
 export { slug } from './string/slug';
-// ## String
+// ## String ##
 
 // ## Other ##
 export { all, type AllOptions } from './other/all';
