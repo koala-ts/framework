@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { koalaDefaultConfig } from '../src/config/default-config';
 import type { HttpMiddleware, HttpRequest, HttpScope, NextMiddleware, UploadedFile } from '../src/Http';
 import { Any, Get, Post, Route, RouteGroup } from '../src/routing';
-import { createTestAgent } from '../src/Testing';
+import { createTestAgent } from '../src/Testing/TestAgentFactory';
 import { exclusiveRoutingModeError } from '../src/routing/verify-routing-mode';
 
 interface FunctionFirstRoutingRequest extends HttpRequest {
@@ -378,6 +378,7 @@ describe('Function First Routing E2E Test', () => {
                     await next();
                   },
                 ],
+                options: {},
               },
             },
           },
@@ -416,7 +417,10 @@ describe('Function First Routing E2E Test', () => {
           {
             routeConfig: {
               upload: {
-                options: { multipart: true },
+                options: {
+                  multipart: true,
+                },
+                middleware: [],
               },
             },
           },
