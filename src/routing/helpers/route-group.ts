@@ -1,23 +1,27 @@
-import type { HttpMiddleware } from '@/Http';
+import type { HttpMiddleware, HttpRequest } from '@/Http';
 import type { RouteDeclaration } from '@/routing/route';
 import type { RouteSource } from '@/routing/source/route-source';
+import type { Request } from 'koa';
 
 export type RouteConfigOverlay = Pick<RouteDeclaration, 'middleware' | 'options'>;
 
-export interface RouteGroupOptions {
+export interface RouteGroupOptions<TRequest extends Request = HttpRequest> {
   prefix?: string;
   namePrefix?: string;
-  middleware?: HttpMiddleware[];
+  middleware?: HttpMiddleware<TRequest>[];
   routeConfig?: Record<string, RouteConfigOverlay>;
 }
 
-export interface RouteGroupDefinition {
+export interface RouteGroupDefinition<TRequest extends Request = HttpRequest> {
   kind: 'route-group';
-  options: RouteGroupOptions;
-  resolveRoutes: () => RouteSource[];
+  options: RouteGroupOptions<TRequest>;
+  resolveRoutes: () => RouteSource<TRequest>[];
 }
 
-export function RouteGroup(options: RouteGroupOptions, resolveRoutes: () => RouteSource[]): RouteGroupDefinition {
+export function RouteGroup<TRequest extends Request = HttpRequest>(
+  options: RouteGroupOptions<TRequest>,
+  resolveRoutes: () => RouteSource<TRequest>[],
+): RouteGroupDefinition<TRequest> {
   return {
     kind: 'route-group',
     options,

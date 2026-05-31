@@ -5,4 +5,4 @@ import type { Request } from 'koa';
 
 export type RouteSource<TRequest extends Request = HttpRequest> =
   | RouteDefinition<TRequest>
-  | RouteGroupDefinition;
+  | RouteGroupDefinition<TRequest>;
