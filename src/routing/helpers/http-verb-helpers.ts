@@ -1,42 +1,67 @@
-import type { HttpMiddleware } from '@/Http';
+import type { HttpMiddleware, HttpRequest } from '@/Http';
 import type { HttpMethod } from '@/routing/http-method';
 import type { RouteDefinition } from '@/routing/definition/route-definition';
 import { Route } from '@/routing/route';
+import type { Request } from 'koa';
 
-type RouteHandler = HttpMiddleware;
-type MiddlewareAndHandler = [...middleware: HttpMiddleware[], handler: RouteHandler];
-type NamedMiddlewareAndHandler = [name: string, ...middlewareAndHandler: MiddlewareAndHandler];
-type VerbHelperRouteArguments = MiddlewareAndHandler | NamedMiddlewareAndHandler;
-type UnsafeVerbHelperRouteArguments = VerbHelperRouteArguments | [name: string] | [];
+type RouteHandler<TRequest extends Request = HttpRequest> = HttpMiddleware<TRequest>;
+type MiddlewareAndHandler<TRequest extends Request = HttpRequest> = [
+  ...middleware: HttpMiddleware<TRequest>[],
+  handler: RouteHandler<TRequest>,
+];
+type NamedMiddlewareAndHandler<TRequest extends Request = HttpRequest> = [
+  name: string,
+  ...middlewareAndHandler: MiddlewareAndHandler<TRequest>,
+];
+type VerbHelperRouteArguments<TRequest extends Request = HttpRequest> =
+  | MiddlewareAndHandler<TRequest>
+  | NamedMiddlewareAndHandler<TRequest>;
+type UnsafeVerbHelperRouteArguments<TRequest extends Request = HttpRequest> =
+  | VerbHelperRouteArguments<TRequest>
+  | [name: string]
+  | [];
 
-interface VerbHelperArguments {
+interface VerbHelperArguments<TRequest extends Request = HttpRequest> {
   path: string;
   name?: string;
-  middleware: HttpMiddleware[];
-  handler: RouteHandler;
+  middleware: HttpMiddleware<TRequest>[];
+  handler: RouteHandler<TRequest>;
 }
 
 type NamedVerbHelper = {
-  (path: string, ...middlewareAndHandler: MiddlewareAndHandler): RouteDefinition;
-  (path: string, name: string, ...middlewareAndHandler: MiddlewareAndHandler): RouteDefinition;
+  <TRequest extends Request = HttpRequest>(
+    path: string,
+    ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
+  ): RouteDefinition;
+  <TRequest extends Request = HttpRequest>(
+    path: string,
+    name: string,
+    ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
+  ): RouteDefinition;
 };
 
 function createVerbHelper(method: HttpMethod): NamedVerbHelper {
-  return (path: string, ...routeArguments: UnsafeVerbHelperRouteArguments) =>
+  return (<TRequest extends Request = HttpRequest>(
+    path: string,
+    ...routeArguments: UnsafeVerbHelperRouteArguments<TRequest>
+  ) =>
     Route({
       method,
       ...resolveVerbHelperArguments(path, routeArguments),
-    });
+    })) as NamedVerbHelper;
 }
 
-function resolveVerbHelperArguments(path: string, routeArguments: UnsafeVerbHelperRouteArguments): VerbHelperArguments {
+function resolveVerbHelperArguments<TRequest extends Request = HttpRequest>(
+  path: string,
+  routeArguments: UnsafeVerbHelperRouteArguments<TRequest>,
+): VerbHelperArguments<TRequest> {
   const isNamedRoute = isNamedVerbHelperRouteArguments(routeArguments);
   const name = isNamedRoute ? routeArguments[0] : undefined;
   const routeMiddlewareAndHandler = isNamedRoute
-    ? (routeArguments.slice(1) as MiddlewareAndHandler | [])
-    : routeArguments;
+    ? (routeArguments.slice(1) as MiddlewareAndHandler<TRequest> | [])
+    : (routeArguments as MiddlewareAndHandler<TRequest> | []);
   const handler = requireVerbHelperHandler(routeMiddlewareAndHandler, isNamedRoute);
-  const middleware = routeMiddlewareAndHandler.slice(0, -1) as HttpMiddleware[];
+  const middleware = routeMiddlewareAndHandler.slice(0, -1) as HttpMiddleware<TRequest>[];
 
   return {
     path,
@@ -46,17 +71,17 @@ function resolveVerbHelperArguments(path: string, routeArguments: UnsafeVerbHelp
   };
 }
 
-function isNamedVerbHelperRouteArguments(
-  routeArguments: UnsafeVerbHelperRouteArguments,
-): routeArguments is NamedMiddlewareAndHandler | [name: string] {
+function isNamedVerbHelperRouteArguments<TRequest extends Request = HttpRequest>(
+  routeArguments: UnsafeVerbHelperRouteArguments<TRequest>,
+): routeArguments is NamedMiddlewareAndHandler<TRequest> | [name: string] {
   return typeof routeArguments[0] === 'string';
 }
 
-function requireVerbHelperHandler(
-  middlewareAndHandler: MiddlewareAndHandler | [],
+function requireVerbHelperHandler<TRequest extends Request = HttpRequest>(
+  middlewareAndHandler: MiddlewareAndHandler<TRequest> | [],
   isNamedRoute: boolean,
-): RouteHandler {
-  const handler = middlewareAndHandler.at(-1) as RouteHandler | undefined;
+): RouteHandler<TRequest> {
+  const handler = middlewareAndHandler.at(-1) as RouteHandler<TRequest> | undefined;
 
   if (handler === undefined && isNamedRoute) {
     throw new Error('Named verb helpers require a handler.');

@@ -252,6 +252,41 @@ describe('Function First Routing E2E Test', () => {
     expect(response.body).toEqual([{ id: 1 }]);
   });
 
+  test('it should register request typed handlers through named verb helpers', async () => {
+    interface CreateSourceRequest extends HttpRequest {
+      body: { name: string };
+      params: { workspaceId: string };
+    }
+    const validateCreateSourceRequest: HttpMiddleware<CreateSourceRequest> = async (_scope, next) => {
+      await next();
+    };
+    const createSourceHandler = async ({ request, response }: HttpScope<CreateSourceRequest>): Promise<void> => {
+      response.body = {
+        name: request.body.name,
+        workspaceId: request.params.workspaceId,
+      };
+    };
+    const agent = createTestAgent({
+      ...koalaDefaultConfig,
+      routes: [
+        Post<CreateSourceRequest>(
+          '/workspaces/:workspaceId/sources',
+          'create',
+          validateCreateSourceRequest,
+          createSourceHandler,
+        ),
+      ],
+    });
+
+    const response = await agent.post('/workspaces/framework/sources').send({ name: 'Koala' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      name: 'Koala',
+      workspaceId: 'framework',
+    });
+  });
+
   test('it should apply middleware declared through a verb helper in order', async () => {
     const authMiddleware: HttpMiddleware = async (scope: HttpScope, next: NextMiddleware) => {
       scope.response.append('x-middleware-order', 'auth');
