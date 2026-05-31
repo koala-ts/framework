@@ -28,9 +28,16 @@ interface VerbHelperArguments<TRequest extends Request = HttpRequest> {
   handler: RouteHandler<TRequest>;
 }
 
-type NamedVerbHelper<TRequest extends Request = HttpRequest> = {
-  (path: string, ...middlewareAndHandler: MiddlewareAndHandler<TRequest>): RouteDefinition<TRequest>;
-  (path: string, name: string, ...middlewareAndHandler: MiddlewareAndHandler<TRequest>): RouteDefinition<TRequest>;
+type NamedVerbHelper = {
+  <TRequest extends Request = HttpRequest>(
+    path: string,
+    ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
+  ): RouteDefinition<TRequest>;
+  <TRequest extends Request = HttpRequest>(
+    path: string,
+    name: string,
+    ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
+  ): RouteDefinition<TRequest>;
 };
 
 function createVerbHelper(method: HttpMethod): NamedVerbHelper {
