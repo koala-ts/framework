@@ -22,4 +22,4 @@ Check out the [documentation](https://koala-ts.github.io/).
 
 ## License
 
-KoalaTS is [MIT licensed](/LICENSE).
+KoalaTS is [GPLv3 licensed](/LICENSE).
