@@ -14,10 +14,8 @@ export interface RouteDeclaration<TRequest extends Request = HttpRequest> {
   options?: RouteOptions;
 }
 
-export function Route<TRequest extends Request = HttpRequest>(route: RouteDeclaration<TRequest>): RouteDefinition {
-  return createRouteDefinition({
-    ...route,
-    handler: route.handler as unknown as HttpMiddleware,
-    middleware: route.middleware as unknown as HttpMiddleware[] | undefined,
-  });
+export function Route<TRequest extends Request = HttpRequest>(
+  route: RouteDeclaration<TRequest>,
+): RouteDefinition<TRequest> {
+  return createRouteDefinition(route);
 }

@@ -32,12 +32,12 @@ type NamedVerbHelper = {
   <TRequest extends Request = HttpRequest>(
     path: string,
     ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
-  ): RouteDefinition;
+  ): RouteDefinition<TRequest>;
   <TRequest extends Request = HttpRequest>(
     path: string,
     name: string,
     ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
-  ): RouteDefinition;
+  ): RouteDefinition<TRequest>;
 };
 
 function createVerbHelper(method: HttpMethod): NamedVerbHelper {
