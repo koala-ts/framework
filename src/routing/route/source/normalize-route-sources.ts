@@ -1,6 +1,6 @@
 import type { RouteGroupDefinition } from '@/routing/group/route-group';
 import { mergeRouteOptions } from '@/routing/route/definition/resolve-route-options';
-import type { RouteDefinition } from '@/routing/route/definition/route-definition';
+import type { RouteDefinition } from '@/routing/route/definition/route-definition.type';
 import type { Request } from 'koa';
 import type { RouteSource } from './route-source';
 

@@ -1,4 +1,4 @@
-import type { RouteDefinition } from '@/routing/route/definition/route-definition';
+import type { RouteDefinition } from '@/routing/route/definition/route-definition.type';
 import type { RouteRegistration } from '@/routing/route/registration/route-registration';
 import type { Request } from 'koa';
 

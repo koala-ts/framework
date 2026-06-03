@@ -1,5 +1,5 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
-import type { RouteDefinition } from '@/routing/route/definition/route-definition';
+import type { RouteDefinition } from '@/routing/route/definition/route-definition.type';
 import { Route } from '@/routing/route/route';
 import type { HttpMethod } from '@/routing/verb/http-method.type';
 import type { Request } from 'koa';
