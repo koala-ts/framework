@@ -1,4 +1,4 @@
-import type { RouteOptions } from '@/routing/route-options';
+import type { RouteOptions } from '@/routing/route/route-options';
 import type { Request } from 'koa';
 import type { RouteDefinition } from './route-definition';
 

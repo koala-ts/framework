@@ -1,11 +1,11 @@
 import { type Application } from '@/application/application';
 import { type HttpScope } from '@/Http';
-import { expandRouteDefinitions } from '@/routing/registration/expand-route-definitions';
-import { normalizeRouteSources } from '@/routing/source/normalize-route-sources';
-import type { RouteSource } from '@/routing/source/route-source';
-import { validateRouteDefinitions } from '@/routing/validation/validate-route-definitions';
-import { type DefaultContext, type DefaultState, type Middleware, type Request } from 'koa';
+import { expandRouteDefinitions } from '@/routing/route/registration/expand-route-definitions';
+import { normalizeRouteSources } from '@/routing/route/source/normalize-route-sources';
+import type { RouteSource } from '@/routing/route/source/route-source';
+import { validateRouteDefinitions } from '@/routing/route/validation/validate-route-definitions';
 import Router, { type RouterInstance } from '@koa/router';
+import { type DefaultContext, type DefaultState, type Middleware, type Request } from 'koa';
 
 export function registerRoutes<TRequest extends Request>(
   app: Application,

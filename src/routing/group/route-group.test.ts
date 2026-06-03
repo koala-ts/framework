@@ -1,5 +1,5 @@
+import { Get } from '@/routing/verb/http-verb-helpers';
 import { describe, expect, test } from 'vitest';
-import { Get } from '@/routing/helpers/http-verb-helpers';
 import { RouteGroup } from './route-group';
 
 describe('route group', () => {

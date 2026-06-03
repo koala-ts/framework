@@ -1,5 +1,5 @@
-import type { RouteDefinition } from '@/routing/definition/route-definition';
-import type { RouteRegistration } from '@/routing/registration/route-registration';
+import type { RouteDefinition } from '@/routing/route/definition/route-definition';
+import type { RouteRegistration } from '@/routing/route/registration/route-registration';
 import type { Request } from 'koa';
 
 export function validateRouteDefinitions<TRequest extends Request>(

@@ -1,7 +1,7 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
-import { resolveRouteOptions } from '@/routing/definition/resolve-route-options';
-import type { RouteOptions } from '@/routing/route-options';
-import type { RouterMethod } from '@/routing/router-method.type';
+import { resolveRouteOptions } from '@/routing/route/definition/resolve-route-options';
+import type { RouteOptions } from '@/routing/route/route-options';
+import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { HttpMethod } from '@/routing/verb/http-method.type';
 import type { Request } from 'koa';
 import type { RouteDefinition } from './route-definition';

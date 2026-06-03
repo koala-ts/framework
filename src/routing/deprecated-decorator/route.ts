@@ -1,5 +1,5 @@
 import type { HttpMiddleware } from '@/Http';
-import type { RouteOptions } from '@/routing/route-options';
+import type { RouteOptions } from '@/routing/route/route-options';
 import type { HttpMethod } from '@/routing/verb/http-method.type';
 import { createLegacyRouteDecorator } from './legacy-router';
 
