@@ -4,7 +4,7 @@ import { serveStaticFiles } from '@/Http/Files';
 import { applyConfiguredGlobalMiddleware } from '@/Http/middleware/apply-configured-global-middleware';
 import { initializeRequestScopeStorage } from '@/Http/Scope/request-scope-storage';
 import { registerEventSubscribers } from '@/Kernel';
-import { registerLegacyRoutes } from '@/routing/legacy-decorator/legacy-router';
+import { registerLegacyRoutes } from '@/routing/deprecated-decorator/legacy-router';
 import { registerRoutes } from '@/routing/registration/register-routes';
 import { verifyRoutingMode } from '@/routing/verify-routing-mode';
 import type { Request } from 'koa';
