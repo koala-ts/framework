@@ -2,10 +2,14 @@ import { create } from '@/application/create-application';
 import { type KoalaConfig } from '@/config/koala-config';
 import { type HttpMiddleware, type HttpScope, type NextMiddleware } from '@/Http';
 import { type User } from '@/Security/types';
+import type { Request } from 'koa';
 import supertest from 'supertest';
 import { type TestAgent } from './types';
 
-export function createTestAgent(config: KoalaConfig, agentConfig?: { actAs?: User }): TestAgent {
+export function createTestAgent<TRequest extends Request>(
+  config: KoalaConfig<TRequest>,
+  agentConfig?: { actAs?: User },
+): TestAgent {
   const globalMiddleware = config.globalMiddleware ?? [];
   const testConfig = { ...config };
 

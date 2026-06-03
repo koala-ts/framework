@@ -4,10 +4,13 @@ import { expandRouteDefinitions } from '@/routing/registration/expand-route-defi
 import { normalizeRouteSources } from '@/routing/source/normalize-route-sources';
 import type { RouteSource } from '@/routing/source/route-source';
 import { validateRouteDefinitions } from '@/routing/validation/validate-route-definitions';
-import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
+import { type DefaultContext, type DefaultState, type Middleware, type Request } from 'koa';
 import Router, { type RouterInstance } from '@koa/router';
 
-export function registerRoutes(app: Application, routes: RouteSource[] = []): Application {
+export function registerRoutes<TRequest extends Request>(
+  app: Application,
+  routes: RouteSource<TRequest>[] = [],
+): Application {
   const router = createRouter(routes);
 
   app.use(router.routes() as unknown as Middleware<DefaultState, DefaultContext & HttpScope>);
@@ -16,7 +19,7 @@ export function registerRoutes(app: Application, routes: RouteSource[] = []): Ap
   return app;
 }
 
-function createRouter(routeSources: RouteSource[]): RouterInstance {
+function createRouter<TRequest extends Request>(routeSources: RouteSource<TRequest>[]): RouterInstance {
   const router = new Router();
   const routes = normalizeRouteSources(routeSources);
   const registrations = expandRouteDefinitions(routes);
@@ -24,7 +27,10 @@ function createRouter(routeSources: RouteSource[]): RouterInstance {
   validateRouteDefinitions(routes, registrations);
 
   for (const route of registrations) {
-    router[route.method](route.path, ...(route.middleware as Middleware<DefaultState, DefaultContext & HttpScope>[]));
+    router[route.method](
+      route.path,
+      ...(route.middleware as unknown as Middleware<DefaultState, DefaultContext & HttpScope>[]),
+    );
   }
 
   return router;

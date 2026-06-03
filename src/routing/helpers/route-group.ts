@@ -3,13 +3,16 @@ import type { RouteDeclaration } from '@/routing/route';
 import type { RouteSource } from '@/routing/source/route-source';
 import type { Request } from 'koa';
 
-export type RouteConfigOverlay = Pick<RouteDeclaration, 'middleware' | 'options'>;
+export type RouteConfigOverlay<TRequest extends Request = HttpRequest> = Pick<
+  RouteDeclaration<TRequest>,
+  'middleware' | 'options'
+>;
 
 export interface RouteGroupOptions<TRequest extends Request = HttpRequest> {
   prefix?: string;
   namePrefix?: string;
   middleware?: HttpMiddleware<TRequest>[];
-  routeConfig?: Record<string, RouteConfigOverlay>;
+  routeConfig?: Record<string, RouteConfigOverlay<TRequest>>;
 }
 
 export interface RouteGroupDefinition<TRequest extends Request = HttpRequest> {

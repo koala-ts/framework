@@ -1,9 +1,12 @@
 import { koaBody } from 'koa-body';
+import type { Request } from 'koa';
 import type { RouteDefinition } from '@/routing/definition/route-definition';
 import type { RouteRegistration } from '@/routing/registration/route-registration';
 
-export function expandRouteDefinitions(routes: RouteDefinition[]): RouteRegistration[] {
-  const registrations: RouteRegistration[] = [];
+export function expandRouteDefinitions<TRequest extends Request>(
+  routes: RouteDefinition<TRequest>[],
+): RouteRegistration<TRequest>[] {
+  const registrations: RouteRegistration<TRequest>[] = [];
 
   for (const route of routes) {
     registrations.push(...expandRouteDefinition(route));
@@ -12,7 +15,9 @@ export function expandRouteDefinitions(routes: RouteDefinition[]): RouteRegistra
   return registrations;
 }
 
-function expandRouteDefinition(route: RouteDefinition): RouteRegistration[] {
+function expandRouteDefinition<TRequest extends Request>(
+  route: RouteDefinition<TRequest>,
+): RouteRegistration<TRequest>[] {
   const middleware = resolveRouteMiddleware(route);
 
   return route.methods.map(method => ({
@@ -22,7 +27,9 @@ function expandRouteDefinition(route: RouteDefinition): RouteRegistration[] {
   }));
 }
 
-function resolveRouteMiddleware(route: RouteDefinition): RouteRegistration['middleware'] {
+function resolveRouteMiddleware<TRequest extends Request>(
+  route: RouteDefinition<TRequest>,
+): RouteRegistration<TRequest>['middleware'] {
   const middlewareStack = [...route.middleware, route.handler];
 
   return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;

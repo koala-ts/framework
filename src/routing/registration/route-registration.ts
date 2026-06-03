@@ -1,8 +1,14 @@
+import type { HttpRequest } from '@/Http';
 import type { RouteDefinition } from '@/routing/definition/route-definition';
 import type { RouterMethod } from '@/routing/router-method';
+import type { Request } from 'koa';
 
-export interface RouteRegistration {
+type RouteRegistrationMiddleware<TRequest extends Request> =
+  | RouteDefinition<TRequest>['middleware'][number]
+  | RouteDefinition<TRequest>['handler'];
+
+export interface RouteRegistration<TRequest extends Request = HttpRequest> {
   method: RouterMethod;
   path: string;
-  middleware: Array<RouteDefinition['middleware'][number] | RouteDefinition['handler']>;
+  middleware: RouteRegistrationMiddleware<TRequest>[];
 }

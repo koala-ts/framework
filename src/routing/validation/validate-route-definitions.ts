@@ -1,12 +1,16 @@
 import type { RouteDefinition } from '@/routing/definition/route-definition';
 import type { RouteRegistration } from '@/routing/registration/route-registration';
+import type { Request } from 'koa';
 
-export function validateRouteDefinitions(routes: RouteDefinition[], registrations: RouteRegistration[]): void {
+export function validateRouteDefinitions<TRequest extends Request>(
+  routes: RouteDefinition<TRequest>[],
+  registrations: RouteRegistration<TRequest>[],
+): void {
   validateUniqueRouteNames(routes);
   validateUniqueRouteSignatures(registrations);
 }
 
-function validateUniqueRouteSignatures(registrations: RouteRegistration[]): void {
+function validateUniqueRouteSignatures<TRequest extends Request>(registrations: RouteRegistration<TRequest>[]): void {
   const signatures = new Set<string>();
 
   for (const registration of registrations) {
@@ -20,7 +24,7 @@ function validateUniqueRouteSignatures(registrations: RouteRegistration[]): void
   }
 }
 
-function validateUniqueRouteNames(routes: RouteDefinition[]): void {
+function validateUniqueRouteNames<TRequest extends Request>(routes: RouteDefinition<TRequest>[]): void {
   const routeNames = new Set<string>();
 
   for (const route of routes) {

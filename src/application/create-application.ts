@@ -8,9 +8,10 @@ import { registerLegacyRoutes } from '@/routing/decorator/legacy-router';
 import { registerRoutes } from '@/routing/registration/register-routes';
 import { verifyRoutingMode } from '@/routing/verify-routing-mode';
 import Koa from 'koa';
+import type { Request } from 'koa';
 import { type Application } from './application';
 
-export function create(config: KoalaConfig): Application {
+export function create<TRequest extends Request>(config: KoalaConfig<TRequest>): Application {
   const app = new Koa() as Application;
   const controllers = config.controllers ?? [];
 

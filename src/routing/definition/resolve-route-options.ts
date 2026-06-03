@@ -1,4 +1,5 @@
 import type { RouteOptions } from '@/routing/route-options';
+import type { Request } from 'koa';
 import type { RouteDefinition } from './route-definition';
 
 export function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
@@ -8,10 +9,10 @@ export function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition
   };
 }
 
-export function mergeRouteOptions(
-  route: RouteDefinition,
+export function mergeRouteOptions<TRequest extends Request>(
+  route: RouteDefinition<TRequest>,
   options: RouteOptions,
-): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
+): Pick<RouteDefinition<TRequest>, 'parseBody' | 'bodyOptions'> {
   return {
     parseBody: options.parseBody ?? route.parseBody,
     bodyOptions: {
