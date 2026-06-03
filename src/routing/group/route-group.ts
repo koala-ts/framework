@@ -1,6 +1,7 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
 import type { RouteSource } from '@/routing/registration/source/route-source';
-import type { RouteDeclaration } from '@/routing/route/route';
+
+import { RouteDeclaration } from '@/routing/route/route-declaration.type';
 import type { Request } from 'koa';
 
 export type RouteConfigOverlay<TRequest extends Request = HttpRequest> = Pick<
