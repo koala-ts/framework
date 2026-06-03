@@ -1,7 +1,7 @@
 import { koalaDefaultConfig } from '@/config/default-config';
 import type { HttpMiddleware, HttpRequest, HttpScope, NextMiddleware, UploadedFile } from '@/Http';
 import { Any, Get, Post, Route, RouteGroup } from '@/routing';
-import { exclusiveRoutingModeError } from '@/routing/verify-routing-mode';
+import { exclusiveRoutingModeError } from '@/routing/deprecated-decorator/verify-routing-mode';
 import { createTestAgent } from '@/Testing';
 import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';

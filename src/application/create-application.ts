@@ -5,8 +5,8 @@ import { applyConfiguredGlobalMiddleware } from '@/Http/middleware/apply-configu
 import { initializeRequestScopeStorage } from '@/Http/Scope/request-scope-storage';
 import { registerEventSubscribers } from '@/Kernel';
 import { registerLegacyRoutes } from '@/routing/deprecated-decorator/legacy-router';
+import { verifyRoutingMode } from '@/routing/deprecated-decorator/verify-routing-mode';
 import { registerRoutes } from '@/routing/registration/register-routes';
-import { verifyRoutingMode } from '@/routing/verify-routing-mode';
 import type { Request } from 'koa';
 import Koa from 'koa';
 import { type Application } from './application';
