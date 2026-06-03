@@ -1,8 +1,8 @@
 // Application
 export { create } from '@/application/create-application';
 export type { Application } from '@/application/application';
-import { getLegacyRoutes, registerLegacyRoutes } from '@/routing/decorator/legacy-router';
-import type { RouteMetadata as LegacyRouteMetadata } from '@/routing/decorator/route-metadata';
+import { getLegacyRoutes, registerLegacyRoutes } from '@/routing/legacy-decorator/legacy-router';
+import type { RouteMetadata as LegacyRouteMetadata } from '@/routing/legacy-decorator/route-metadata';
 
 // Core modules
 export type * from '@/config/koala-config';
@@ -12,7 +12,7 @@ export * from '@/Http';
 export * from '@/Kernel';
 
 // Routing
-export * from '@/routing/decorator/route';
+export * from '@/routing/legacy-decorator/route';
 export type { HttpMethod } from '@/routing/http-method';
 export type { RouteOptions } from '@/routing/route-options';
 export type { RouterMethod } from '@/routing/router-method';
