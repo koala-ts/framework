@@ -1,10 +1,10 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
-import { resolveRouteOptions } from '@/routing/route/definition/resolve-route-options';
-import type { RouteOptions } from '@/routing/route/route-options';
+import { resolveRouteOptions } from '@/routing/route/resolve-route-options';
+import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { HttpMethod } from '@/routing/verb/http-method.type';
 import type { Request } from 'koa';
-import type { RouteDefinition } from '../route-definition.type';
+import type { RouteDefinition } from './route-definition.type';
 
 interface RouteDefinitionInput<TRequest extends Request = HttpRequest> {
   name?: string;

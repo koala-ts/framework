@@ -1,6 +1,6 @@
-import type { RouteOptions } from '@/routing/route/route-options';
+import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { Request } from 'koa';
-import type { RouteDefinition } from '../route-definition.type';
+import type { RouteDefinition } from './route-definition.type';
 
 export function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
   return {

@@ -1,4 +1,4 @@
-export type { RouteSource } from '@/routing/route/source/route-source';
+export type { RouteSource } from '@/routing/registration/source/route-source';
 export { Route } from './route/route';
 export { createPathFor } from './path/create-path-for';
 export { RouteGroup } from './group/route-group';

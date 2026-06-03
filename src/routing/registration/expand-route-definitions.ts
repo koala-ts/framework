@@ -1,4 +1,4 @@
-import type { RouteRegistration } from '@/routing/route/registration/route-registration';
+import type { RouteRegistration } from '@/routing/registration/route-registration';
 import type { RouteDefinition } from '@/routing/route/route-definition.type';
 import type { Request } from 'koa';
 import { koaBody } from 'koa-body';
