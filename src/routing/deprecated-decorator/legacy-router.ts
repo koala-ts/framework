@@ -1,8 +1,8 @@
 import { type Application } from '@/application/application';
 import { type HttpMiddleware } from '@/Http';
+import { Route as createRouteDefinition } from '@/routing';
 import { registerRoutes } from '@/routing/registration/register-routes';
 import 'reflect-metadata';
-import { createRouteDefinition } from '@/routing/route/create-route-definition';
 import type { RouteDefinition } from '@/routing/route/route-definition.type';
 import type { Route } from './route';
 import type { RouteMetadata } from './route-metadata';
