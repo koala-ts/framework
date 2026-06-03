@@ -1,5 +1,5 @@
-import type { HttpRequest, HttpMiddleware } from '@/Http';
-import type { RouterMethod } from '@/routing/router-method';
+import type { HttpMiddleware, HttpRequest } from '@/Http';
+import type { RouterMethod } from '@/routing/router-method.type';
 import type { Request } from 'koa';
 import type { KoaBodyMiddlewareOptions } from 'koa-body';
 

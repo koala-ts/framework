@@ -1,6 +1,6 @@
 import type { HttpRequest } from '@/Http';
 import type { RouteDefinition } from '@/routing/definition/route-definition';
-import type { RouterMethod } from '@/routing/router-method';
+import type { RouterMethod } from '@/routing/router-method.type';
 import type { Request } from 'koa';
 
 type RouteRegistrationMiddleware<TRequest extends Request> =

@@ -15,7 +15,7 @@ export * from '@/Kernel';
 export * from '@/routing/deprecated-decorator/route';
 export type { HttpMethod } from '@/routing/verb/http-method.type';
 export type { RouteOptions } from '@/routing/route-options';
-export type { RouterMethod } from '@/routing/router-method';
+export type { RouterMethod } from '@/routing/router-method.type';
 /**
  * @deprecated Use `Route` from `@koala-ts/framework/routing` instead.
  */
