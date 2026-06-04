@@ -1,7 +1,7 @@
+import { Get } from '@/routing/declaration/http-verb-helpers';
+import { Route } from '@/routing/declaration/route';
+import { RouteGroup } from '@/routing/declaration/route-group';
 import { describe, expect, test, vi } from 'vitest';
-import { Get } from '@/routing/helpers/http-verb-helpers';
-import { RouteGroup } from '@/routing/helpers/route-group';
-import { Route } from '@/routing/route';
 import { createPathCatalog } from './create-path-catalog';
 
 describe('create path catalog', () => {

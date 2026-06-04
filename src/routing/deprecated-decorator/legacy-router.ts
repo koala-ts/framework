@@ -1,7 +1,7 @@
 import { type Application } from '@/application/application';
 import { type HttpMiddleware } from '@/Http';
-import { createRouteDefinition } from '@/routing/definition/create-route-definition';
-import type { RouteDefinition } from '@/routing/definition/route-definition';
+import { Route as createRouteDefinition } from '@/routing';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import { registerRoutes } from '@/routing/registration/register-routes';
 import 'reflect-metadata';
 import type { Route } from './route';
@@ -23,7 +23,7 @@ export function getLegacyRoutes(): RouteMetadata[] {
   return (Reflect.getMetadata(legacyRouteMetadataKey, Reflect) ?? []) as RouteMetadata[];
 }
 
-export function getLegacyRouteDefinitions(): RouteDefinition[] {
+export function getLegacyRouteDefinitions(): NormalizedRouteProps[] {
   return getLegacyRoutes().map(route =>
     createRouteDefinition({
       method: route.methods,

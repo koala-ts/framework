@@ -1,25 +1,26 @@
-import type { RouteDefinition } from '@/routing/definition/route-definition';
-import { mergeRouteOptions } from '@/routing/definition/resolve-route-options';
-import type { RouteGroupDefinition } from '@/routing/helpers/route-group';
-import type { RouteSource } from './route-source';
+import type { HttpRequestBase } from '@/Http';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
+import type { RouteGroupDefinition } from '@/routing/declaration/route-group';
+import type { RouteSource } from '@/routing/declaration/route-source.type';
+import { mergeRouteOptions } from '@/routing/normalization/resolve-route-options';
 
-interface NormalizationContext {
+interface NormalizationContext<TRequest extends HttpRequestBase> {
   prefix: string;
   namePrefix: string;
-  middleware: RouteDefinition['middleware'];
+  middleware: NormalizedRouteProps<TRequest>['middleware'];
 }
 
-const defaultNormalizationContext: NormalizationContext = {
+const defaultNormalizationContext = {
   prefix: '',
   namePrefix: '',
   middleware: [],
 };
 
-export function normalizeRouteSources(
-  routeSources: RouteSource[],
-  context: NormalizationContext = defaultNormalizationContext,
-): RouteDefinition[] {
-  const routes: RouteDefinition[] = [];
+export function normalizeRouteSources<TRequest extends HttpRequestBase>(
+  routeSources: RouteSource<TRequest>[],
+  context: NormalizationContext<TRequest> = defaultNormalizationContext,
+): NormalizedRouteProps<TRequest>[] {
+  const routes: NormalizedRouteProps<TRequest>[] = [];
 
   for (const routeSource of routeSources) {
     if (isRouteGroupDefinition(routeSource)) {
@@ -33,13 +34,19 @@ export function normalizeRouteSources(
   return routes;
 }
 
-function normalizeRouteGroup(group: RouteGroupDefinition, parentContext: NormalizationContext): RouteDefinition[] {
+function normalizeRouteGroup<TRequest extends HttpRequestBase>(
+  group: RouteGroupDefinition<TRequest>,
+  parentContext: NormalizationContext<TRequest>,
+): NormalizedRouteProps<TRequest>[] {
   const context = createChildContext(group, parentContext);
 
   return normalizeRouteSources(applyRouteConfig(group.resolveRoutes(), group), context);
 }
 
-function createChildContext(group: RouteGroupDefinition, parentContext: NormalizationContext): NormalizationContext {
+function createChildContext<TRequest extends HttpRequestBase>(
+  group: RouteGroupDefinition<TRequest>,
+  parentContext: NormalizationContext<TRequest>,
+): NormalizationContext<TRequest> {
   return {
     prefix:
       group.options.prefix === undefined
@@ -50,7 +57,10 @@ function createChildContext(group: RouteGroupDefinition, parentContext: Normaliz
   };
 }
 
-function normalizeRouteDefinition(route: RouteDefinition, context: NormalizationContext): RouteDefinition {
+function normalizeRouteDefinition<TRequest extends HttpRequestBase>(
+  route: NormalizedRouteProps<TRequest>,
+  context: NormalizationContext<TRequest>,
+): NormalizedRouteProps<TRequest> {
   return {
     ...route,
     path: joinRoutePath(context.prefix, route.path),
@@ -59,7 +69,10 @@ function normalizeRouteDefinition(route: RouteDefinition, context: Normalization
   };
 }
 
-function applyRouteConfig(routeSources: RouteSource[], group: RouteGroupDefinition): RouteSource[] {
+function applyRouteConfig<TRequest extends HttpRequestBase>(
+  routeSources: RouteSource<TRequest>[],
+  group: RouteGroupDefinition<TRequest>,
+): RouteSource<TRequest>[] {
   return routeSources.map(routeSource => {
     if (isRouteGroupDefinition(routeSource)) {
       return routeSource;
@@ -79,14 +92,16 @@ function applyRouteConfig(routeSources: RouteSource[], group: RouteGroupDefiniti
   });
 }
 
-function resolveRouteConfigOptions(
-  route: RouteDefinition,
-  routeConfig: NonNullable<RouteGroupDefinition['options']['routeConfig']>[string],
-): Partial<Pick<RouteDefinition, 'parseBody' | 'bodyOptions'>> {
+function resolveRouteConfigOptions<TRequest extends HttpRequestBase>(
+  route: NormalizedRouteProps<TRequest>,
+  routeConfig: NonNullable<RouteGroupDefinition<TRequest>['options']['routeConfig']>[string],
+): Partial<Pick<NormalizedRouteProps<TRequest>, 'parseBody' | 'bodyOptions'>> {
   return routeConfig.options ? mergeRouteOptions(route, routeConfig.options) : {};
 }
 
-function isRouteGroupDefinition(routeSource: RouteSource): routeSource is RouteGroupDefinition {
+function isRouteGroupDefinition<TRequest extends HttpRequestBase>(
+  routeSource: RouteSource<TRequest>,
+): routeSource is RouteGroupDefinition<TRequest> {
   return 'kind' in routeSource && routeSource.kind === 'route-group';
 }
 

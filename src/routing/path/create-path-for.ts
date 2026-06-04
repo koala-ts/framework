@@ -1,6 +1,6 @@
-import { createPathCatalog } from '@/routing/source/create-path-catalog';
-import { createPathTemplateResolver } from '@/routing/source/resolve-path-template';
-import type { RouteSource } from '@/routing/source/route-source';
+import type { RouteSource } from '@/routing/declaration/route-source.type';
+import { createPathCatalog } from './create-path-catalog';
+import { createPathTemplateResolver } from './resolve-path-template';
 
 type PathParamValue = string | number | boolean;
 type PathParams = Record<string, PathParamValue>;

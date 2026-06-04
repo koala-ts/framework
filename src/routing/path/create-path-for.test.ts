@@ -1,7 +1,7 @@
+import { Get } from '@/routing/declaration/http-verb-helpers';
 import { describe, expect, test, vi } from 'vitest';
+import { RouteGroup } from '../declaration/route-group';
 import { createPathFor } from './create-path-for';
-import { Get } from './http-verb-helpers';
-import { RouteGroup } from './route-group';
 
 describe('create path for', () => {
   describe('path resolution', () => {

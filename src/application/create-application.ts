@@ -4,13 +4,14 @@ import { serveStaticFiles } from '@/Http/Files';
 import { applyConfiguredGlobalMiddleware } from '@/Http/middleware/apply-configured-global-middleware';
 import { initializeRequestScopeStorage } from '@/Http/Scope/request-scope-storage';
 import { registerEventSubscribers } from '@/Kernel';
-import { registerLegacyRoutes } from '@/routing/decorator/legacy-router';
+import { registerLegacyRoutes } from '@/routing/deprecated-decorator/legacy-router';
+import { verifyRoutingMode } from '@/routing/deprecated-decorator/verify-routing-mode';
 import { registerRoutes } from '@/routing/registration/register-routes';
-import { verifyRoutingMode } from '@/routing/verify-routing-mode';
+import type { Request } from 'koa';
 import Koa from 'koa';
 import { type Application } from './application';
 
-export function create(config: KoalaConfig): Application {
+export function create<TRequest extends Request>(config: KoalaConfig<TRequest>): Application {
   const app = new Koa() as Application;
   const controllers = config.controllers ?? [];
 

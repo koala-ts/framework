@@ -1,9 +1,6 @@
-export { Route } from './route';
-export { createPathFor } from './helpers/create-path-for';
-export { RouteGroup } from './helpers/route-group';
-export { Any, Delete, Get, Head, Options, Patch, Post, Put } from './helpers/http-verb-helpers';
-export type { RouteDeclaration } from './route';
-export type { RouteConfigOverlay, RouteGroupDefinition, RouteGroupOptions } from './helpers/route-group';
-export type { RouteSource } from './source/route-source';
-export type { HttpMethod } from './http-method';
-export type { RouteOptions } from './route-options';
+export type { HttpMethod } from '@/routing/http-method.type';
+export type { RouteSource } from '@/routing/declaration/route-source.type';
+export { Route } from './declaration/route';
+export { createPathFor } from './path/create-path-for';
+export { RouteGroup } from './declaration/route-group';
+export { Any, Delete, Get, Head, Options, Patch, Post, Put } from '@/routing/declaration/http-verb-helpers';

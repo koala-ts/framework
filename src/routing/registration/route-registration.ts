@@ -1,8 +1,13 @@
-import type { RouteDefinition } from '@/routing/definition/route-definition';
-import type { RouterMethod } from '@/routing/router-method';
+import type { HttpRequest, HttpRequestBase } from '@/Http';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
+import type { RouterMethod } from '@/routing/declaration/router-method.type';
 
-export interface RouteRegistration {
+type RouteRegistrationMiddleware<TRequest extends HttpRequestBase> =
+  | NormalizedRouteProps<TRequest>['middleware'][number]
+  | NormalizedRouteProps<TRequest>['handler'];
+
+export interface RouteRegistration<TRequest extends HttpRequestBase = HttpRequest> {
   method: RouterMethod;
   path: string;
-  middleware: Array<RouteDefinition['middleware'][number] | RouteDefinition['handler']>;
+  middleware: RouteRegistrationMiddleware<TRequest>[];
 }

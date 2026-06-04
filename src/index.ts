@@ -1,8 +1,8 @@
 // Application
 export { create } from '@/application/create-application';
 export type { Application } from '@/application/application';
-import { getLegacyRoutes, registerLegacyRoutes } from '@/routing/decorator/legacy-router';
-import type { RouteMetadata as LegacyRouteMetadata } from '@/routing/decorator/route-metadata';
+import { getLegacyRoutes, registerLegacyRoutes } from '@/routing/deprecated-decorator/legacy-router';
+import type { RouteMetadata as LegacyRouteMetadata } from '@/routing/deprecated-decorator/route-metadata';
 
 // Core modules
 export type * from '@/config/koala-config';
@@ -12,10 +12,10 @@ export * from '@/Http';
 export * from '@/Kernel';
 
 // Routing
-export * from '@/routing/decorator/route';
-export type { HttpMethod } from '@/routing/http-method';
-export type { RouteOptions } from '@/routing/route-options';
-export type { RouterMethod } from '@/routing/router-method';
+export * from '@/routing/deprecated-decorator/route';
+export type { HttpMethod } from '@/routing/http-method.type';
+export type { RouteOptions } from '@/routing/declaration/route-options.type';
+export type { RouterMethod } from '@/routing/declaration/router-method.type';
 /**
  * @deprecated Use `Route` from `@koala-ts/framework/routing` instead.
  */

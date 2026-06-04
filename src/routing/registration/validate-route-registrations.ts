@@ -1,12 +1,18 @@
-import type { RouteDefinition } from '@/routing/definition/route-definition';
+import type { HttpRequestBase } from '@/Http';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteRegistration } from '@/routing/registration/route-registration';
 
-export function validateRouteDefinitions(routes: RouteDefinition[], registrations: RouteRegistration[]): void {
+export function validateRouteRegistrations<TRequest extends HttpRequestBase>(
+  routes: NormalizedRouteProps<TRequest>[],
+  registrations: RouteRegistration<TRequest>[],
+): void {
   validateUniqueRouteNames(routes);
   validateUniqueRouteSignatures(registrations);
 }
 
-function validateUniqueRouteSignatures(registrations: RouteRegistration[]): void {
+function validateUniqueRouteSignatures<TRequest extends HttpRequestBase>(
+  registrations: RouteRegistration<TRequest>[],
+): void {
   const signatures = new Set<string>();
 
   for (const registration of registrations) {
@@ -20,7 +26,7 @@ function validateUniqueRouteSignatures(registrations: RouteRegistration[]): void
   }
 }
 
-function validateUniqueRouteNames(routes: RouteDefinition[]): void {
+function validateUniqueRouteNames<TRequest extends HttpRequestBase>(routes: NormalizedRouteProps<TRequest>[]): void {
   const routeNames = new Set<string>();
 
   for (const route of routes) {
