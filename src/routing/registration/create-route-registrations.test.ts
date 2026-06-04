@@ -1,11 +1,11 @@
 import { describe, expect, test, vi } from 'vitest';
-import { expandRouteDefinitions } from './expand-route-definitions';
+import { createRouteRegistrations } from './create-route-registrations';
 
-describe('expand route definitions', () => {
-  test('it expands route definitions into route registrations', () => {
+describe('create route registrations', () => {
+  test('it creates route registrations from normalized routes', () => {
     const handler = vi.fn(async () => undefined);
 
-    const registrations = expandRouteDefinitions([
+    const registrations = createRouteRegistrations([
       {
         path: '/users',
         methods: ['get', 'post'],
@@ -33,7 +33,7 @@ describe('expand route definitions', () => {
   test('it prepends koa body middleware when body parsing is enabled', () => {
     const handler = vi.fn(async () => undefined);
 
-    const registrations = expandRouteDefinitions([
+    const registrations = createRouteRegistrations([
       {
         path: '/users',
         methods: ['post'],

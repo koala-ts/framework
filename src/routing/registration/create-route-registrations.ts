@@ -3,19 +3,19 @@ import type { RouteRegistration } from '@/routing/registration/route-registratio
 import type { Request } from 'koa';
 import { koaBody } from 'koa-body';
 
-export function expandRouteDefinitions<TRequest extends Request>(
+export function createRouteRegistrations<TRequest extends Request>(
   routes: NormalizedRouteProps<TRequest>[],
 ): RouteRegistration<TRequest>[] {
   const registrations: RouteRegistration<TRequest>[] = [];
 
   for (const route of routes) {
-    registrations.push(...expandRouteDefinition(route));
+    registrations.push(...createRouteRegistration(route));
   }
 
   return registrations;
 }
 
-function expandRouteDefinition<TRequest extends Request>(
+function createRouteRegistration<TRequest extends Request>(
   route: NormalizedRouteProps<TRequest>,
 ): RouteRegistration<TRequest>[] {
   const middleware = resolveRouteMiddleware(route);

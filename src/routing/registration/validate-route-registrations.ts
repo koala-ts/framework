@@ -2,7 +2,7 @@ import type { NormalizedRouteProps } from '@/routing/declaration/normalized-rout
 import type { RouteRegistration } from '@/routing/registration/route-registration';
 import type { Request } from 'koa';
 
-export function validateRouteDefinitions<TRequest extends Request>(
+export function validateRouteRegistrations<TRequest extends Request>(
   routes: NormalizedRouteProps<TRequest>[],
   registrations: RouteRegistration<TRequest>[],
 ): void {

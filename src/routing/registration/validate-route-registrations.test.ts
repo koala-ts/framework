@@ -1,12 +1,12 @@
 import { describe, expect, test, vi } from 'vitest';
-import { validateRouteDefinitions } from './validate-route-definitions';
+import { validateRouteRegistrations } from './validate-route-registrations';
 
-describe('validate route definitions', () => {
+describe('validate route registrations', () => {
   test('it rejects duplicate route signatures', () => {
     const handler = vi.fn(async () => undefined);
 
     expect(() =>
-      validateRouteDefinitions(
+      validateRouteRegistrations(
         [
           {
             path: '/users',
@@ -45,7 +45,7 @@ describe('validate route definitions', () => {
     const handler = vi.fn(async () => undefined);
 
     expect(() =>
-      validateRouteDefinitions(
+      validateRouteRegistrations(
         [
           {
             name: 'users.list',
@@ -86,7 +86,7 @@ describe('validate route definitions', () => {
     const handler = vi.fn(async () => undefined);
 
     expect(() =>
-      validateRouteDefinitions(
+      validateRouteRegistrations(
         [
           {
             name: 'users.list',
