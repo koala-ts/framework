@@ -1,7 +1,7 @@
 import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
-import type { HttpMethod } from '@/routing/declaration/http-method.type';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import { Route } from '@/routing/declaration/route';
+import type { HttpMethod } from '@/routing/http-method.type';
 
 type RouteHandler<TRequest extends HttpRequestBase = HttpRequest> = HttpMiddleware<TRequest>;
 type MiddlewareAndHandler<TRequest extends HttpRequestBase = HttpRequest> = [

@@ -1,6 +1,6 @@
 import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
-import type { HttpMethod } from '@/routing/declaration/http-method.type';
 import type { RouteOptions } from '@/routing/declaration/route-options.type';
+import type { HttpMethod } from '@/routing/http-method.type';
 
 export interface RouteProps<TRequest extends HttpRequestBase = HttpRequest> {
   name?: string;

@@ -1,5 +1,4 @@
-export type { HttpMethod } from '@/routing/declaration/http-method.type';
-export type { RouteOptions } from '@/routing/declaration/route-options.type';
+export type { HttpMethod } from '@/routing/http-method.type';
 export type { RouteSource } from '@/routing/declaration/route-source.type';
 export { Route } from './declaration/route';
 export { createPathFor } from './path/create-path-for';
