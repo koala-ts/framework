@@ -1,6 +1,6 @@
 import type { HttpRequest } from '@/Http';
+import { RouteProps } from '@/routing/declaration/route-props.type';
 import type { HttpMethod } from '@/routing/registration/verb/http-method.type';
-import { RouteProps } from '@/routing/route-props.type';
 import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
