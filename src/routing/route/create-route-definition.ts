@@ -30,15 +30,13 @@ function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions
 export function createRouteDefinition<TRequest extends Request = HttpRequest>(
   routeProps: RouteProps<TRequest>,
 ): RouteDefinition<TRequest> {
-  const routeOptions = resolveRouteOptions(routeProps.options ?? {});
-
   return {
     name: routeProps.name,
     path: routeProps.path,
     methods: qualifyMethods(routeProps.method),
     handler: routeProps.handler,
     middleware: routeProps.middleware ?? [],
-    ...routeOptions,
+    ...resolveRouteOptions(routeProps.options ?? {}),
   };
 }
 
