@@ -32,5 +32,7 @@ function resolveRouteMiddleware<TRequest extends Request>(
 ): RouteRegistration<TRequest>['middleware'] {
   const middlewareStack = [...route.middleware, route.handler];
 
-  return route.parseBody ? [koaBody(route.bodyOptions), ...middlewareStack] : middlewareStack;
+  return route.parseBody
+    ? [koaBody(route.bodyOptions as Parameters<typeof koaBody>[0]), ...middlewareStack]
+    : middlewareStack;
 }

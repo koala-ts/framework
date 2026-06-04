@@ -1,7 +1,7 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
+import type { RouteBodyOptions } from '@/routing/declaration/route-body-options.type';
 import type { RouterMethod } from '@/routing/declaration/router-method.type';
 import type { Request } from 'koa';
-import type { KoaBodyMiddlewareOptions } from 'koa-body';
 
 export interface NormalizedRouteProps<TRequest extends Request = HttpRequest> {
   name?: string;
@@ -10,5 +10,5 @@ export interface NormalizedRouteProps<TRequest extends Request = HttpRequest> {
   handler: HttpMiddleware<TRequest>;
   middleware: HttpMiddleware<TRequest>[];
   parseBody: boolean;
-  bodyOptions: Partial<KoaBodyMiddlewareOptions>;
+  bodyOptions: RouteBodyOptions;
 }

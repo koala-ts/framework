@@ -1,7 +1,7 @@
-import type { KoaBodyMiddlewareOptions } from 'koa-body';
+import type { RouteBodyOptions } from '@/routing/declaration/route-body-options.type';
 
 export type RouteOptions = Partial<
-  KoaBodyMiddlewareOptions & {
+  RouteBodyOptions & {
     parseBody?: boolean;
   }
 >;
