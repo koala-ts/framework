@@ -1,5 +1,6 @@
-import type { HttpMiddleware, HttpRequest } from '@/Http';
+import type { HttpRequest } from '@/Http';
 import type { HttpMethod } from '@/routing/registration/verb/http-method.type';
+import { RouteDeclaration } from '@/routing/route/route-declaration.type';
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { Request } from 'koa';
@@ -29,17 +30,8 @@ function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
   return qualifiedMethods.includes('all') ? ['all'] : [...new Set<RouterMethod>(qualifiedMethods)];
 }
 
-interface RouteProps<TRequest extends Request = HttpRequest> {
-  name?: string;
-  method: HttpMethod | HttpMethod[];
-  path: string;
-  handler: HttpMiddleware<TRequest>;
-  middleware?: HttpMiddleware<TRequest>[];
-  options?: RouteOptions;
-}
-
 export function createRouteDefinition<TRequest extends Request = HttpRequest>(
-  routeProps: RouteProps<TRequest>,
+  routeProps: RouteDeclaration<TRequest>,
 ): RouteDefinition<TRequest> {
   return {
     name: routeProps.name,
