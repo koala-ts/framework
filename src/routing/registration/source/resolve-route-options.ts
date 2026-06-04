@@ -1,4 +1,4 @@
-import type { RouteOptions } from '@/routing/route/route-options.type';
+import type { RouteOptions } from '@/routing/declaration/route-options.type';
 import type { Request } from 'koa';
 import type { NormalizedRouteProps } from '../../declaration/normalized-route-props.type';
 

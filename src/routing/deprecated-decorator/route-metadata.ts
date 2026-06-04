@@ -1,5 +1,5 @@
 import type { HttpMiddleware } from '@/Http';
-import type { RouteOptions } from '@/routing/route/route-options.type';
+import type { RouteOptions } from '@/routing/declaration/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 
 /**
