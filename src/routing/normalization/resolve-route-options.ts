@@ -1,6 +1,6 @@
+import type { HttpRequestBase } from '@/Http';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteOptions } from '@/routing/declaration/route-options.type';
-import type { Request } from 'koa';
-import type { NormalizedRouteProps } from '../../declaration/normalized-route-props.type';
 
 function extractBodyOptions(options: RouteOptions): NormalizedRouteProps['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
@@ -8,7 +8,7 @@ function extractBodyOptions(options: RouteOptions): NormalizedRouteProps['bodyOp
   return bodyOptions as NormalizedRouteProps['bodyOptions'];
 }
 
-export function mergeRouteOptions<TRequest extends Request>(
+export function mergeRouteOptions<TRequest extends HttpRequestBase>(
   route: NormalizedRouteProps<TRequest>,
   options: RouteOptions,
 ): Pick<NormalizedRouteProps<TRequest>, 'parseBody' | 'bodyOptions'> {

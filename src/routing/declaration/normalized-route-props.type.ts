@@ -1,9 +1,8 @@
-import type { HttpMiddleware, HttpRequest } from '@/Http';
+import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
 import type { RouteBodyOptions } from '@/routing/declaration/route-body-options.type';
 import type { RouterMethod } from '@/routing/declaration/router-method.type';
-import type { Request } from 'koa';
 
-export interface NormalizedRouteProps<TRequest extends Request = HttpRequest> {
+export interface NormalizedRouteProps<TRequest extends HttpRequestBase = HttpRequest> {
   name?: string;
   path: string;
   methods: RouterMethod[];

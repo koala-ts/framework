@@ -1,10 +1,9 @@
-import type { HttpRequest } from '@/Http';
+import type { HttpRequest, HttpRequestBase } from '@/Http';
 import type { HttpMethod } from '@/routing/declaration/http-method.type';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteOptions } from '@/routing/declaration/route-options.type';
 import { RouteProps } from '@/routing/declaration/route-props.type';
 import type { RouterMethod } from '@/routing/declaration/router-method.type';
-import type { Request } from 'koa';
 
 function resolveRouteOptions(options: RouteOptions): Pick<NormalizedRouteProps, 'parseBody' | 'bodyOptions'> {
   return {
@@ -30,7 +29,7 @@ function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
   return qualifiedMethods.includes('all') ? ['all'] : [...new Set<RouterMethod>(qualifiedMethods)];
 }
 
-export function normalizeRouteProps<TRequest extends Request = HttpRequest>(
+export function normalizeRouteProps<TRequest extends HttpRequestBase = HttpRequest>(
   routeProps: RouteProps<TRequest>,
 ): NormalizedRouteProps<TRequest> {
   return {

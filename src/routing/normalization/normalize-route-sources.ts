@@ -1,10 +1,10 @@
+import type { HttpRequestBase } from '@/Http';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteGroupDefinition } from '@/routing/declaration/route-group';
+import type { RouteSource } from '@/routing/declaration/route-source.type';
 import { mergeRouteOptions } from '@/routing/normalization/resolve-route-options';
-import type { Request } from 'koa';
-import type { RouteSource } from '../../declaration/route-source.type';
 
-interface NormalizationContext<TRequest extends Request> {
+interface NormalizationContext<TRequest extends HttpRequestBase> {
   prefix: string;
   namePrefix: string;
   middleware: NormalizedRouteProps<TRequest>['middleware'];
@@ -16,7 +16,7 @@ const defaultNormalizationContext = {
   middleware: [],
 };
 
-export function normalizeRouteSources<TRequest extends Request>(
+export function normalizeRouteSources<TRequest extends HttpRequestBase>(
   routeSources: RouteSource<TRequest>[],
   context: NormalizationContext<TRequest> = defaultNormalizationContext,
 ): NormalizedRouteProps<TRequest>[] {
@@ -34,7 +34,7 @@ export function normalizeRouteSources<TRequest extends Request>(
   return routes;
 }
 
-function normalizeRouteGroup<TRequest extends Request>(
+function normalizeRouteGroup<TRequest extends HttpRequestBase>(
   group: RouteGroupDefinition<TRequest>,
   parentContext: NormalizationContext<TRequest>,
 ): NormalizedRouteProps<TRequest>[] {
@@ -43,7 +43,7 @@ function normalizeRouteGroup<TRequest extends Request>(
   return normalizeRouteSources(applyRouteConfig(group.resolveRoutes(), group), context);
 }
 
-function createChildContext<TRequest extends Request>(
+function createChildContext<TRequest extends HttpRequestBase>(
   group: RouteGroupDefinition<TRequest>,
   parentContext: NormalizationContext<TRequest>,
 ): NormalizationContext<TRequest> {
@@ -57,7 +57,7 @@ function createChildContext<TRequest extends Request>(
   };
 }
 
-function normalizeRouteDefinition<TRequest extends Request>(
+function normalizeRouteDefinition<TRequest extends HttpRequestBase>(
   route: NormalizedRouteProps<TRequest>,
   context: NormalizationContext<TRequest>,
 ): NormalizedRouteProps<TRequest> {
@@ -69,7 +69,7 @@ function normalizeRouteDefinition<TRequest extends Request>(
   };
 }
 
-function applyRouteConfig<TRequest extends Request>(
+function applyRouteConfig<TRequest extends HttpRequestBase>(
   routeSources: RouteSource<TRequest>[],
   group: RouteGroupDefinition<TRequest>,
 ): RouteSource<TRequest>[] {
@@ -92,14 +92,14 @@ function applyRouteConfig<TRequest extends Request>(
   });
 }
 
-function resolveRouteConfigOptions<TRequest extends Request>(
+function resolveRouteConfigOptions<TRequest extends HttpRequestBase>(
   route: NormalizedRouteProps<TRequest>,
   routeConfig: NonNullable<RouteGroupDefinition<TRequest>['options']['routeConfig']>[string],
 ): Partial<Pick<NormalizedRouteProps<TRequest>, 'parseBody' | 'bodyOptions'>> {
   return routeConfig.options ? mergeRouteOptions(route, routeConfig.options) : {};
 }
 
-function isRouteGroupDefinition<TRequest extends Request>(
+function isRouteGroupDefinition<TRequest extends HttpRequestBase>(
   routeSource: RouteSource<TRequest>,
 ): routeSource is RouteGroupDefinition<TRequest> {
   return 'kind' in routeSource && routeSource.kind === 'route-group';

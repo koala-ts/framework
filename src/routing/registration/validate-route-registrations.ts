@@ -1,8 +1,8 @@
+import type { HttpRequestBase } from '@/Http';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteRegistration } from '@/routing/registration/route-registration';
-import type { Request } from 'koa';
 
-export function validateRouteRegistrations<TRequest extends Request>(
+export function validateRouteRegistrations<TRequest extends HttpRequestBase>(
   routes: NormalizedRouteProps<TRequest>[],
   registrations: RouteRegistration<TRequest>[],
 ): void {
@@ -10,7 +10,9 @@ export function validateRouteRegistrations<TRequest extends Request>(
   validateUniqueRouteSignatures(registrations);
 }
 
-function validateUniqueRouteSignatures<TRequest extends Request>(registrations: RouteRegistration<TRequest>[]): void {
+function validateUniqueRouteSignatures<TRequest extends HttpRequestBase>(
+  registrations: RouteRegistration<TRequest>[],
+): void {
   const signatures = new Set<string>();
 
   for (const registration of registrations) {
@@ -24,7 +26,7 @@ function validateUniqueRouteSignatures<TRequest extends Request>(registrations: 
   }
 }
 
-function validateUniqueRouteNames<TRequest extends Request>(routes: NormalizedRouteProps<TRequest>[]): void {
+function validateUniqueRouteNames<TRequest extends HttpRequestBase>(routes: NormalizedRouteProps<TRequest>[]): void {
   const routeNames = new Set<string>();
 
   for (const route of routes) {

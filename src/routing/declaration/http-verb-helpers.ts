@@ -1,27 +1,26 @@
-import type { HttpMiddleware, HttpRequest } from '@/Http';
+import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
 import type { HttpMethod } from '@/routing/declaration/http-method.type';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import { Route } from '@/routing/declaration/route';
-import type { Request } from 'koa';
 
-type RouteHandler<TRequest extends Request = HttpRequest> = HttpMiddleware<TRequest>;
-type MiddlewareAndHandler<TRequest extends Request = HttpRequest> = [
+type RouteHandler<TRequest extends HttpRequestBase = HttpRequest> = HttpMiddleware<TRequest>;
+type MiddlewareAndHandler<TRequest extends HttpRequestBase = HttpRequest> = [
   ...middleware: HttpMiddleware<TRequest>[],
   handler: RouteHandler<TRequest>,
 ];
-type NamedMiddlewareAndHandler<TRequest extends Request = HttpRequest> = [
+type NamedMiddlewareAndHandler<TRequest extends HttpRequestBase = HttpRequest> = [
   name: string,
   ...middlewareAndHandler: MiddlewareAndHandler<TRequest>,
 ];
-type VerbHelperRouteArguments<TRequest extends Request = HttpRequest> =
+type VerbHelperRouteArguments<TRequest extends HttpRequestBase = HttpRequest> =
   | MiddlewareAndHandler<TRequest>
   | NamedMiddlewareAndHandler<TRequest>;
-type UnsafeVerbHelperRouteArguments<TRequest extends Request = HttpRequest> =
+type UnsafeVerbHelperRouteArguments<TRequest extends HttpRequestBase = HttpRequest> =
   | VerbHelperRouteArguments<TRequest>
   | [name: string]
   | [];
 
-interface VerbHelperArguments<TRequest extends Request = HttpRequest> {
+interface VerbHelperArguments<TRequest extends HttpRequestBase = HttpRequest> {
   path: string;
   name?: string;
   middleware: HttpMiddleware<TRequest>[];
@@ -29,11 +28,11 @@ interface VerbHelperArguments<TRequest extends Request = HttpRequest> {
 }
 
 type NamedVerbHelper = {
-  <TRequest extends Request = HttpRequest>(
+  <TRequest extends HttpRequestBase = HttpRequest>(
     path: string,
     ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
   ): NormalizedRouteProps<TRequest>;
-  <TRequest extends Request = HttpRequest>(
+  <TRequest extends HttpRequestBase = HttpRequest>(
     path: string,
     name: string,
     ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
@@ -41,7 +40,7 @@ type NamedVerbHelper = {
 };
 
 function createVerbHelper(method: HttpMethod): NamedVerbHelper {
-  return <TRequest extends Request = HttpRequest>(
+  return <TRequest extends HttpRequestBase = HttpRequest>(
     path: string,
     ...routeArguments: UnsafeVerbHelperRouteArguments<TRequest>
   ) =>
@@ -51,7 +50,7 @@ function createVerbHelper(method: HttpMethod): NamedVerbHelper {
     });
 }
 
-function resolveVerbHelperArguments<TRequest extends Request = HttpRequest>(
+function resolveVerbHelperArguments<TRequest extends HttpRequestBase = HttpRequest>(
   path: string,
   routeArguments: UnsafeVerbHelperRouteArguments<TRequest>,
 ): VerbHelperArguments<TRequest> {
@@ -71,13 +70,13 @@ function resolveVerbHelperArguments<TRequest extends Request = HttpRequest>(
   };
 }
 
-function isNamedVerbHelperRouteArguments<TRequest extends Request = HttpRequest>(
+function isNamedVerbHelperRouteArguments<TRequest extends HttpRequestBase = HttpRequest>(
   routeArguments: UnsafeVerbHelperRouteArguments<TRequest>,
 ): routeArguments is NamedMiddlewareAndHandler<TRequest> | [name: string] {
   return typeof routeArguments[0] === 'string';
 }
 
-function requireVerbHelperHandler<TRequest extends Request = HttpRequest>(
+function requireVerbHelperHandler<TRequest extends HttpRequestBase = HttpRequest>(
   middlewareAndHandler: MiddlewareAndHandler<TRequest> | [],
   isNamedRoute: boolean,
 ): RouteHandler<TRequest> {
