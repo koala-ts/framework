@@ -1,7 +1,7 @@
 import { type Application } from '@/application/application';
+import { Get } from '@/routing/declaration/http-verb-helpers';
 import { Route } from '@/routing/declaration/route';
 import { RouteGroup } from '@/routing/declaration/route-group';
-import { Get } from '@/routing/registration/verb/http-verb-helpers';
 import Koa from 'koa';
 import supertest from 'supertest';
 import { describe, expect, test } from 'vitest';

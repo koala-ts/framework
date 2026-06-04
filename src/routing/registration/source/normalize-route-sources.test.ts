@@ -1,5 +1,5 @@
+import { Get } from '@/routing/declaration/http-verb-helpers';
 import { RouteGroup } from '@/routing/declaration/route-group';
-import { Get } from '@/routing/registration/verb/http-verb-helpers';
 import { describe, expect, test, vi } from 'vitest';
 import { normalizeRouteSources } from './normalize-route-sources';
 

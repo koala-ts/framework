@@ -1,4 +1,4 @@
-import { Get } from '@/routing/registration/verb/http-verb-helpers';
+import { Get } from '@/routing/declaration/http-verb-helpers';
 import { describe, expect, test } from 'vitest';
 import { RouteGroup } from './route-group';
 
