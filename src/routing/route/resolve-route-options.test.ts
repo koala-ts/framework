@@ -1,5 +1,6 @@
+import { resolveRouteOptions } from '@/routing/route/create-route-definition';
 import { describe, expect, test } from 'vitest';
-import { mergeRouteOptions, resolveRouteOptions } from './resolve-route-options';
+import { mergeRouteOptions } from './resolve-route-options';
 
 describe('resolve route options', () => {
   test('it resolves route definition options from route options', () => {

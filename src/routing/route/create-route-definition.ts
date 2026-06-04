@@ -1,5 +1,4 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
-import { resolveRouteOptions } from '@/routing/route/resolve-route-options';
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { HttpMethod } from '@/routing/verb/http-method.type';
@@ -13,6 +12,19 @@ interface RouteProps<TRequest extends Request = HttpRequest> {
   handler: HttpMiddleware<TRequest>;
   middleware?: HttpMiddleware<TRequest>[];
   options?: RouteOptions;
+}
+
+export function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
+  return {
+    parseBody: options.parseBody ?? true,
+    bodyOptions: extractBodyOptions(options),
+  };
+}
+
+export function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
+  const { parseBody: _parseBody, ...bodyOptions } = options;
+
+  return bodyOptions as RouteDefinition['bodyOptions'];
 }
 
 export function createRouteDefinition<TRequest extends Request = HttpRequest>({
