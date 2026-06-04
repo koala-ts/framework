@@ -14,14 +14,14 @@ interface RouteProps<TRequest extends Request = HttpRequest> {
   options?: RouteOptions;
 }
 
-export function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
+function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
   return {
     parseBody: options.parseBody ?? true,
     bodyOptions: extractBodyOptions(options),
   };
 }
 
-export function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
+function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
 
   return bodyOptions as RouteDefinition['bodyOptions'];
