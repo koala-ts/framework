@@ -1,7 +1,7 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
+import type { HttpMethod } from '@/routing/registration/verb/http-method.type';
 import { Route } from '@/routing/route/route';
 import type { RouteDefinition } from '@/routing/route/route-definition.type';
-import type { HttpMethod } from '@/routing/verb/http-method.type';
 import type { Request } from 'koa';
 
 type RouteHandler<TRequest extends Request = HttpRequest> = HttpMiddleware<TRequest>;

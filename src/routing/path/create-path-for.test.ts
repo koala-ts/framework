@@ -1,6 +1,6 @@
+import { Get } from '@/routing/registration/verb/http-verb-helpers';
 import { describe, expect, test, vi } from 'vitest';
 import { RouteGroup } from '../group/route-group';
-import { Get } from '../verb/http-verb-helpers';
 import { createPathFor } from './create-path-for';
 
 describe('create path for', () => {

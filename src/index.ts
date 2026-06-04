@@ -13,7 +13,7 @@ export * from '@/Kernel';
 
 // Routing
 export * from '@/routing/deprecated-decorator/route';
-export type { HttpMethod } from '@/routing/verb/http-method.type';
+export type { HttpMethod } from '@/routing/registration/verb/http-method.type';
 export type { RouteOptions } from '@/routing/route/route-options.type';
 export type { RouterMethod } from '@/routing/route/router-method.type';
 /**
