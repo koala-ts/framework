@@ -27,6 +27,17 @@ function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions
   return bodyOptions as RouteDefinition['bodyOptions'];
 }
 
+function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
+  const methods = Array.isArray(method) ? method : [method];
+  const qualifiedMethods: RouterMethod[] = methods.map(method => {
+    const lower = method.toLowerCase() as RouterMethod;
+
+    return ['any', 'all'].includes(lower) ? 'all' : lower;
+  });
+
+  return qualifiedMethods.includes('all') ? ['all'] : [...new Set<RouterMethod>(qualifiedMethods)];
+}
+
 export function createRouteDefinition<TRequest extends Request = HttpRequest>(
   routeProps: RouteProps<TRequest>,
 ): RouteDefinition<TRequest> {
@@ -38,15 +49,4 @@ export function createRouteDefinition<TRequest extends Request = HttpRequest>(
     middleware: routeProps.middleware ?? [],
     ...resolveRouteOptions(routeProps.options ?? {}),
   };
-}
-
-function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
-  const methods = Array.isArray(method) ? method : [method];
-  const qualifiedMethods: RouterMethod[] = methods.map(method => {
-    const lower = method.toLowerCase() as RouterMethod;
-
-    return ['any', 'all'].includes(lower) ? 'all' : lower;
-  });
-
-  return qualifiedMethods.includes('all') ? ['all'] : [...new Set<RouterMethod>(qualifiedMethods)];
 }
