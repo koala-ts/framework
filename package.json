@@ -46,7 +46,7 @@
     "email": "imdhemy@gmail.com",
     "url": "https://imdhemy.com"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=24",
     "npm": ">=11"

@@ -1,4 +1,4 @@
 | Q       | A                      |
 | ------- | ---------------------- |
-| License | GPLv3                  |
+| License | Apache-2.0             |
 | Issue   | Closes #<issue_number> |
