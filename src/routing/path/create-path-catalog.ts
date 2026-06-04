@@ -1,5 +1,5 @@
 import type { RouteSource } from '@/routing/declaration/route-source.type';
-import { normalizeRouteSources } from '@/routing/registration/source/normalize-route-sources';
+import { normalizeRouteSources } from '@/routing/normalization/normalize-route-sources';
 
 export function createPathCatalog(routeSources: RouteSource[]): Map<string, string> {
   const catalog = new Map<string, string>();
