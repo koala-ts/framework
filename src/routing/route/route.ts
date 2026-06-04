@@ -1,6 +1,6 @@
 import type { HttpRequest } from '@/Http';
 import type { HttpMethod } from '@/routing/registration/verb/http-method.type';
-import { RouteDeclaration } from '@/routing/route/route-declaration.type';
+import { RouteProps } from '@/routing/route-props.type';
 import type { RouteDefinition } from '@/routing/route/route-definition.type';
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
@@ -31,7 +31,7 @@ function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
 }
 
 export function createRouteDefinition<TRequest extends Request = HttpRequest>(
-  routeProps: RouteDeclaration<TRequest>,
+  routeProps: RouteProps<TRequest>,
 ): RouteDefinition<TRequest> {
   return {
     name: routeProps.name,
@@ -43,8 +43,6 @@ export function createRouteDefinition<TRequest extends Request = HttpRequest>(
   };
 }
 
-export function Route<TRequest extends Request = HttpRequest>(
-  route: RouteDeclaration<TRequest>,
-): RouteDefinition<TRequest> {
+export function Route<TRequest extends Request = HttpRequest>(route: RouteProps<TRequest>): RouteDefinition<TRequest> {
   return createRouteDefinition(route);
 }
