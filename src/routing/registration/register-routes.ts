@@ -3,7 +3,7 @@ import { type HttpScope } from '@/Http';
 import type { RouteSource } from '@/routing/declaration/route-source.type';
 import { normalizeRouteSources } from '@/routing/normalization/normalize-route-sources';
 import { expandRouteDefinitions } from '@/routing/registration/expand-route-definitions';
-import { validateRouteDefinitions } from '@/routing/registration/validation/validate-route-definitions';
+import { validateRouteDefinitions } from '@/routing/registration/validate-route-definitions';
 import Router, { type RouterInstance } from '@koa/router';
 import { type DefaultContext, type DefaultState, type Middleware, type Request } from 'koa';
 
