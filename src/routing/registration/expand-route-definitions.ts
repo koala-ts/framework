@@ -1,5 +1,5 @@
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteRegistration } from '@/routing/registration/route-registration';
-import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { Request } from 'koa';
 import { koaBody } from 'koa-body';
 

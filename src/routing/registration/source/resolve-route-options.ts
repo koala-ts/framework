@@ -1,6 +1,6 @@
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { Request } from 'koa';
-import type { NormalizedRouteProps } from '../../route/normalized-route-props.type';
+import type { NormalizedRouteProps } from '../../declaration/normalized-route-props.type';
 
 function extractBodyOptions(options: RouteOptions): NormalizedRouteProps['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;

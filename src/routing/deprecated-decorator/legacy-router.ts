@@ -1,9 +1,9 @@
 import { type Application } from '@/application/application';
 import { type HttpMiddleware } from '@/Http';
 import { Route as createRouteDefinition } from '@/routing';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import { registerRoutes } from '@/routing/registration/register-routes';
 import 'reflect-metadata';
-import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { Route } from './route';
 import type { RouteMetadata } from './route-metadata';
 

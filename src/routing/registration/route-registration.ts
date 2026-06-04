@@ -1,5 +1,5 @@
 import type { HttpRequest } from '@/Http';
-import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { Request } from 'koa';
 

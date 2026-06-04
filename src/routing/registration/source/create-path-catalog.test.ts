@@ -1,6 +1,6 @@
-import { RouteGroup } from '@/routing/group/route-group';
+import { Route } from '@/routing/declaration/route';
+import { RouteGroup } from '@/routing/declaration/route-group';
 import { Get } from '@/routing/registration/verb/http-verb-helpers';
-import { Route } from '@/routing/route/route';
 import { describe, expect, test, vi } from 'vitest';
 import { createPathCatalog } from './create-path-catalog';
 

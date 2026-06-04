@@ -1,6 +1,6 @@
-import type { RouteGroupDefinition } from '@/routing/group/route-group';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
+import type { RouteGroupDefinition } from '@/routing/declaration/route-group';
 import { mergeRouteOptions } from '@/routing/registration/source/resolve-route-options';
-import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { Request } from 'koa';
 import type { RouteSource } from './route-source';
 

@@ -1,7 +1,7 @@
 import type { HttpRequest } from '@/Http';
+import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import { RouteProps } from '@/routing/declaration/route-props.type';
 import type { HttpMethod } from '@/routing/registration/verb/http-method.type';
-import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { Request } from 'koa';
@@ -41,10 +41,4 @@ export function normalizeRouteProps<TRequest extends Request = HttpRequest>(
     middleware: routeProps.middleware ?? [],
     ...resolveRouteOptions(routeProps.options ?? {}),
   };
-}
-
-export function Route<TRequest extends Request = HttpRequest>(
-  route: RouteProps<TRequest>,
-): NormalizedRouteProps<TRequest> {
-  return normalizeRouteProps(route);
 }
