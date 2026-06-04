@@ -6,7 +6,7 @@ import type { HttpMethod } from '@/routing/verb/http-method.type';
 import type { Request } from 'koa';
 import type { RouteDefinition } from './route-definition.type';
 
-interface RouteDefinitionInput<TRequest extends Request = HttpRequest> {
+interface RouteProps<TRequest extends Request = HttpRequest> {
   name?: string;
   method: HttpMethod | HttpMethod[];
   path: string;
@@ -22,7 +22,7 @@ export function createRouteDefinition<TRequest extends Request = HttpRequest>({
   handler,
   middleware = [],
   options = {},
-}: RouteDefinitionInput<TRequest>): RouteDefinition<TRequest> {
+}: RouteProps<TRequest>): RouteDefinition<TRequest> {
   const routeOptions = resolveRouteOptions(options);
 
   return {
