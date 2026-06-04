@@ -1,6 +1,6 @@
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { Request } from 'koa';
-import type { RouteDefinition } from './route-definition.type';
+import type { RouteDefinition } from '../../route/route-definition.type';
 
 function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
