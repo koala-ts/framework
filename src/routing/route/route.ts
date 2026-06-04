@@ -30,7 +30,7 @@ function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
   return qualifiedMethods.includes('all') ? ['all'] : [...new Set<RouterMethod>(qualifiedMethods)];
 }
 
-export function createRouteDefinition<TRequest extends Request = HttpRequest>(
+export function normalizeRouteProps<TRequest extends Request = HttpRequest>(
   routeProps: RouteProps<TRequest>,
 ): NormalizedRouteProps<TRequest> {
   return {
@@ -46,5 +46,5 @@ export function createRouteDefinition<TRequest extends Request = HttpRequest>(
 export function Route<TRequest extends Request = HttpRequest>(
   route: RouteProps<TRequest>,
 ): NormalizedRouteProps<TRequest> {
-  return createRouteDefinition(route);
+  return normalizeRouteProps(route);
 }
