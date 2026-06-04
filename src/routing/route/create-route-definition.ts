@@ -27,22 +27,17 @@ function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions
   return bodyOptions as RouteDefinition['bodyOptions'];
 }
 
-export function createRouteDefinition<TRequest extends Request = HttpRequest>({
-  name,
-  method,
-  path,
-  handler,
-  middleware = [],
-  options = {},
-}: RouteProps<TRequest>): RouteDefinition<TRequest> {
-  const routeOptions = resolveRouteOptions(options);
+export function createRouteDefinition<TRequest extends Request = HttpRequest>(
+  routeProps: RouteProps<TRequest>,
+): RouteDefinition<TRequest> {
+  const routeOptions = resolveRouteOptions(routeProps.options ?? {});
 
   return {
-    name,
-    path,
-    methods: qualifyMethods(method),
-    handler,
-    middleware,
+    name: routeProps.name,
+    path: routeProps.path,
+    methods: qualifyMethods(routeProps.method),
+    handler: routeProps.handler,
+    middleware: routeProps.middleware ?? [],
     ...routeOptions,
   };
 }
