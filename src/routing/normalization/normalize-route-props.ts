@@ -3,7 +3,7 @@ import type { HttpMethod } from '@/routing/declaration/http-method.type';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteOptions } from '@/routing/declaration/route-options.type';
 import { RouteProps } from '@/routing/declaration/route-props.type';
-import type { RouterMethod } from '@/routing/route/router-method.type';
+import type { RouterMethod } from '@/routing/declaration/router-method.type';
 import type { Request } from 'koa';
 
 function resolveRouteOptions(options: RouteOptions): Pick<NormalizedRouteProps, 'parseBody' | 'bodyOptions'> {
