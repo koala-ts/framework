@@ -1,11 +1,11 @@
+import { type Application } from '@/application/application';
+import { Get } from '@/routing/declaration/http-verb-helpers';
+import { Route } from '@/routing/declaration/route';
+import { RouteGroup } from '@/routing/declaration/route-group';
 import Koa from 'koa';
 import supertest from 'supertest';
 import { describe, expect, test } from 'vitest';
-import { type Application } from '@/application/application';
-import { Get } from '@/routing/helpers/http-verb-helpers';
 import { registerRoutes } from './register-routes';
-import { RouteGroup } from '@/routing/helpers/route-group';
-import { Route } from '@/routing/route';
 
 describe('register routes', () => {
   test('it registers a function-first route', async () => {

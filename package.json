@@ -59,7 +59,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "watch:test": "vitest watch",
+    "watch:build": "tsc --noEmit --watch"
   },
   "dependencies": {
     "@koa/router": "^15.1.1",

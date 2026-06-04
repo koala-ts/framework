@@ -1,9 +1,9 @@
-import type { Context, DefaultState, Next, Request } from 'koa';
-import { type HttpRequest } from '../Request';
+import type { Context, DefaultState, Next } from 'koa';
+import { type HttpRequest, type HttpRequestBase } from '../Request';
 import { type HttpResponse } from '../Response';
 import { type User } from '@/Security/types';
 
-export interface HttpScope<TRequest extends Request = HttpRequest, TUser extends User = User> extends Context {
+export interface HttpScope<TRequest extends HttpRequestBase = HttpRequest, TUser extends User = User> extends Context {
   request: TRequest;
   response: HttpResponse;
   user?: TUser;
@@ -11,7 +11,7 @@ export interface HttpScope<TRequest extends Request = HttpRequest, TUser extends
 
 export type NextMiddleware = Next;
 
-export type HttpMiddleware<TRequest extends Request = HttpRequest> = (
+export type HttpMiddleware<TRequest extends HttpRequestBase = HttpRequest> = (
   scope: HttpScope<TRequest>,
   next: NextMiddleware,
 ) => Promise<unknown>;
