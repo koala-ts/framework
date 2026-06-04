@@ -1,10 +1,10 @@
 import type { RouteRegistration } from '@/routing/registration/route-registration';
-import type { RouteDefinition } from '@/routing/route/route-definition.type';
+import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { Request } from 'koa';
 import { koaBody } from 'koa-body';
 
 export function expandRouteDefinitions<TRequest extends Request>(
-  routes: RouteDefinition<TRequest>[],
+  routes: NormalizedRouteProps<TRequest>[],
 ): RouteRegistration<TRequest>[] {
   const registrations: RouteRegistration<TRequest>[] = [];
 
@@ -16,7 +16,7 @@ export function expandRouteDefinitions<TRequest extends Request>(
 }
 
 function expandRouteDefinition<TRequest extends Request>(
-  route: RouteDefinition<TRequest>,
+  route: NormalizedRouteProps<TRequest>,
 ): RouteRegistration<TRequest>[] {
   const middleware = resolveRouteMiddleware(route);
 
@@ -28,7 +28,7 @@ function expandRouteDefinition<TRequest extends Request>(
 }
 
 function resolveRouteMiddleware<TRequest extends Request>(
-  route: RouteDefinition<TRequest>,
+  route: NormalizedRouteProps<TRequest>,
 ): RouteRegistration<TRequest>['middleware'] {
   const middlewareStack = [...route.middleware, route.handler];
 

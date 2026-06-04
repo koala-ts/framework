@@ -1,9 +1,9 @@
 import type { RouteRegistration } from '@/routing/registration/route-registration';
-import type { RouteDefinition } from '@/routing/route/route-definition.type';
+import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { Request } from 'koa';
 
 export function validateRouteDefinitions<TRequest extends Request>(
-  routes: RouteDefinition<TRequest>[],
+  routes: NormalizedRouteProps<TRequest>[],
   registrations: RouteRegistration<TRequest>[],
 ): void {
   validateUniqueRouteNames(routes);
@@ -24,7 +24,7 @@ function validateUniqueRouteSignatures<TRequest extends Request>(registrations: 
   }
 }
 
-function validateUniqueRouteNames<TRequest extends Request>(routes: RouteDefinition<TRequest>[]): void {
+function validateUniqueRouteNames<TRequest extends Request>(routes: NormalizedRouteProps<TRequest>[]): void {
   const routeNames = new Set<string>();
 
   for (const route of routes) {

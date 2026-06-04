@@ -1,13 +1,13 @@
 import type { RouteGroupDefinition } from '@/routing/group/route-group';
 import { mergeRouteOptions } from '@/routing/registration/source/resolve-route-options';
-import type { RouteDefinition } from '@/routing/route/route-definition.type';
+import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { Request } from 'koa';
 import type { RouteSource } from './route-source';
 
 interface NormalizationContext<TRequest extends Request> {
   prefix: string;
   namePrefix: string;
-  middleware: RouteDefinition<TRequest>['middleware'];
+  middleware: NormalizedRouteProps<TRequest>['middleware'];
 }
 
 const defaultNormalizationContext = {
@@ -19,8 +19,8 @@ const defaultNormalizationContext = {
 export function normalizeRouteSources<TRequest extends Request>(
   routeSources: RouteSource<TRequest>[],
   context: NormalizationContext<TRequest> = defaultNormalizationContext,
-): RouteDefinition<TRequest>[] {
-  const routes: RouteDefinition<TRequest>[] = [];
+): NormalizedRouteProps<TRequest>[] {
+  const routes: NormalizedRouteProps<TRequest>[] = [];
 
   for (const routeSource of routeSources) {
     if (isRouteGroupDefinition(routeSource)) {
@@ -37,7 +37,7 @@ export function normalizeRouteSources<TRequest extends Request>(
 function normalizeRouteGroup<TRequest extends Request>(
   group: RouteGroupDefinition<TRequest>,
   parentContext: NormalizationContext<TRequest>,
-): RouteDefinition<TRequest>[] {
+): NormalizedRouteProps<TRequest>[] {
   const context = createChildContext(group, parentContext);
 
   return normalizeRouteSources(applyRouteConfig(group.resolveRoutes(), group), context);
@@ -58,9 +58,9 @@ function createChildContext<TRequest extends Request>(
 }
 
 function normalizeRouteDefinition<TRequest extends Request>(
-  route: RouteDefinition<TRequest>,
+  route: NormalizedRouteProps<TRequest>,
   context: NormalizationContext<TRequest>,
-): RouteDefinition<TRequest> {
+): NormalizedRouteProps<TRequest> {
   return {
     ...route,
     path: joinRoutePath(context.prefix, route.path),
@@ -93,9 +93,9 @@ function applyRouteConfig<TRequest extends Request>(
 }
 
 function resolveRouteConfigOptions<TRequest extends Request>(
-  route: RouteDefinition<TRequest>,
+  route: NormalizedRouteProps<TRequest>,
   routeConfig: NonNullable<RouteGroupDefinition<TRequest>['options']['routeConfig']>[string],
-): Partial<Pick<RouteDefinition<TRequest>, 'parseBody' | 'bodyOptions'>> {
+): Partial<Pick<NormalizedRouteProps<TRequest>, 'parseBody' | 'bodyOptions'>> {
   return routeConfig.options ? mergeRouteOptions(route, routeConfig.options) : {};
 }
 

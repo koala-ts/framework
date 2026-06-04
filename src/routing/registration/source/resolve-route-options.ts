@@ -1,17 +1,17 @@
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { Request } from 'koa';
-import type { RouteDefinition } from '../../route/route-definition.type';
+import type { NormalizedRouteProps } from '../../route/normalized-route-props.type';
 
-function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
+function extractBodyOptions(options: RouteOptions): NormalizedRouteProps['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
 
-  return bodyOptions as RouteDefinition['bodyOptions'];
+  return bodyOptions as NormalizedRouteProps['bodyOptions'];
 }
 
 export function mergeRouteOptions<TRequest extends Request>(
-  route: RouteDefinition<TRequest>,
+  route: NormalizedRouteProps<TRequest>,
   options: RouteOptions,
-): Pick<RouteDefinition<TRequest>, 'parseBody' | 'bodyOptions'> {
+): Pick<NormalizedRouteProps<TRequest>, 'parseBody' | 'bodyOptions'> {
   return {
     parseBody: options.parseBody ?? route.parseBody,
     bodyOptions: {

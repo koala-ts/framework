@@ -1,22 +1,22 @@
 import type { HttpRequest } from '@/Http';
 import type { HttpMethod } from '@/routing/registration/verb/http-method.type';
 import { RouteProps } from '@/routing/route-props.type';
-import type { RouteDefinition } from '@/routing/route/route-definition.type';
+import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { RouteOptions } from '@/routing/route/route-options.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { Request } from 'koa';
 
-function resolveRouteOptions(options: RouteOptions): Pick<RouteDefinition, 'parseBody' | 'bodyOptions'> {
+function resolveRouteOptions(options: RouteOptions): Pick<NormalizedRouteProps, 'parseBody' | 'bodyOptions'> {
   return {
     parseBody: options.parseBody ?? true,
     bodyOptions: extractBodyOptions(options),
   };
 }
 
-function extractBodyOptions(options: RouteOptions): RouteDefinition['bodyOptions'] {
+function extractBodyOptions(options: RouteOptions): NormalizedRouteProps['bodyOptions'] {
   const { parseBody: _parseBody, ...bodyOptions } = options;
 
-  return bodyOptions as RouteDefinition['bodyOptions'];
+  return bodyOptions as NormalizedRouteProps['bodyOptions'];
 }
 
 function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
@@ -32,7 +32,7 @@ function qualifyMethods(method: HttpMethod | HttpMethod[]): RouterMethod[] {
 
 export function createRouteDefinition<TRequest extends Request = HttpRequest>(
   routeProps: RouteProps<TRequest>,
-): RouteDefinition<TRequest> {
+): NormalizedRouteProps<TRequest> {
   return {
     name: routeProps.name,
     path: routeProps.path,
@@ -43,6 +43,8 @@ export function createRouteDefinition<TRequest extends Request = HttpRequest>(
   };
 }
 
-export function Route<TRequest extends Request = HttpRequest>(route: RouteProps<TRequest>): RouteDefinition<TRequest> {
+export function Route<TRequest extends Request = HttpRequest>(
+  route: RouteProps<TRequest>,
+): NormalizedRouteProps<TRequest> {
   return createRouteDefinition(route);
 }

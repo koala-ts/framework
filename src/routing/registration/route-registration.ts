@@ -1,11 +1,11 @@
 import type { HttpRequest } from '@/Http';
-import type { RouteDefinition } from '@/routing/route/route-definition.type';
+import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { Request } from 'koa';
 
 type RouteRegistrationMiddleware<TRequest extends Request> =
-  | RouteDefinition<TRequest>['middleware'][number]
-  | RouteDefinition<TRequest>['handler'];
+  | NormalizedRouteProps<TRequest>['middleware'][number]
+  | NormalizedRouteProps<TRequest>['handler'];
 
 export interface RouteRegistration<TRequest extends Request = HttpRequest> {
   method: RouterMethod;

@@ -1,7 +1,7 @@
 import type { HttpMiddleware, HttpRequest } from '@/Http';
 import type { HttpMethod } from '@/routing/registration/verb/http-method.type';
+import type { NormalizedRouteProps } from '@/routing/route/normalized-route-props.type';
 import { Route } from '@/routing/route/route';
-import type { RouteDefinition } from '@/routing/route/route-definition.type';
 import type { Request } from 'koa';
 
 type RouteHandler<TRequest extends Request = HttpRequest> = HttpMiddleware<TRequest>;
@@ -32,12 +32,12 @@ type NamedVerbHelper = {
   <TRequest extends Request = HttpRequest>(
     path: string,
     ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
-  ): RouteDefinition<TRequest>;
+  ): NormalizedRouteProps<TRequest>;
   <TRequest extends Request = HttpRequest>(
     path: string,
     name: string,
     ...middlewareAndHandler: MiddlewareAndHandler<TRequest>
-  ): RouteDefinition<TRequest>;
+  ): NormalizedRouteProps<TRequest>;
 };
 
 function createVerbHelper(method: HttpMethod): NamedVerbHelper {

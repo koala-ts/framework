@@ -3,7 +3,7 @@ import type { RouterMethod } from '@/routing/route/router-method.type';
 import type { Request } from 'koa';
 import type { KoaBodyMiddlewareOptions } from 'koa-body';
 
-export interface RouteDefinition<TRequest extends Request = HttpRequest> {
+export interface NormalizedRouteProps<TRequest extends Request = HttpRequest> {
   name?: string;
   path: string;
   methods: RouterMethod[];
