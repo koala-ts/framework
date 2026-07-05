@@ -13,12 +13,9 @@ type NamedMiddlewareAndHandler<TRequest extends HttpRequestBase = HttpRequest> =
   ...middlewareAndHandler: MiddlewareAndHandler<TRequest>,
 ];
 type VerbHelperRouteArguments<TRequest extends HttpRequestBase = HttpRequest> =
-  | MiddlewareAndHandler<TRequest>
-  | NamedMiddlewareAndHandler<TRequest>;
+  MiddlewareAndHandler<TRequest> | NamedMiddlewareAndHandler<TRequest>;
 type UnsafeVerbHelperRouteArguments<TRequest extends HttpRequestBase = HttpRequest> =
-  | VerbHelperRouteArguments<TRequest>
-  | [name: string]
-  | [];
+  VerbHelperRouteArguments<TRequest> | [name: string] | [];
 
 interface VerbHelperArguments<TRequest extends HttpRequestBase = HttpRequest> {
   path: string;
