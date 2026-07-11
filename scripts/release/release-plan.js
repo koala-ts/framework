@@ -8,11 +8,13 @@ import { selectChangedPackages, sortPackagesForPublishing } from './package-sele
  */
 
 /**
- * @param {{ changedFiles: string[]; packages: Package[]; releaseMode?: 'all' }} options
+ * @param {{ changedFiles: string[]; packages: Package[]; releaseMode?: 'all'; unpublishedPackageNames?: string[] }} options
  * @returns {{ packageNames: string[] }}
  */
-export const createReleasePlan = ({ changedFiles, packages, releaseMode }) => {
-  const selectedPackageNames = selectChangedPackages({ changedFiles, packages, releaseMode });
+export const createReleasePlan = ({ changedFiles, packages, releaseMode, unpublishedPackageNames = [] }) => {
+  const selectedPackageNames = [
+    ...new Set([...selectChangedPackages({ changedFiles, packages, releaseMode }), ...unpublishedPackageNames]),
+  ];
 
   return {
     packageNames: sortPackagesForPublishing({ packages, selectedPackageNames }),
@@ -35,3 +37,10 @@ export const getChangedFiles = ({ previousTag, releaseTag, runGit }) =>
     .trim()
     .split('\n')
     .filter(Boolean);
+
+/**
+ * @param {{ packages: Package[]; getPublishedVersion: (packageName: string) => string | undefined }} options
+ * @returns {string[]}
+ */
+export const getUnpublishedPackageNames = ({ packages, getPublishedVersion }) =>
+  packages.filter(({ name }) => !getPublishedVersion(name)).map(({ name }) => name);

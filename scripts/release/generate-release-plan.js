@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { createReleasePlan, findPreviousTag, getChangedFiles } from './release-plan.js';
+import { createReleasePlan, findPreviousTag, getChangedFiles, getUnpublishedPackageNames } from './release-plan.js';
 
 const releaseTag = process.argv[2];
 
@@ -15,7 +15,13 @@ const previousTag = findPreviousTag({ releaseTag, runGit });
 const changedFiles = getChangedFiles({ previousTag, releaseTag, runGit });
 const packageDefinitions = [readPackageDefinition('.'), ...readWorkspacePackageDefinitions()];
 const releaseMode = process.env.RELEASE_MODE === 'all' ? 'all' : undefined;
-const releasePlan = createReleasePlan({ changedFiles, packages: packageDefinitions, releaseMode });
+const unpublishedPackageNames = getUnpublishedPackageNames({ getPublishedVersion, packages: packageDefinitions });
+const releasePlan = createReleasePlan({
+  changedFiles,
+  packages: packageDefinitions,
+  releaseMode,
+  unpublishedPackageNames,
+});
 
 process.stdout.write(`${JSON.stringify({ previousTag, ...releasePlan })}\n`);
 
@@ -33,4 +39,16 @@ function readPackageDefinition(path) {
   );
 
   return { name: manifest.name, path, dependencies };
+}
+
+function getPublishedVersion(packageName) {
+  try {
+    return execFileSync('npm', ['view', packageName, 'version'], { encoding: 'utf8' }).trim();
+  } catch (error) {
+    if (error.status === 1 && error.stderr.includes('E404')) {
+      return undefined;
+    }
+
+    throw error;
+  }
 }
