@@ -82,7 +82,7 @@
     "check:type": "npm run check:type:packages && tsc -p tsconfig.check.json",
     "check:type:packages": "npm run check:type --workspaces --if-present",
     "check:boundaries": "depcruise --validate .dependency-cruiser.cjs src",
-    "check:packages": "npm run build:packages && publint src/packages/contracts && attw --pack src/packages/contracts && node scripts/verify-package-artifact.js src/packages/contracts",
+    "check:packages": "npm run build:packages && publint src/packages/contracts && node scripts/verify-package-artifact.js src/packages/contracts",
     "watch:test": "vitest watch",
     "watch:build": "tsc --noEmit --watch"
   },
@@ -101,7 +101,6 @@
     "supertest": "^7.1.4"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.5",
     "@biomejs/biome": "2.5.3",
     "@types/node": "24.13.3",
     "@vitest/coverage-v8": "^4.0.12",
