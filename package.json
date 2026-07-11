@@ -1,5 +1,6 @@
 {
   "name": "@koala-ts/framework",
+  "version": "2.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -40,7 +41,9 @@
       ]
     }
   },
-  "version": "2.4.4",
+  "workspaces": [
+    "src/packages/*"
+  ],
   "description": "A NodeJS framework for lazy developers",
   "keywords": [
     "koala",
@@ -71,17 +74,22 @@
   },
   "scripts": {
     "test": "vitest run --coverage",
-    "build": "tsc",
+    "build": "npm run build:packages && tsc",
+    "build:packages": "npm run build --workspaces --if-present",
     "start": "tsx watch playground/main.ts",
     "check:code": "biome check .",
     "fix:code": "biome check --write .",
-    "check:type": "tsc -p tsconfig.check.json",
+    "check:type": "npm run check:type:packages && tsc -p tsconfig.check.json",
+    "check:type:packages": "npm run check:type --workspaces --if-present",
+    "check:boundaries": "depcruise --validate .dependency-cruiser.cjs src",
+    "check:packages": "npm run build:packages && publint src/packages/contracts && attw --pack src/packages/contracts && node scripts/verify-package-artifact.js src/packages/contracts",
     "watch:test": "vitest watch",
     "watch:build": "tsc --noEmit --watch"
   },
   "dependencies": {
     "@koa/router": "^15.1.1",
     "@koa/send": "^6.0.0",
+    "@koala-ts/contracts": "*",
     "@types/koa": "^3.0.0",
     "@types/supertest": "^7.2.0",
     "argon2": "^0.44.0",
@@ -93,9 +101,12 @@
     "supertest": "^7.1.4"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@biomejs/biome": "2.5.3",
     "@types/node": "24.13.3",
     "@vitest/coverage-v8": "^4.0.12",
+    "dependency-cruiser": "^18.0.0",
+    "publint": "^0.3.21",
     "tsx": "^4.20.6",
     "typescript": "7.0.2",
     "vitest": "^4.0.10"

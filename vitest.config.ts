@@ -10,7 +10,7 @@ export default defineConfig({
   test: {
     exclude: [...configDefaults.exclude, 'dist/**'],
     coverage: {
-      exclude: ['**/dist/**', '**/playground/**', '**/tests/**', '**/types.*', '**/index.*'],
+      exclude: ['**/dist/**', '**/playground/**', '**/scripts/**', '**/tests/**', '**/types.*', '**/index.*'],
     },
   },
 });
