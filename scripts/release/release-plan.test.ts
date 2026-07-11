@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { createReleasePlan, findPreviousTag, getChangedFiles, type Package } from './release-plan.js';
+import {
+  createReleasePlan,
+  findPreviousTag,
+  getChangedFiles,
+  getUnpublishedPackageNames,
+  type Package,
+} from './release-plan.js';
 
 describe('release plan', () => {
   it('uses the tag before the release tag as the comparison point', () => {
@@ -36,5 +42,20 @@ describe('release plan', () => {
     });
 
     expect(releasePlan).toEqual({ packageNames: ['@koala-ts/contracts', '@koala-ts/framework'] });
+  });
+
+  it('includes a package that has not been published', () => {
+    const packages: Package[] = [
+      { name: '@koala-ts/framework', path: '.' },
+      { name: '@koala-ts/contracts', path: 'src/packages/contracts' },
+    ];
+    const getPublishedVersion = (packageName: string) => (packageName === '@koala-ts/contracts' ? undefined : '2.18.1');
+
+    const unpublishedPackageNames = getUnpublishedPackageNames({ getPublishedVersion, packages });
+
+    expect(unpublishedPackageNames).toEqual(['@koala-ts/contracts']);
+    expect(createReleasePlan({ changedFiles: [], packages, unpublishedPackageNames })).toEqual({
+      packageNames: ['@koala-ts/contracts'],
+    });
   });
 });
