@@ -69,7 +69,7 @@ describe('createStore', () => {
   });
 
   test('has() returns true for undefined values', () => {
-    const store = createStore<{ id: number; name?: string }>();
+    const store = createStore<{ id: number; name: string | undefined }>();
 
     store.run({ id: 1, name: undefined }, () => {
       expect(store.has('name')).toBe(true);

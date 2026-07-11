@@ -33,7 +33,7 @@ export function normalizeRouteProps<TRequest extends HttpRequestBase = HttpReque
   routeProps: RouteProps<TRequest>,
 ): NormalizedRouteProps<TRequest> {
   return {
-    name: routeProps.name,
+    ...(routeProps.name === undefined ? {} : { name: routeProps.name }),
     path: routeProps.path,
     methods: qualifyMethods(routeProps.method),
     handler: routeProps.handler,

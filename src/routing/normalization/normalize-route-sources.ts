@@ -61,11 +61,13 @@ function normalizeRouteDefinition<TRequest extends HttpRequestBase>(
   route: NormalizedRouteProps<TRequest>,
   context: NormalizationContext<TRequest>,
 ): NormalizedRouteProps<TRequest> {
+  const { name: routeName, ...routeProps } = route;
+
   return {
-    ...route,
+    ...routeProps,
     path: joinRoutePath(context.prefix, route.path),
-    name: route.name ? `${context.namePrefix}${route.name}` : undefined,
-    middleware: [...context.middleware, ...route.middleware],
+    ...(routeName === undefined ? {} : { name: `${context.namePrefix}${routeName}` }),
+    middleware: [...context.middleware, ...routeProps.middleware],
   };
 }
 

@@ -64,7 +64,7 @@ function resolveVerbHelperArguments<TRequest extends HttpRequestBase = HttpReque
 
   return {
     path,
-    name,
+    ...(name === undefined ? {} : { name }),
     middleware,
     handler,
   };
