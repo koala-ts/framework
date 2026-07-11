@@ -1,6 +1,6 @@
 import { describe, expect, it, type Mock, vi } from 'vitest';
-import type { HttpScope } from '@/Http';
-import { serveStaticFiles } from '@/Http/Files/StaticFilesMiddleware';
+import { serveStaticFiles } from '#koala/Http/Files/StaticFilesMiddleware';
+import type { HttpScope } from '#koala/Http/index';
 
 vi.mock('@koa/send', () => ({
   send: vi.fn(),

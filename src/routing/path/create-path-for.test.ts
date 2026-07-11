@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
-import { Get } from '@/routing/declaration/http-verb-helpers';
-import { RouteGroup } from '../declaration/route-group';
-import { createPathFor } from './create-path-for';
+import { Get } from '#koala/routing/declaration/http-verb-helpers';
+import { RouteGroup } from '#koala/routing/declaration/route-group';
+import { createPathFor } from '#koala/routing/path/create-path-for';
 
 describe('create path for', () => {
   describe('path resolution', () => {

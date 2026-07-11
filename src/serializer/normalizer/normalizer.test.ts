@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { Metadata } from '@/serializer';
-import { createNormalizer } from '@/serializer/normalizer/normalizer';
+import type { Metadata } from '#koala/serializer/index';
+import { createNormalizer } from '#koala/serializer/normalizer/normalizer';
 
 describe('Normalizer', () => {
   it('should normalize plain objects with context', () => {

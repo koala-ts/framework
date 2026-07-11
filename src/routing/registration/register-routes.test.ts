@@ -1,11 +1,11 @@
 import Koa from 'koa';
 import supertest from 'supertest';
 import { describe, expect, test } from 'vitest';
-import type { Application } from '@/application/application';
-import { Get } from '@/routing/declaration/http-verb-helpers';
-import { Route } from '@/routing/declaration/route';
-import { RouteGroup } from '@/routing/declaration/route-group';
-import { registerRoutes } from './register-routes';
+import type { Application } from '#koala/application/application';
+import { Get } from '#koala/routing/declaration/http-verb-helpers';
+import { Route } from '#koala/routing/declaration/route';
+import { RouteGroup } from '#koala/routing/declaration/route-group';
+import { registerRoutes } from '#koala/routing/registration/register-routes';
 
 describe('register routes', () => {
   test('it registers a function-first route', async () => {

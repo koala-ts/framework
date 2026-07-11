@@ -1,4 +1,4 @@
-import type { HttpMiddleware } from '@/Http';
+import type { HttpMiddleware } from '#koala/Http/index';
 
 export function applyConfiguredGlobalMiddleware(middleware: HttpMiddleware[] | undefined = []): HttpMiddleware {
   return async (scope, next) => {

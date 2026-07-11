@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { Any, Delete, Get, Head, Options, Patch, Post, Put } from './http-verb-helpers';
+import { Any, Delete, Get, Head, Options, Patch, Post, Put } from '#koala/routing/declaration/http-verb-helpers';
 
 describe('routing http verb helpers', () => {
   test.each([

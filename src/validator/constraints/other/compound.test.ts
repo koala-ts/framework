@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ConstraintContext } from '@/validator/constraint-validator';
-import type { Violation } from '@/validator/violation';
-import { compound } from './compound';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import { compound } from '#koala/validator/constraints/other/compound';
+import type { Violation } from '#koala/validator/violation';
 
 describe('compound', () => {
   it('creates a constraint that applies nested constraints from arrays', () => {

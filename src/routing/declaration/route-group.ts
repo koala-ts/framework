@@ -1,7 +1,7 @@
-import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
+import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '#koala/Http/index';
 
-import type { RouteProps } from '@/routing/declaration/route-props.type';
-import type { RouteSource } from '@/routing/declaration/route-source.type';
+import type { RouteProps } from '#koala/routing/declaration/route-props.type';
+import type { RouteSource } from '#koala/routing/declaration/route-source.type';
 
 export type RouteConfigOverlay<TRequest extends HttpRequestBase = HttpRequest> = Pick<
   RouteProps<TRequest>,

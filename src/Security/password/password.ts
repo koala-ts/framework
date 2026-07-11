@@ -1,5 +1,5 @@
 import { hash as _hash, needsRehash as _needsRehash, verify as _verify } from 'argon2';
-import type { PasswordConfig, PasswordHasher } from '@/Security/password/types';
+import type { PasswordConfig, PasswordHasher } from '#koala/Security/password/types';
 
 function hash(config?: PasswordConfig): PasswordHasher['hash'] {
   return (plainPassword: string): Promise<string> => _hash(plainPassword, config);

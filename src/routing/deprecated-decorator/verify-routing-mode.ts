@@ -1,5 +1,5 @@
-import type { KoalaConfig } from '@/config/koala-config';
-import type { HttpRequestBase } from '@/Http';
+import type { KoalaConfig } from '#koala/config/koala-config';
+import type { HttpRequestBase } from '#koala/Http/index';
 
 export const exclusiveRoutingModeError =
   'Koala routing mode is exclusive. Use either legacy controllers from @koala-ts/framework or routes from @koala-ts/framework/routing.';

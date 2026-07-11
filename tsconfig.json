@@ -2,8 +2,7 @@
   "compilerOptions": {
     "types": ["node"],
     "paths": {
-      "@/*": ["./src/*"],
-      "@Tests/*": ["./tests/*"]
+      "#koala/*": ["./src/*"]
     },
     "esModuleInterop": true,
     "target": "ESNext",
@@ -11,8 +10,7 @@
     "moduleDetection": "force",
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
+    "module": "NodeNext",
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
@@ -27,9 +25,5 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
-  "exclude": ["node_modules", "dist"],
-  "tsc-alias": {
-    "resolveFullPaths": true,
-    "verbose": false
-  }
+  "exclude": ["node_modules", "dist"]
 }

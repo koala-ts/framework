@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { loadEnvConfig } from '@/config/config-loader';
+import { loadEnvConfig } from '#koala/config/config-loader';
 
 describe('load env config', () => {
   const configSpy = vi.spyOn(dotenv, 'config');

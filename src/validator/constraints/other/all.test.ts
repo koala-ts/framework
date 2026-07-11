@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
-import type { ConstraintContext } from '@/validator/constraint-validator';
-import type { Violation } from '@/validator/violation';
-import { type AllOptions, all } from './all';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import { type AllOptions, all } from '#koala/validator/constraints/other/all';
+import type { Violation } from '#koala/validator/violation';
 
 describe('all', () => {
   describe('non-array values', () => {

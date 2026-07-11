@@ -1,2 +1,2 @@
-export * from './StaticFilesMiddleware';
-export * from './types';
+export * from '#koala/Http/Files/StaticFilesMiddleware';
+export * from '#koala/Http/Files/types';

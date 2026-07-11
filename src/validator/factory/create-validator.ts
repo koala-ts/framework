@@ -1,9 +1,9 @@
-import type { ConstraintOptions } from '@/validator/constraint';
-import type { ConstraintContext, ConstraintValidator } from '@/validator/constraint-validator';
-import { UnknownConstraintError } from '@/validator/errors';
-import type { Payload } from '@/validator/payload';
-import type { FieldSchema } from '@/validator/schema';
-import type { Validator } from '@/validator/validator';
+import type { ConstraintOptions } from '#koala/validator/constraint';
+import type { ConstraintContext, ConstraintValidator } from '#koala/validator/constraint-validator';
+import { UnknownConstraintError } from '#koala/validator/errors';
+import type { Payload } from '#koala/validator/payload';
+import type { FieldSchema } from '#koala/validator/schema';
+import type { Validator } from '#koala/validator/validator';
 
 type FieldSchemaEntry = [string, FieldSchema];
 type RegisteredConstraintValidator = {

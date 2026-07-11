@@ -1,4 +1,4 @@
-import type { HttpScope } from '@/Http';
+import type { HttpScope } from '#koala/Http/index';
 
 export interface EventEmitter {
   emit(event: string, ...args: unknown[]): void;

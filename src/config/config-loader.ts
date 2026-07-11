@@ -1,7 +1,7 @@
 import path from 'node:path';
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-import type { KoalaDotenvOptions } from './koala-config';
+import type { KoalaDotenvOptions } from '#koala/config/koala-config';
 
 export function loadEnvConfig(env: string, dotenvOptions?: KoalaDotenvOptions): void {
   const rootDir = process.cwd();

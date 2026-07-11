@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { notBlank } from '@/validator/constraints/basic/not-blank';
-import { email } from '@/validator/constraints/string/email';
-import { createValidator } from '@/validator/factory/create-validator';
-import { compound } from './compound';
+import { notBlank } from '#koala/validator/constraints/basic/not-blank';
+import { compound } from '#koala/validator/constraints/other/compound';
+import { email } from '#koala/validator/constraints/string/email';
+import { createValidator } from '#koala/validator/factory/create-validator';
 
 describe('compound (integration)', () => {
   it('applies nested constraints to the same value', () => {

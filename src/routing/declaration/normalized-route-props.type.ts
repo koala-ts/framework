@@ -1,6 +1,6 @@
-import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
-import type { RouteBodyOptions } from '@/routing/declaration/route-body-options.type';
-import type { RouterMethod } from '@/routing/declaration/router-method.type';
+import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '#koala/Http/index';
+import type { RouteBodyOptions } from '#koala/routing/declaration/route-body-options.type';
+import type { RouterMethod } from '#koala/routing/declaration/router-method.type';
 
 export interface NormalizedRouteProps<TRequest extends HttpRequestBase = HttpRequest> {
   name?: string;

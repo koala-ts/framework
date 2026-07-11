@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from 'vitest';
-import type { HttpMiddleware, HttpScope } from '@/Http';
-import { flattenViolations } from '@/validator/flatten-violations';
-import type { Validator } from '@/validator/validator';
-import type { Violation } from '@/validator/violation';
-import { createValidationMiddleware } from './create-validation-middleware';
+import type { HttpMiddleware, HttpScope } from '#koala/Http/index';
+import { flattenViolations } from '#koala/validator/flatten-violations';
+import { createValidationMiddleware } from '#koala/validator/middleware/create-validation-middleware';
+import type { Validator } from '#koala/validator/validator';
+import type { Violation } from '#koala/validator/violation';
 
 describe('createValidationMiddleware', () => {
   test('continues to the next middleware when validation passes', async () => {

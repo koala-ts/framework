@@ -1,5 +1,5 @@
-import type { HttpMiddleware, HttpScope, NextMiddleware } from '@/Http';
-import type { Firewall, SecurityConfig } from '@/Security/types';
+import type { HttpMiddleware, HttpScope, NextMiddleware } from '#koala/Http/index';
+import type { Firewall, SecurityConfig } from '#koala/Security/types';
 
 export function firewall(config: SecurityConfig): HttpMiddleware {
   return async function firewallMiddleware(scope: HttpScope, next: NextMiddleware): Promise<void> {

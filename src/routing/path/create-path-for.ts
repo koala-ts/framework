@@ -1,6 +1,6 @@
-import type { RouteSource } from '@/routing/declaration/route-source.type';
-import { createPathCatalog } from './create-path-catalog';
-import { createPathTemplateResolver } from './resolve-path-template';
+import type { RouteSource } from '#koala/routing/declaration/route-source.type';
+import { createPathCatalog } from '#koala/routing/path/create-path-catalog';
+import { createPathTemplateResolver } from '#koala/routing/path/resolve-path-template';
 
 type PathParamValue = string | number | boolean;
 type PathParams = Record<string, PathParamValue>;

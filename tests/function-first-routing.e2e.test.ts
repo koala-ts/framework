@@ -1,10 +1,10 @@
 import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
-import { koalaDefaultConfig } from '@/config/default-config';
-import type { HttpMiddleware, HttpRequest, HttpScope, NextMiddleware, UploadedFile } from '@/Http';
-import { Any, Get, Post, Route, RouteGroup } from '@/routing';
-import { exclusiveRoutingModeError } from '@/routing/deprecated-decorator/verify-routing-mode';
-import { createTestAgent } from '@/Testing';
+import { koalaDefaultConfig } from '#koala/config/default-config';
+import type { HttpMiddleware, HttpRequest, HttpScope, NextMiddleware, UploadedFile } from '#koala/Http/index';
+import { exclusiveRoutingModeError } from '#koala/routing/deprecated-decorator/verify-routing-mode';
+import { Any, Get, Post, Route, RouteGroup } from '#koala/routing/index';
+import { createTestAgent } from '#koala/Testing/index';
 
 interface FunctionFirstRoutingRequest extends HttpRequest {
   body: { name: string };

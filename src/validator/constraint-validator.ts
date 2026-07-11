@@ -1,6 +1,6 @@
-import type { ConstraintOptions } from './constraint';
-import type { FieldSchema } from './schema';
-import type { Violation } from './violation';
+import type { ConstraintOptions } from '#koala/validator/constraint';
+import type { FieldSchema } from '#koala/validator/schema';
+import type { Violation } from '#koala/validator/violation';
 
 export type ConstraintContext<TOptions extends ConstraintOptions<object> = ConstraintOptions> = {
   path: string;

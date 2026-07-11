@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import type { ConstraintContext } from '@/validator/constraint-validator';
-import { type UniqueOptions, unique } from './unique';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import { type UniqueOptions, unique } from '#koala/validator/constraints/comparison/unique';
 
 describe('unique', () => {
   describe('non-array values', () => {

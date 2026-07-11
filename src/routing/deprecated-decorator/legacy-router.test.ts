@@ -1,9 +1,13 @@
 import Koa from 'koa';
 import supertest from 'supertest';
 import { afterEach, describe, expect, test } from 'vitest';
-import type { Application } from '@/application/application';
-import { getLegacyRouteDefinitions, getLegacyRoutes, registerLegacyRoutes } from './legacy-router';
-import { Route } from './route';
+import type { Application } from '#koala/application/application';
+import {
+  getLegacyRouteDefinitions,
+  getLegacyRoutes,
+  registerLegacyRoutes,
+} from '#koala/routing/deprecated-decorator/legacy-router';
+import { Route } from '#koala/routing/deprecated-decorator/route';
 
 const getMethodDescriptor = (prototype: object, methodName: string): PropertyDescriptor => {
   const descriptor = Object.getOwnPropertyDescriptor(prototype, methodName);

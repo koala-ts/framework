@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
-import { createStore } from './ScopeStoreFactory';
-import { ScopeStoreError } from './types';
+import { createStore } from '#koala/Http/Scope/State/ScopeStoreFactory';
+import { ScopeStoreError } from '#koala/Http/Scope/State/types';
 
 describe('createStore', () => {
   test('create a store & run', () => {

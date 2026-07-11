@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { Get } from '@/routing/declaration/http-verb-helpers';
-import { RouteGroup } from './route-group';
+import { Get } from '#koala/routing/declaration/http-verb-helpers';
+import { RouteGroup } from '#koala/routing/declaration/route-group';
 
 describe('route group', () => {
   test('it creates a callback-based route group definition', () => {

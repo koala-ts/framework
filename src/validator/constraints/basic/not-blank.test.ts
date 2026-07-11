@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ConstraintContext } from '@/validator/constraint-validator';
-import { notBlank } from './not-blank';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import { notBlank } from '#koala/validator/constraints/basic/not-blank';
 
 describe('notBlank', () => {
   it.each([

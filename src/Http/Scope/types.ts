@@ -1,7 +1,7 @@
 import type { Context, DefaultState, Next } from 'koa';
-import type { User } from '@/Security/types';
-import type { HttpRequest, HttpRequestBase } from '../Request';
-import type { HttpResponse } from '../Response';
+import type { HttpRequest, HttpRequestBase } from '#koala/Http/Request/index';
+import type { HttpResponse } from '#koala/Http/Response/index';
+import type { User } from '#koala/Security/types';
 
 export interface HttpScope<TRequest extends HttpRequestBase = HttpRequest, TUser extends User = User> extends Context {
   request: TRequest;

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { createPathTemplateResolver, resolvePathTemplate } from './resolve-path-template';
+import { createPathTemplateResolver, resolvePathTemplate } from '#koala/routing/path/resolve-path-template';
 
 describe('resolve path template', () => {
   describe('path resolution', () => {

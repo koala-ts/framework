@@ -1,2 +1,2 @@
-export * from '@/Testing/TestAgentFactory';
-export type * from '@/Testing/types';
+export * from '#koala/Testing/TestAgentFactory';
+export type * from '#koala/Testing/types';

@@ -1,11 +1,11 @@
-import type { Application } from '@/application/application';
-import type { HttpMiddleware } from '@/Http';
-import { Route as createRouteDefinition } from '@/routing';
-import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
-import { registerRoutes } from '@/routing/registration/register-routes';
+import type { Application } from '#koala/application/application';
+import type { HttpMiddleware } from '#koala/Http/index';
+import type { NormalizedRouteProps } from '#koala/routing/declaration/normalized-route-props.type';
+import { Route as createRouteDefinition } from '#koala/routing/index';
+import { registerRoutes } from '#koala/routing/registration/register-routes';
 import 'reflect-metadata';
-import type { Route } from './route';
-import type { RouteMetadata } from './route-metadata';
+import type { Route } from '#koala/routing/deprecated-decorator/route';
+import type { RouteMetadata } from '#koala/routing/deprecated-decorator/route-metadata';
 
 const legacyRouteMetadataKey = Symbol('Route');
 

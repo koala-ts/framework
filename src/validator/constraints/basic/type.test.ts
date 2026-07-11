@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ConstraintContext } from '@/validator/constraint-validator';
-import { type TypeOptions, type } from './type';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import { type TypeOptions, type } from '#koala/validator/constraints/basic/type';
 
 describe('type', () => {
   it.each([

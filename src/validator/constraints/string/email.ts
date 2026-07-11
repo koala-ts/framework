@@ -1,5 +1,5 @@
-import type { ConstraintOptions } from '@/validator/constraint';
-import type { ConstraintContext } from '@/validator/constraint-validator';
+import type { ConstraintOptions } from '#koala/validator/constraint';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
 
 const DEFAULT_MESSAGE = 'This value is not a valid email address.';
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ConstraintContext } from '@/validator/constraint-validator';
-import { email } from './email';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import { email } from '#koala/validator/constraints/string/email';
 
 describe('email', () => {
   it('rejects invalid email by default', () => {

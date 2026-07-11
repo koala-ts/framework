@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dateNormalizer } from '@/serializer/normalizer/date-normalizer';
+import { dateNormalizer } from '#koala/serializer/normalizer/date-normalizer';
 
 describe('Date normalizer', () => {
   it('should normalize date to ISO string', () => {

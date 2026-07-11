@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
-import type { HttpMiddleware, HttpScope } from '@/Http';
-import { applyConfiguredGlobalMiddleware } from './apply-configured-global-middleware';
+import type { HttpMiddleware, HttpScope } from '#koala/Http/index';
+import { applyConfiguredGlobalMiddleware } from '#koala/Http/middleware/apply-configured-global-middleware';
 
 describe('applyConfiguredGlobalMiddleware', () => {
   test('continues to next middleware when undefined', async () => {

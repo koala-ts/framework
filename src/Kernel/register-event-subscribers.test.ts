@@ -1,6 +1,6 @@
 import { expect, test, vi } from 'vitest';
-import type { Application } from '@/application/application';
-import { registerEventSubscribers } from '@/Kernel';
+import type { Application } from '#koala/application/application';
+import { registerEventSubscribers } from '#koala/Kernel/index';
 
 test('register a single event subscriber', () => {
   const on = vi.fn();

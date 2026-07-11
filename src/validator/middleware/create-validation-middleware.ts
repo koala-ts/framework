@@ -1,8 +1,8 @@
-import type { HttpMiddleware, HttpScope, NextMiddleware } from '@/Http';
-import { flattenViolations } from '@/validator/flatten-violations';
-import type { ValidationSchema } from '@/validator/schema';
-import type { Validator } from '@/validator/validator';
-import type { Violation } from '@/validator/violation';
+import type { HttpMiddleware, HttpScope, NextMiddleware } from '#koala/Http/index';
+import { flattenViolations } from '#koala/validator/flatten-violations';
+import type { ValidationSchema } from '#koala/validator/schema';
+import type { Validator } from '#koala/validator/validator';
+import type { Violation } from '#koala/validator/violation';
 
 type ViolationMapper = (violations: Violation[]) => Record<string, string[]>;
 

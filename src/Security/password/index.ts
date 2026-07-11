@@ -1,2 +1,2 @@
-export * from './password';
-export * from './types';
+export * from '#koala/Security/password/password';
+export * from '#koala/Security/password/types';

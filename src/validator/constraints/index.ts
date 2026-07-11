@@ -1,9 +1,9 @@
-import { notBlank } from '@/validator/constraints/basic/not-blank';
-import { type } from '@/validator/constraints/basic/type';
-import { unique } from '@/validator/constraints/comparison/unique';
-import { all } from '@/validator/constraints/other/all';
-import { email } from '@/validator/constraints/string/email';
-import { slug } from '@/validator/constraints/string/slug';
+import { notBlank } from '#koala/validator/constraints/basic/not-blank';
+import { type } from '#koala/validator/constraints/basic/type';
+import { unique } from '#koala/validator/constraints/comparison/unique';
+import { all } from '#koala/validator/constraints/other/all';
+import { email } from '#koala/validator/constraints/string/email';
+import { slug } from '#koala/validator/constraints/string/slug';
 
 export const builtInConstraints = {
   // Basic
@@ -22,20 +22,20 @@ export const builtInConstraints = {
 };
 
 // ## Basic ##
-export { notBlank } from './basic/not-blank';
-export { type TypeOptions, type } from './basic/type';
+export { notBlank } from '#koala/validator/constraints/basic/not-blank';
+export { type TypeOptions, type } from '#koala/validator/constraints/basic/type';
 // ## Basic ##
 
 // ## Comparison ##
-export { type UniqueOptions, unique } from './comparison/unique';
+export { type UniqueOptions, unique } from '#koala/validator/constraints/comparison/unique';
 // ## Comparison ##
 
 // ## String ##
-export { email } from './string/email';
-export { slug } from './string/slug';
+export { email } from '#koala/validator/constraints/string/email';
+export { slug } from '#koala/validator/constraints/string/slug';
 // ## String ##
 
 // ## Other ##
-export { type AllOptions, all } from './other/all';
-export { compound } from './other/compound';
+export { type AllOptions, all } from '#koala/validator/constraints/other/all';
+export { compound } from '#koala/validator/constraints/other/compound';
 // ## Other ##

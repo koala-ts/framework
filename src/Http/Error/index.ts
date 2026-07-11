@@ -1,1 +1,1 @@
-export * from './types';
+export * from '#koala/Http/Error/types';

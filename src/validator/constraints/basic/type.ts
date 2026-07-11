@@ -1,6 +1,6 @@
-import type { ConstraintOptions } from '@/validator/constraint';
-import type { ConstraintContext } from '@/validator/constraint-validator';
-import type { Violation } from '@/validator/violation';
+import type { ConstraintOptions } from '#koala/validator/constraint';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import type { Violation } from '#koala/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value should match at least one of these types [{types}].';
 
