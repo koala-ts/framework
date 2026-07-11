@@ -10,10 +10,22 @@
     }
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./routing": "./dist/routing/index.js",
-    "./validator": "./dist/validator/index.js",
-    "./validator/constraints": "./dist/validator/constraints/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./routing": {
+      "types": "./dist/routing/index.d.ts",
+      "default": "./dist/routing/index.js"
+    },
+    "./validator": {
+      "types": "./dist/validator/index.d.ts",
+      "default": "./dist/validator/index.js"
+    },
+    "./validator/constraints": {
+      "types": "./dist/validator/constraints/index.d.ts",
+      "default": "./dist/validator/constraints/index.js"
+    }
   },
   "typesVersions": {
     "*": {
