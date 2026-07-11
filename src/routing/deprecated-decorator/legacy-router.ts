@@ -1,5 +1,5 @@
-import { type Application } from '@/application/application';
-import { type HttpMiddleware } from '@/Http';
+import type { Application } from '@/application/application';
+import type { HttpMiddleware } from '@/Http';
 import { Route as createRouteDefinition } from '@/routing';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import { registerRoutes } from '@/routing/registration/register-routes';
@@ -10,7 +10,7 @@ import type { RouteMetadata } from './route-metadata';
 const legacyRouteMetadataKey = Symbol('Route');
 
 export function createLegacyRouteDecorator({ method, path, middleware = [], options = {} }: Route): MethodDecorator {
-  return function (target: object, propertyKey: string | symbol): void {
+  return (target: object, propertyKey: string | symbol): void => {
     const routes = getLegacyRoutes();
 
     routes.push(createRouteMetadata({ method, path, middleware, options }, target, propertyKey));

@@ -1,10 +1,10 @@
-import { type Application } from '@/application/application';
-import { Get } from '@/routing/declaration/http-verb-helpers';
-import { Route } from '@/routing/declaration/route';
-import { RouteGroup } from '@/routing/declaration/route-group';
 import Koa from 'koa';
 import supertest from 'supertest';
 import { describe, expect, test } from 'vitest';
+import type { Application } from '@/application/application';
+import { Get } from '@/routing/declaration/http-verb-helpers';
+import { Route } from '@/routing/declaration/route';
+import { RouteGroup } from '@/routing/declaration/route-group';
 import { registerRoutes } from './register-routes';
 
 describe('register routes', () => {

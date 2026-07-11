@@ -1,6 +1,6 @@
-import { ConstraintContext } from '@/validator/constraint-validator';
 import { describe, expect, test } from 'vitest';
-import { unique, UniqueOptions } from './unique';
+import type { ConstraintContext } from '@/validator/constraint-validator';
+import { type UniqueOptions, unique } from './unique';
 
 describe('unique', () => {
   describe('non-array values', () => {

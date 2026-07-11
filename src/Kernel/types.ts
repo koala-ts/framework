@@ -1,4 +1,4 @@
-import { type HttpScope } from '@/Http';
+import type { HttpScope } from '@/Http';
 
 export interface EventEmitter {
   emit(event: string, ...args: unknown[]): void;
@@ -9,5 +9,5 @@ export interface KernelStorage {
   scope: HttpScope;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Event subscribers accept arbitrary event arguments.
 export type EventSubscriber = (...args: any[]) => void | Promise<void>;

@@ -1,6 +1,6 @@
 import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
 
-import { RouteProps } from '@/routing/declaration/route-props.type';
+import type { RouteProps } from '@/routing/declaration/route-props.type';
 import type { RouteSource } from '@/routing/declaration/route-source.type';
 
 export type RouteConfigOverlay<TRequest extends HttpRequestBase = HttpRequest> = Pick<

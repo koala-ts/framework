@@ -1,7 +1,7 @@
 import { send } from '@koa/send';
-import { type HttpMiddleware, type HttpScope, type NextMiddleware } from '@/Http';
-import { type HttpError } from '@/Http/Error';
-import { type StaticFilesOptions } from '@/Http/Files/types';
+import type { HttpMiddleware, HttpScope, NextMiddleware } from '@/Http';
+import type { HttpError } from '@/Http/Error';
+import type { StaticFilesOptions } from '@/Http/Files/types';
 
 const defaultOptions: StaticFilesOptions = {
   root: 'public',

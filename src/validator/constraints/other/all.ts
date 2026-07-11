@@ -1,7 +1,7 @@
-import { ConstraintOptions } from '@/validator/constraint';
-import { ConstraintContext } from '@/validator/constraint-validator';
-import { FieldSchema } from '@/validator/schema';
-import { Violation } from '@/validator/violation';
+import type { ConstraintOptions } from '@/validator/constraint';
+import type { ConstraintContext } from '@/validator/constraint-validator';
+import type { FieldSchema } from '@/validator/schema';
+import type { Violation } from '@/validator/violation';
 
 const NOT_ARRAY_MESSAGE = 'This value must be a list.';
 

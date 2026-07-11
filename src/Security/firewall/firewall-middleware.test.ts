@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { type HttpScope } from '@/Http';
+import type { HttpScope } from '@/Http';
 import { firewall } from '@/Security/firewall/firewall-middleware';
 
 describe('Firewall Middleware', () => {

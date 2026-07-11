@@ -5,6 +5,16 @@ import type { Application } from '@/application/application';
 import { getLegacyRouteDefinitions, getLegacyRoutes, registerLegacyRoutes } from './legacy-router';
 import { Route } from './route';
 
+const getMethodDescriptor = (prototype: object, methodName: string): PropertyDescriptor => {
+  const descriptor = Object.getOwnPropertyDescriptor(prototype, methodName);
+
+  if (!descriptor) {
+    throw new Error(`Expected ${methodName} descriptor`);
+  }
+
+  return descriptor;
+};
+
 describe('legacy router', () => {
   afterEach(() => {
     getLegacyRoutes().length = 0;
@@ -18,7 +28,7 @@ describe('legacy router', () => {
     Route({ method: ['GET', 'POST'], path: '/users', options: { parseBody: false } })(
       UsersController.prototype,
       'list',
-      Object.getOwnPropertyDescriptor(UsersController.prototype, 'list')!,
+      getMethodDescriptor(UsersController.prototype, 'list'),
     );
 
     const routeDefinitions = getLegacyRouteDefinitions();
@@ -43,7 +53,7 @@ describe('legacy router', () => {
     Route({ method: 'GET', path: '/users' })(
       UsersController.prototype,
       'list',
-      Object.getOwnPropertyDescriptor(UsersController.prototype, 'list')!,
+      getMethodDescriptor(UsersController.prototype, 'list'),
     );
 
     const app = new Koa() as Application;

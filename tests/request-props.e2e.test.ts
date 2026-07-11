@@ -1,6 +1,6 @@
 import { text } from 'node:stream/consumers';
 import { describe, expect, test } from 'vitest';
-import { createTestAgent, type HttpRequest, type HttpScope, Route, UploadedFile } from '../src';
+import { createTestAgent, type HttpRequest, type HttpScope, Route, type UploadedFile } from '../src';
 
 interface MyRequest extends HttpRequest {
   body: { name: string };

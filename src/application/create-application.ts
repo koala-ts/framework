@@ -1,4 +1,6 @@
-import { type KoalaConfig } from '@/config/koala-config';
+import type { Request } from 'koa';
+import Koa from 'koa';
+import type { KoalaConfig } from '@/config/koala-config';
 import { initializeScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files';
 import { applyConfiguredGlobalMiddleware } from '@/Http/middleware/apply-configured-global-middleware';
@@ -7,9 +9,7 @@ import { registerEventSubscribers } from '@/Kernel';
 import { registerLegacyRoutes } from '@/routing/deprecated-decorator/legacy-router';
 import { verifyRoutingMode } from '@/routing/deprecated-decorator/verify-routing-mode';
 import { registerRoutes } from '@/routing/registration/register-routes';
-import type { Request } from 'koa';
-import Koa from 'koa';
-import { type Application } from './application';
+import type { Application } from './application';
 
 export function create<TRequest extends Request>(config: KoalaConfig<TRequest>): Application {
   const app = new Koa() as Application;

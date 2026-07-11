@@ -1,6 +1,6 @@
-import { Violation } from './violation';
-import { ConstraintOptions } from './constraint';
-import { FieldSchema } from './schema';
+import type { ConstraintOptions } from './constraint';
+import type { FieldSchema } from './schema';
+import type { Violation } from './violation';
 
 export type ConstraintContext<TOptions extends ConstraintOptions<object> = ConstraintOptions> = {
   path: string;

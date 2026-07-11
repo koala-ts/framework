@@ -1,7 +1,7 @@
+import { koaBody } from 'koa-body';
 import type { HttpRequestBase } from '@/Http';
 import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
 import type { RouteRegistration } from '@/routing/registration/route-registration';
-import { koaBody } from 'koa-body';
 
 export function createRouteRegistrations<TRequest extends HttpRequestBase>(
   routes: NormalizedRouteProps<TRequest>[],

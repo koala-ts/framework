@@ -1,6 +1,6 @@
-import { type Application } from '@/application/application';
-import { registerEventSubscribers } from '@/Kernel';
 import { expect, test, vi } from 'vitest';
+import type { Application } from '@/application/application';
+import { registerEventSubscribers } from '@/Kernel';
 
 test('register a single event subscriber', () => {
   const on = vi.fn();

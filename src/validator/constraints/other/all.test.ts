@@ -1,7 +1,7 @@
-import { ConstraintContext } from '@/validator/constraint-validator';
-import { Violation } from '@/validator/violation';
 import { describe, expect, test, vi } from 'vitest';
-import { all, AllOptions } from './all';
+import type { ConstraintContext } from '@/validator/constraint-validator';
+import type { Violation } from '@/validator/violation';
+import { type AllOptions, all } from './all';
 
 describe('all', () => {
   describe('non-array values', () => {

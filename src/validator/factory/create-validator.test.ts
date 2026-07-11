@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import type { ConstraintContext } from '@/validator/constraint-validator';
 import { UnknownConstraintError } from '@/validator/errors';
 import { createValidator } from '@/validator/factory/create-validator';
-import { Violation } from '@/validator/violation';
-import { ConstraintContext } from '@/validator/constraint-validator';
+import type { Violation } from '@/validator/violation';
 
 describe('Validator', () => {
   describe('Registry', () => {

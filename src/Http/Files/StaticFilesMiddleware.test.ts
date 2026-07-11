@@ -1,5 +1,5 @@
 import { describe, expect, it, type Mock, vi } from 'vitest';
-import { type HttpScope } from '@/Http';
+import type { HttpScope } from '@/Http';
 import { serveStaticFiles } from '@/Http/Files/StaticFilesMiddleware';
 
 vi.mock('@koa/send', () => ({

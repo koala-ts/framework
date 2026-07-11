@@ -1,4 +1,4 @@
-import { ConstraintSchema } from './constraint';
+import type { ConstraintSchema } from './constraint';
 
 type FieldSchemaEntry = string | ConstraintSchema;
 

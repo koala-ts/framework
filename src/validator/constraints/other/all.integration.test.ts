@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { createValidator } from '@/validator/factory/create-validator';
 import { notBlank } from '@/validator/constraints/basic/not-blank';
 import { email } from '@/validator/constraints/string/email';
 import { slug } from '@/validator/constraints/string/slug';
+import { createValidator } from '@/validator/factory/create-validator';
 import { all } from './all';
 
 describe('all (integration)', () => {

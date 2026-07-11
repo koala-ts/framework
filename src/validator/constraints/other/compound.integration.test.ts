@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { createValidator } from '@/validator/factory/create-validator';
 import { notBlank } from '@/validator/constraints/basic/not-blank';
 import { email } from '@/validator/constraints/string/email';
+import { createValidator } from '@/validator/factory/create-validator';
 import { compound } from './compound';
 
 describe('compound (integration)', () => {

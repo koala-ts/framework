@@ -1,5 +1,5 @@
-import { type HttpMiddleware, type HttpScope } from '@/Http';
 import { describe, expect, test, vi } from 'vitest';
+import type { HttpMiddleware, HttpScope } from '@/Http';
 import { applyConfiguredGlobalMiddleware } from './apply-configured-global-middleware';
 
 describe('applyConfiguredGlobalMiddleware', () => {

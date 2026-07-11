@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { type HttpScope, type ScopeStore } from '@/Http';
+import type { HttpScope, ScopeStore } from '@/Http';
 import {
   initializeRequestScopeStorage,
   type ScopeStorage,

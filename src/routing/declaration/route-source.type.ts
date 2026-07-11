@@ -3,4 +3,5 @@ import type { NormalizedRouteProps } from '@/routing/declaration/normalized-rout
 import type { RouteGroupDefinition } from '@/routing/declaration/route-group';
 
 export type RouteSource<TRequest extends HttpRequestBase = HttpRequest> =
-  NormalizedRouteProps<TRequest> | RouteGroupDefinition<TRequest>;
+  | NormalizedRouteProps<TRequest>
+  | RouteGroupDefinition<TRequest>;

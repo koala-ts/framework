@@ -1,6 +1,6 @@
+import { describe, expect, test, vi } from 'vitest';
 import { Get } from '@/routing/declaration/http-verb-helpers';
 import { RouteGroup } from '@/routing/declaration/route-group';
-import { describe, expect, test, vi } from 'vitest';
 import { normalizeRouteSources } from './normalize-route-sources';
 
 describe('normalize route sources', () => {

@@ -29,7 +29,11 @@ jobs:
           npm version "$GITHUB_REF_NAME" --no-git-tag-version
           npm install
 
+      - run: npm run check:code
+      - run: npm run check:type
+      - run: npm run test
       - run: npm run build
+      - run: npm run check:exports
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

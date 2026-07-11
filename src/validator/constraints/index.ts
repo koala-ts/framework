@@ -23,11 +23,11 @@ export const builtInConstraints = {
 
 // ## Basic ##
 export { notBlank } from './basic/not-blank';
-export { type, type TypeOptions } from './basic/type';
+export { type TypeOptions, type } from './basic/type';
 // ## Basic ##
 
 // ## Comparison ##
-export { unique, type UniqueOptions } from './comparison/unique';
+export { type UniqueOptions, unique } from './comparison/unique';
 // ## Comparison ##
 
 // ## String ##
@@ -36,6 +36,6 @@ export { slug } from './string/slug';
 // ## String ##
 
 // ## Other ##
-export { all, type AllOptions } from './other/all';
+export { type AllOptions, all } from './other/all';
 export { compound } from './other/compound';
 // ## Other ##

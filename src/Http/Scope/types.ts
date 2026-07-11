@@ -1,7 +1,7 @@
 import type { Context, DefaultState, Next } from 'koa';
-import { type HttpRequest, type HttpRequestBase } from '../Request';
-import { type HttpResponse } from '../Response';
-import { type User } from '@/Security/types';
+import type { User } from '@/Security/types';
+import type { HttpRequest, HttpRequestBase } from '../Request';
+import type { HttpResponse } from '../Response';
 
 export interface HttpScope<TRequest extends HttpRequestBase = HttpRequest, TUser extends User = User> extends Context {
   request: TRequest;

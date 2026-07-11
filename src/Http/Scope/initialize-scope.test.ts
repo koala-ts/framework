@@ -1,6 +1,6 @@
-import { type HttpScope } from '@/Http';
-import { type Next } from 'koa';
+import type { Next } from 'koa';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { HttpScope } from '@/Http';
 import { initializeScope, type ScopeAwareApp } from './initialize-scope';
 
 describe('initializeScope', () => {

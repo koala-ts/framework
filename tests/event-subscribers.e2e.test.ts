@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { createTestAgent, KoalaConfig, Route } from '../src';
+import { createTestAgent, type KoalaConfig, Route } from '../src';
 import { useEmit } from '../src/Kernel';
 
 class MyController {

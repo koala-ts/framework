@@ -2,7 +2,7 @@ import { createArrayNormalizer } from '@/serializer/normalizer/array-normalizer'
 import { dateNormalizer } from '@/serializer/normalizer/date-normalizer';
 import { nullNormalizer } from '@/serializer/normalizer/null-normalizer';
 import { createRecordNormalizer } from '@/serializer/normalizer/record-normalizer';
-import { type NormalizedValue, type Normalizer, type NormalizerContext } from '@/serializer/normalizer/types';
+import type { NormalizedValue, Normalizer, NormalizerContext } from '@/serializer/normalizer/types';
 
 type CustomNormalizer = Normalizer<unknown, NormalizedValue | undefined>;
 
