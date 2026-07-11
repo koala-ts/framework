@@ -64,14 +64,17 @@ jobs:
         id: release_plan
         env:
           RELEASE_MODE: ${{ steps.release.outputs.mode }}
+          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          node scripts/release/generate-release-plan.js "${{ steps.release.outputs.tag }}" > release-plan.json
-          package_count=$(node -e 'const { packageNames } = JSON.parse(require("node:fs").readFileSync("release-plan.json")); process.stdout.write(String(packageNames.length));')
+          node scripts/release/generate-release-plan.js "${{ steps.release.outputs.tag }}" > "$RELEASE_PLAN_PATH"
+          package_count=$(node -e 'const { packageNames } = JSON.parse(require("node:fs").readFileSync(process.env.RELEASE_PLAN_PATH)); process.stdout.write(String(packageNames.length));')
           echo "package_count=$package_count" >> "$GITHUB_OUTPUT"
 
       - name: Stage release manifests
+        env:
+          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          node scripts/release/stage-release.js "${{ steps.release.outputs.tag }}" release-plan.json
+          node scripts/release/stage-release.js "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"
           npm install
 
       - name: Check code
@@ -96,8 +99,9 @@ jobs:
         if: steps.release_plan.outputs.package_count != '0'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          node -e "const { packageNames } = JSON.parse(require('node:fs').readFileSync('release-plan.json')); process.stdout.write(packageNames.join('\\n'));" | while IFS= read -r package_name; do
+          node -e "const { packageNames } = JSON.parse(require('node:fs').readFileSync(process.env.RELEASE_PLAN_PATH)); process.stdout.write(packageNames.join('\\n'));" | while IFS= read -r package_name; do
             if [ "$package_name" = '@koala-ts/framework' ]; then
               npm publish --provenance --access public
             else
@@ -110,8 +114,9 @@ jobs:
         env:
           KOALA_TS_MIRROR_TOKEN: ${{ secrets.KOALA_TS_MIRROR_TOKEN }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          if node -e "const { packageNames } = JSON.parse(require('node:fs').readFileSync('release-plan.json')); process.exit(packageNames.includes('@koala-ts/contracts') ? 0 : 1);"; then
+          if node -e "const { packageNames } = JSON.parse(require('node:fs').readFileSync(process.env.RELEASE_PLAN_PATH)); process.exit(packageNames.includes('@koala-ts/contracts') ? 0 : 1);"; then
             mirror_directory=$(mktemp -d)
             git clone "https://x-access-token:${KOALA_TS_MIRROR_TOKEN}@github.com/koala-ts/contracts.git" "$mirror_directory"
             git -C "$mirror_directory" checkout -B main
