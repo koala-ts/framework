@@ -66,7 +66,8 @@ jobs:
           RELEASE_MODE: ${{ steps.release.outputs.mode }}
         run: |
           node scripts/release/generate-release-plan.js "${{ steps.release.outputs.tag }}" > release-plan.json
-          echo "package_count=$(node -e \"const { packageNames } = JSON.parse(require('node:fs').readFileSync('release-plan.json')); process.stdout.write(String(packageNames.length));\")" >> "$GITHUB_OUTPUT"
+          package_count=$(node -e 'const { packageNames } = JSON.parse(require("node:fs").readFileSync("release-plan.json")); process.stdout.write(String(packageNames.length));')
+          echo "package_count=$package_count" >> "$GITHUB_OUTPUT"
 
       - name: Stage release manifests
         run: |
