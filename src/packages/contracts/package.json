@@ -2,6 +2,11 @@
   "name": "@koala-ts/contracts",
   "version": "2.0.0",
   "description": "Shared contracts for KoalaTs packages",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koala-ts/framework.git",
+    "directory": "src/packages/contracts"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
