@@ -1,9 +1,9 @@
-import type { HttpRequest, HttpRequestBase } from '@/Http';
-import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
-import type { RouteOptions } from '@/routing/declaration/route-options.type';
-import { RouteProps } from '@/routing/declaration/route-props.type';
-import type { RouterMethod } from '@/routing/declaration/router-method.type';
-import type { HttpMethod } from '@/routing/http-method.type';
+import type { HttpRequest, HttpRequestBase } from '#koala/Http/index';
+import type { NormalizedRouteProps } from '#koala/routing/declaration/normalized-route-props.type';
+import type { RouteOptions } from '#koala/routing/declaration/route-options.type';
+import type { RouteProps } from '#koala/routing/declaration/route-props.type';
+import type { RouterMethod } from '#koala/routing/declaration/router-method.type';
+import type { HttpMethod } from '#koala/routing/http-method.type';
 
 function resolveRouteOptions(options: RouteOptions): Pick<NormalizedRouteProps, 'parseBody' | 'bodyOptions'> {
   return {
@@ -33,7 +33,7 @@ export function normalizeRouteProps<TRequest extends HttpRequestBase = HttpReque
   routeProps: RouteProps<TRequest>,
 ): NormalizedRouteProps<TRequest> {
   return {
-    name: routeProps.name,
+    ...(routeProps.name === undefined ? {} : { name: routeProps.name }),
     path: routeProps.path,
     methods: qualifyMethods(routeProps.method),
     handler: routeProps.handler,

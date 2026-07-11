@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { createPasswordHasher } from './password';
+import { createPasswordHasher } from '#koala/Security/password/password';
 
 describe('createPasswordHasher', () => {
   test('hash and verify password', async () => {

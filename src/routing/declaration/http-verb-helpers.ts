@@ -1,7 +1,7 @@
-import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '@/Http';
-import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
-import { Route } from '@/routing/declaration/route';
-import type { HttpMethod } from '@/routing/http-method.type';
+import type { HttpMiddleware, HttpRequest, HttpRequestBase } from '#koala/Http/index';
+import type { NormalizedRouteProps } from '#koala/routing/declaration/normalized-route-props.type';
+import { Route } from '#koala/routing/declaration/route';
+import type { HttpMethod } from '#koala/routing/http-method.type';
 
 type RouteHandler<TRequest extends HttpRequestBase = HttpRequest> = HttpMiddleware<TRequest>;
 type MiddlewareAndHandler<TRequest extends HttpRequestBase = HttpRequest> = [
@@ -13,9 +13,12 @@ type NamedMiddlewareAndHandler<TRequest extends HttpRequestBase = HttpRequest> =
   ...middlewareAndHandler: MiddlewareAndHandler<TRequest>,
 ];
 type VerbHelperRouteArguments<TRequest extends HttpRequestBase = HttpRequest> =
-  MiddlewareAndHandler<TRequest> | NamedMiddlewareAndHandler<TRequest>;
+  | MiddlewareAndHandler<TRequest>
+  | NamedMiddlewareAndHandler<TRequest>;
 type UnsafeVerbHelperRouteArguments<TRequest extends HttpRequestBase = HttpRequest> =
-  VerbHelperRouteArguments<TRequest> | [name: string] | [];
+  | VerbHelperRouteArguments<TRequest>
+  | [name: string]
+  | [];
 
 interface VerbHelperArguments<TRequest extends HttpRequestBase = HttpRequest> {
   path: string;
@@ -61,7 +64,7 @@ function resolveVerbHelperArguments<TRequest extends HttpRequestBase = HttpReque
 
   return {
     path,
-    name,
+    ...(name === undefined ? {} : { name }),
     middleware,
     handler,
   };

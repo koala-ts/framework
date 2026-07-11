@@ -1,9 +1,23 @@
 import Koa from 'koa';
 import supertest from 'supertest';
 import { afterEach, describe, expect, test } from 'vitest';
-import type { Application } from '@/application/application';
-import { getLegacyRouteDefinitions, getLegacyRoutes, registerLegacyRoutes } from './legacy-router';
-import { Route } from './route';
+import type { Application } from '#koala/application/application';
+import {
+  getLegacyRouteDefinitions,
+  getLegacyRoutes,
+  registerLegacyRoutes,
+} from '#koala/routing/deprecated-decorator/legacy-router';
+import { Route } from '#koala/routing/deprecated-decorator/route';
+
+const getMethodDescriptor = (prototype: object, methodName: string): PropertyDescriptor => {
+  const descriptor = Object.getOwnPropertyDescriptor(prototype, methodName);
+
+  if (!descriptor) {
+    throw new Error(`Expected ${methodName} descriptor`);
+  }
+
+  return descriptor;
+};
 
 describe('legacy router', () => {
   afterEach(() => {
@@ -18,7 +32,7 @@ describe('legacy router', () => {
     Route({ method: ['GET', 'POST'], path: '/users', options: { parseBody: false } })(
       UsersController.prototype,
       'list',
-      Object.getOwnPropertyDescriptor(UsersController.prototype, 'list')!,
+      getMethodDescriptor(UsersController.prototype, 'list'),
     );
 
     const routeDefinitions = getLegacyRouteDefinitions();
@@ -43,7 +57,7 @@ describe('legacy router', () => {
     Route({ method: 'GET', path: '/users' })(
       UsersController.prototype,
       'list',
-      Object.getOwnPropertyDescriptor(UsersController.prototype, 'list')!,
+      getMethodDescriptor(UsersController.prototype, 'list'),
     );
 
     const app = new Koa() as Application;

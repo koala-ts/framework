@@ -1,4 +1,4 @@
-import { ConstraintSchema } from './constraint';
+import type { ConstraintSchema } from '#koala/validator/constraint';
 
 type FieldSchemaEntry = string | ConstraintSchema;
 

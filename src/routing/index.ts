@@ -1,6 +1,6 @@
-export type { HttpMethod } from '@/routing/http-method.type';
-export type { RouteSource } from '@/routing/declaration/route-source.type';
-export { Route } from './declaration/route';
-export { createPathFor } from './path/create-path-for';
-export { RouteGroup } from './declaration/route-group';
-export { Any, Delete, Get, Head, Options, Patch, Post, Put } from '@/routing/declaration/http-verb-helpers';
+export { Any, Delete, Get, Head, Options, Patch, Post, Put } from '#koala/routing/declaration/http-verb-helpers';
+export { Route } from '#koala/routing/declaration/route';
+export { RouteGroup } from '#koala/routing/declaration/route-group';
+export type { RouteSource } from '#koala/routing/declaration/route-source.type';
+export type { HttpMethod } from '#koala/routing/http-method.type';
+export { createPathFor } from '#koala/routing/path/create-path-for';

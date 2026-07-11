@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { Route } from './route';
+import { Route } from '#koala/routing/declaration/route';
 
 describe('routing route', () => {
   test('it creates a route definition for a single method', () => {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { UnknownConstraintError } from '@/validator/errors';
-import { createValidator } from '@/validator/factory/create-validator';
-import { Violation } from '@/validator/violation';
-import { ConstraintContext } from '@/validator/constraint-validator';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import { UnknownConstraintError } from '#koala/validator/errors';
+import { createValidator } from '#koala/validator/factory/create-validator';
+import type { Violation } from '#koala/validator/violation';
 
 describe('Validator', () => {
   describe('Registry', () => {

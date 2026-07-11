@@ -1,7 +1,7 @@
-import { ConstraintOptions } from '@/validator/constraint';
-import { ConstraintContext } from '@/validator/constraint-validator';
-import { Violation } from '@/validator/violation';
 import { isDeepStrictEqual } from 'node:util';
+import type { ConstraintOptions } from '#koala/validator/constraint';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import type { Violation } from '#koala/validator/violation';
 
 const DEFAULT_MESSAGE = 'This value must contain only unique items.';
 const NOT_ARRAY_MESSAGE = 'This value must be a list.';

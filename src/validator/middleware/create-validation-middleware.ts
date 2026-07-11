@@ -1,8 +1,8 @@
-import { type HttpMiddleware, HttpScope, NextMiddleware } from '@/Http';
-import { flattenViolations } from '@/validator/flatten-violations';
-import { ValidationSchema } from '@/validator/schema';
-import { Violation } from '@/validator/violation';
-import { Validator } from '@/validator/validator';
+import type { HttpMiddleware, HttpScope, NextMiddleware } from '#koala/Http/index';
+import { flattenViolations } from '#koala/validator/flatten-violations';
+import type { ValidationSchema } from '#koala/validator/schema';
+import type { Validator } from '#koala/validator/validator';
+import type { Violation } from '#koala/validator/violation';
 
 type ViolationMapper = (violations: Violation[]) => Record<string, string[]>;
 
@@ -15,8 +15,8 @@ export function createValidationMiddleware({
   validate,
   mapViolations = flattenViolations,
 }: ValidationMiddlewareOptions): (validationSchema: ValidationSchema) => HttpMiddleware {
-  return function (validationSchema: ValidationSchema): HttpMiddleware {
-    return async function middleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
+  return (validationSchema: ValidationSchema): HttpMiddleware =>
+    async function middleware(scope: HttpScope, next: NextMiddleware): Promise<void> {
       const violations = validate(scope.request.body ?? {}, validationSchema);
 
       if (violations.length > 0) {
@@ -27,5 +27,4 @@ export function createValidationMiddleware({
 
       await next();
     };
-  };
 }

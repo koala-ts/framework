@@ -1,7 +1,7 @@
-import { ConstraintOptions } from '@/validator/constraint';
-import { ConstraintContext } from '@/validator/constraint-validator';
-import { FieldSchema } from '@/validator/schema';
-import { Violation } from '@/validator/violation';
+import type { ConstraintOptions } from '#koala/validator/constraint';
+import type { ConstraintContext } from '#koala/validator/constraint-validator';
+import type { FieldSchema } from '#koala/validator/schema';
+import type { Violation } from '#koala/validator/violation';
 
 const NOT_ARRAY_MESSAGE = 'This value must be a list.';
 

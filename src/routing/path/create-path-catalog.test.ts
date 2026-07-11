@@ -1,8 +1,8 @@
-import { Get } from '@/routing/declaration/http-verb-helpers';
-import { Route } from '@/routing/declaration/route';
-import { RouteGroup } from '@/routing/declaration/route-group';
 import { describe, expect, test, vi } from 'vitest';
-import { createPathCatalog } from './create-path-catalog';
+import { Get } from '#koala/routing/declaration/http-verb-helpers';
+import { Route } from '#koala/routing/declaration/route';
+import { RouteGroup } from '#koala/routing/declaration/route-group';
+import { createPathCatalog } from '#koala/routing/path/create-path-catalog';
 
 describe('create path catalog', () => {
   test('it collects named route paths from route sources', () => {

@@ -1,6 +1,6 @@
-import { Violation } from './violation';
-import { Payload } from './payload';
-import { ValidationSchema } from './schema';
+import type { Payload } from '#koala/validator/payload';
+import type { ValidationSchema } from '#koala/validator/schema';
+import type { Violation } from '#koala/validator/violation';
 
 type Options = { groups?: string[] };
 

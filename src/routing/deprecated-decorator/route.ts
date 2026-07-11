@@ -1,7 +1,7 @@
-import type { HttpMiddleware } from '@/Http';
-import type { RouteOptions } from '@/routing/declaration/route-options.type';
-import type { HttpMethod } from '@/routing/http-method.type';
-import { createLegacyRouteDecorator } from './legacy-router';
+import type { HttpMiddleware } from '#koala/Http/index';
+import type { RouteOptions } from '#koala/routing/declaration/route-options.type';
+import { createLegacyRouteDecorator } from '#koala/routing/deprecated-decorator/legacy-router';
+import type { HttpMethod } from '#koala/routing/http-method.type';
 
 /**
  * @deprecated Use `Route` from `@koala-ts/framework/routing` for function-first route declarations.

@@ -1,22 +1,17 @@
 import { hash as _hash, needsRehash as _needsRehash, verify as _verify } from 'argon2';
-import { type PasswordConfig, type PasswordHasher } from '@/Security/password/types';
+import type { PasswordConfig, PasswordHasher } from '#koala/Security/password/types';
 
 function hash(config?: PasswordConfig): PasswordHasher['hash'] {
-  return function (plainPassword: string): Promise<string> {
-    return _hash(plainPassword, config);
-  };
+  return (plainPassword: string): Promise<string> => _hash(plainPassword, config);
 }
 
 function verify(config?: PasswordConfig): PasswordHasher['verify'] {
-  return function (hashedPassword: string, plainPassword: string): Promise<boolean> {
-    return _verify(hashedPassword, plainPassword, config);
-  };
+  return (hashedPassword: string, plainPassword: string): Promise<boolean> =>
+    _verify(hashedPassword, plainPassword, config);
 }
 
 function needsRehash(config?: PasswordConfig): PasswordHasher['needsRehash'] {
-  return function (hashedPassword: string): boolean {
-    return _needsRehash(hashedPassword, config);
-  };
+  return (hashedPassword: string): boolean => _needsRehash(hashedPassword, config);
 }
 
 export function createPasswordHasher(config?: PasswordConfig): PasswordHasher {

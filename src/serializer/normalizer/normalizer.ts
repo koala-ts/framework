@@ -1,8 +1,8 @@
-import { createArrayNormalizer } from '@/serializer/normalizer/array-normalizer';
-import { dateNormalizer } from '@/serializer/normalizer/date-normalizer';
-import { nullNormalizer } from '@/serializer/normalizer/null-normalizer';
-import { createRecordNormalizer } from '@/serializer/normalizer/record-normalizer';
-import { type NormalizedValue, type Normalizer, type NormalizerContext } from '@/serializer/normalizer/types';
+import { createArrayNormalizer } from '#koala/serializer/normalizer/array-normalizer';
+import { dateNormalizer } from '#koala/serializer/normalizer/date-normalizer';
+import { nullNormalizer } from '#koala/serializer/normalizer/null-normalizer';
+import { createRecordNormalizer } from '#koala/serializer/normalizer/record-normalizer';
+import type { NormalizedValue, Normalizer, NormalizerContext } from '#koala/serializer/normalizer/types';
 
 type CustomNormalizer = Normalizer<unknown, NormalizedValue | undefined>;
 

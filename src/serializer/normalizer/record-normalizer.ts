@@ -1,4 +1,4 @@
-import { type NormalizedRecord, type Normalizer, type NormalizerContext } from '@/serializer/normalizer/types';
+import type { NormalizedRecord, Normalizer, NormalizerContext } from '#koala/serializer/normalizer/types';
 
 type Result = NormalizedRecord | undefined;
 

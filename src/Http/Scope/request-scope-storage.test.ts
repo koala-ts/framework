@@ -1,12 +1,12 @@
 import { describe, expect, test, vi } from 'vitest';
-import { type HttpScope, type ScopeStore } from '@/Http';
+import type { HttpScope, ScopeStore } from '#koala/Http/index';
 import {
   initializeRequestScopeStorage,
   type ScopeStorage,
   useEmit,
   useRequest,
   useResponse,
-} from './request-scope-storage';
+} from '#koala/Http/Scope/request-scope-storage';
 
 describe('request scope storage', () => {
   test('middleware should init storage', async () => {

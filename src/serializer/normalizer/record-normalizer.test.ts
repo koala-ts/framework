@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createRecordNormalizer } from '@/serializer/normalizer/record-normalizer';
-import { type NormalizerContext } from '@/serializer/normalizer/types';
+import { createRecordNormalizer } from '#koala/serializer/normalizer/record-normalizer';
+import type { NormalizerContext } from '#koala/serializer/normalizer/types';
 
 describe('Record normalizer', () => {
   it('should return undefined for non records', () => {

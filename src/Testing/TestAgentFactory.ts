@@ -1,10 +1,10 @@
-import { create } from '@/application/create-application';
-import { type KoalaConfig } from '@/config/koala-config';
-import { type HttpMiddleware, type HttpScope, type NextMiddleware } from '@/Http';
-import { type User } from '@/Security/types';
 import type { Request } from 'koa';
 import supertest from 'supertest';
-import { type TestAgent } from './types';
+import { create } from '#koala/application/create-application';
+import type { KoalaConfig } from '#koala/config/koala-config';
+import type { HttpMiddleware, HttpScope, NextMiddleware } from '#koala/Http/index';
+import type { User } from '#koala/Security/types';
+import type { TestAgent } from '#koala/Testing/types';
 
 export function createTestAgent<TRequest extends Request>(
   config: KoalaConfig<TRequest>,

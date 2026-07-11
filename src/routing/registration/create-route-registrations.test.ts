@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { createRouteRegistrations } from './create-route-registrations';
+import { createRouteRegistrations } from '#koala/routing/registration/create-route-registrations';
 
 describe('create route registrations', () => {
   test('it creates route registrations from normalized routes', () => {

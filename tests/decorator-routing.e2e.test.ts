@@ -1,6 +1,6 @@
 import { text } from 'node:stream/consumers';
 import { describe, expect, test, vi } from 'vitest';
-import { createTestAgent, type HttpRequest, type HttpScope, Route, type KoalaConfig, type UploadedFile } from '../src';
+import { createTestAgent, type HttpRequest, type HttpScope, type KoalaConfig, Route, type UploadedFile } from '../src';
 
 interface DecoratorRoutingRequest extends HttpRequest {
   body: { name: string };
@@ -162,10 +162,9 @@ describe('Decorator Routing E2E Test', () => {
     } as KoalaConfig);
 
     const response = await agent.delete('/decorator-route');
-    const allowedMethods = response.headers.allow.split(', ').sort();
 
     expect(response.status).toBe(405);
-    expect(allowedMethods).toEqual(['GET', 'HEAD', 'POST']);
+    expect(response.headers.allow?.split(', ').sort()).toEqual(['GET', 'HEAD', 'POST']);
   });
 
   test('it should parse multipart bodies for decorated routes', async () => {

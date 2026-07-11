@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
-import { createStore } from './ScopeStoreFactory';
-import { ScopeStoreError } from './types';
+import { createStore } from '#koala/Http/Scope/State/ScopeStoreFactory';
+import { ScopeStoreError } from '#koala/Http/Scope/State/types';
 
 describe('createStore', () => {
   test('create a store & run', () => {
@@ -69,7 +69,7 @@ describe('createStore', () => {
   });
 
   test('has() returns true for undefined values', () => {
-    const store = createStore<{ id: number; name?: string }>();
+    const store = createStore<{ id: number; name: string | undefined }>();
 
     store.run({ id: 1, name: undefined }, () => {
       expect(store.has('name')).toBe(true);

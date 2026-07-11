@@ -1,6 +1,7 @@
-import { type HttpRequest } from '@/Http';
+import type { HttpRequest } from '#koala/Http/index';
 
 export interface User {
+  [key: string]: unknown;
   roles?: string[];
 }
 

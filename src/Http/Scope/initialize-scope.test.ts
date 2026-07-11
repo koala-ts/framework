@@ -1,7 +1,7 @@
-import { type HttpScope } from '@/Http';
-import { type Next } from 'koa';
+import type { Next } from 'koa';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { initializeScope, type ScopeAwareApp } from './initialize-scope';
+import type { HttpScope } from '#koala/Http/index';
+import { initializeScope, type ScopeAwareApp } from '#koala/Http/Scope/initialize-scope';
 
 describe('initializeScope', () => {
   let scope: HttpScope;

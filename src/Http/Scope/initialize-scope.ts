@@ -1,6 +1,6 @@
-import { type Next } from 'koa';
-import { type HttpResponse } from '../Response';
-import { type HttpScope } from './types';
+import type { Next } from 'koa';
+import type { HttpResponse } from '#koala/Http/Response/index';
+import type { HttpScope } from '#koala/Http/Scope/types';
 
 export type ScopeAwareApp = {
   context: HttpScope;

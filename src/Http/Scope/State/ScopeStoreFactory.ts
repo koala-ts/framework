@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { type ScopeStore, ScopeStoreError } from './types';
+import { type ScopeStore, ScopeStoreError } from '#koala/Http/Scope/State/types';
 
 export function createStore<TState extends object>(): ScopeStore<TState> {
   const asyncLocalStorage = new AsyncLocalStorage<TState>();

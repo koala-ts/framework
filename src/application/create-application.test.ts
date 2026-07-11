@@ -1,8 +1,8 @@
-import { create } from '@/application/create-application';
-import { koalaDefaultConfig } from '@/config/default-config';
-import { Get, Route, RouteGroup } from '@/routing';
-import { exclusiveRoutingModeError } from '@/routing/deprecated-decorator/verify-routing-mode';
 import { expect, test } from 'vitest';
+import { create } from '#koala/application/create-application';
+import { koalaDefaultConfig } from '#koala/config/default-config';
+import { exclusiveRoutingModeError } from '#koala/routing/deprecated-decorator/verify-routing-mode';
+import { Get, Route, RouteGroup } from '#koala/routing/index';
 
 test('create app with default config', () => {
   const app = create(koalaDefaultConfig);

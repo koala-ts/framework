@@ -1,4 +1,4 @@
-import { Violation } from '@/validator/violation';
+import type { Violation } from '#koala/validator/violation';
 
 export function flattenViolations(violations: Violation[]): Record<string, string[]> {
   const groupedViolations = Object.groupBy(violations, violation => formatPath(violation.path)) as Record<

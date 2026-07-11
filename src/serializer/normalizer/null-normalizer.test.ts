@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { nullNormalizer } from '@/serializer/normalizer/null-normalizer';
+import { nullNormalizer } from '#koala/serializer/normalizer/null-normalizer';
 
 describe('Null normalizer', () => {
   it('should normalize undefined to null', () => {

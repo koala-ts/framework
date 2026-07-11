@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { type Metadata } from '@/serializer';
-import { createNormalizer } from '@/serializer/normalizer/normalizer';
+import type { Metadata } from '#koala/serializer/index';
+import { createNormalizer } from '#koala/serializer/normalizer/normalizer';
 
 describe('Normalizer', () => {
   it('should normalize plain objects with context', () => {
@@ -15,7 +15,7 @@ describe('Normalizer', () => {
 
   it('should allow adding custom normalizers', () => {
     const input = { id: 1, createdAt: new Date('2024-01-01T00:00:00Z') };
-    const customDateNormalizer = function (value: unknown): string | undefined {
+    const customDateNormalizer = (value: unknown): string | undefined => {
       if (value instanceof Date) return value.toISOString();
       return undefined;
     };

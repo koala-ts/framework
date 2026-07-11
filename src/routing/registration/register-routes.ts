@@ -1,11 +1,11 @@
-import { type Application } from '@/application/application';
-import { type HttpRequestBase, type HttpScope } from '@/Http';
-import type { RouteSource } from '@/routing/declaration/route-source.type';
-import { normalizeRouteSources } from '@/routing/normalization/normalize-route-sources';
-import { createRouteRegistrations } from '@/routing/registration/create-route-registrations';
-import { validateRouteRegistrations } from '@/routing/registration/validate-route-registrations';
 import Router, { type RouterInstance } from '@koa/router';
-import { type DefaultContext, type DefaultState, type Middleware } from 'koa';
+import type { DefaultContext, DefaultState, Middleware } from 'koa';
+import type { Application } from '#koala/application/application';
+import type { HttpRequestBase, HttpScope } from '#koala/Http/index';
+import type { RouteSource } from '#koala/routing/declaration/route-source.type';
+import { normalizeRouteSources } from '#koala/routing/normalization/normalize-route-sources';
+import { createRouteRegistrations } from '#koala/routing/registration/create-route-registrations';
+import { validateRouteRegistrations } from '#koala/routing/registration/validate-route-registrations';
 
 export function registerRoutes<TRequest extends HttpRequestBase>(
   app: Application,

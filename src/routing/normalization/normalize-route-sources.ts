@@ -1,8 +1,8 @@
-import type { HttpRequestBase } from '@/Http';
-import type { NormalizedRouteProps } from '@/routing/declaration/normalized-route-props.type';
-import type { RouteGroupDefinition } from '@/routing/declaration/route-group';
-import type { RouteSource } from '@/routing/declaration/route-source.type';
-import { mergeRouteOptions } from '@/routing/normalization/resolve-route-options';
+import type { HttpRequestBase } from '#koala/Http/index';
+import type { NormalizedRouteProps } from '#koala/routing/declaration/normalized-route-props.type';
+import type { RouteGroupDefinition } from '#koala/routing/declaration/route-group';
+import type { RouteSource } from '#koala/routing/declaration/route-source.type';
+import { mergeRouteOptions } from '#koala/routing/normalization/resolve-route-options';
 
 interface NormalizationContext<TRequest extends HttpRequestBase> {
   prefix: string;
@@ -61,11 +61,13 @@ function normalizeRouteDefinition<TRequest extends HttpRequestBase>(
   route: NormalizedRouteProps<TRequest>,
   context: NormalizationContext<TRequest>,
 ): NormalizedRouteProps<TRequest> {
+  const { name: routeName, ...routeProps } = route;
+
   return {
-    ...route,
+    ...routeProps,
     path: joinRoutePath(context.prefix, route.path),
-    name: route.name ? `${context.namePrefix}${route.name}` : undefined,
-    middleware: [...context.middleware, ...route.middleware],
+    ...(routeName === undefined ? {} : { name: `${context.namePrefix}${routeName}` }),
+    middleware: [...context.middleware, ...routeProps.middleware],
   };
 }
 

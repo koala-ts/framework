@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { verifyRoutingMode, exclusiveRoutingModeError } from './verify-routing-mode';
+import { exclusiveRoutingModeError, verifyRoutingMode } from '#koala/routing/deprecated-decorator/verify-routing-mode';
 
 describe('verify routing mode', () => {
   test('it allows legacy routing mode', () => {

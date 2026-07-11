@@ -5,7 +5,7 @@ import {
   type HttpScope,
   type NextMiddleware,
   type ScopeStore,
-} from '@/Http';
+} from '#koala/Http/index';
 
 export interface ScopeEventEmitter {
   emit(event: string, ...args: unknown[]): void;

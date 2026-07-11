@@ -1,9 +1,9 @@
-import { ConstraintOptions } from '@/validator/constraint';
-import { UnknownConstraintError } from '@/validator/errors';
-import { FieldSchema } from '@/validator/schema';
-import { Validator } from '@/validator/validator';
-import { ConstraintContext, ConstraintValidator } from '@/validator/constraint-validator';
-import { Payload } from '@/validator/payload';
+import type { ConstraintOptions } from '#koala/validator/constraint';
+import type { ConstraintContext, ConstraintValidator } from '#koala/validator/constraint-validator';
+import { UnknownConstraintError } from '#koala/validator/errors';
+import type { Payload } from '#koala/validator/payload';
+import type { FieldSchema } from '#koala/validator/schema';
+import type { Validator } from '#koala/validator/validator';
 
 type FieldSchemaEntry = [string, FieldSchema];
 type RegisteredConstraintValidator = {
@@ -23,9 +23,9 @@ export const createValidator = (options: ValidatorOptions): Validator => {
     const activeGroups = options?.groups && options.groups.length > 0 ? options.groups : ['Default'];
 
     // Apply all field schemas and aggregate results.
-    return schemaEntries.flatMap(function (fieldSchemaEntry: FieldSchemaEntry) {
-      return applyFieldSchema(constraints, payload, fieldSchemaEntry, activeGroups);
-    });
+    return schemaEntries.flatMap((fieldSchemaEntry: FieldSchemaEntry) =>
+      applyFieldSchema(constraints, payload, fieldSchemaEntry, activeGroups),
+    );
   };
 };
 

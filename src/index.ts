@@ -1,21 +1,22 @@
 // Application
-export { create } from '@/application/create-application';
-export type { Application } from '@/application/application';
-import { getLegacyRoutes, registerLegacyRoutes } from '@/routing/deprecated-decorator/legacy-router';
-import type { RouteMetadata as LegacyRouteMetadata } from '@/routing/deprecated-decorator/route-metadata';
 
+export type { Application } from '#koala/application/application';
+export { create } from '#koala/application/create-application';
+
+import { getLegacyRoutes, registerLegacyRoutes } from '#koala/routing/deprecated-decorator/legacy-router';
+import type { RouteMetadata as LegacyRouteMetadata } from '#koala/routing/deprecated-decorator/route-metadata';
+
+export * from '#koala/config/config-loader';
+export * from '#koala/config/default-config';
 // Core modules
-export type * from '@/config/koala-config';
-export * from '@/config/default-config';
-export * from '@/config/config-loader';
-export * from '@/Http';
-export * from '@/Kernel';
-
+export type * from '#koala/config/koala-config';
+export * from '#koala/Http/index';
+export * from '#koala/Kernel/index';
+export type { RouteOptions } from '#koala/routing/declaration/route-options.type';
+export type { RouterMethod } from '#koala/routing/declaration/router-method.type';
 // Routing
-export * from '@/routing/deprecated-decorator/route';
-export type { HttpMethod } from '@/routing/http-method.type';
-export type { RouteOptions } from '@/routing/declaration/route-options.type';
-export type { RouterMethod } from '@/routing/declaration/router-method.type';
+export * from '#koala/routing/deprecated-decorator/route';
+export type { HttpMethod } from '#koala/routing/http-method.type';
 /**
  * @deprecated Use `Route` from `@koala-ts/framework/routing` instead.
  */
@@ -30,10 +31,8 @@ export const registerRoutes = registerLegacyRoutes;
 export type RouteMetadata = LegacyRouteMetadata;
 
 // Security
-export * from '@/Security';
-
-// Testing
-export * from '@/Testing';
-
+export * from '#koala/Security/index';
 // Serialization
-export * from '@/serializer';
+export * from '#koala/serializer/index';
+// Testing
+export * from '#koala/Testing/index';

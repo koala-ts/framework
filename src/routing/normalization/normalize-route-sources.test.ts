@@ -1,7 +1,7 @@
-import { Get } from '@/routing/declaration/http-verb-helpers';
-import { RouteGroup } from '@/routing/declaration/route-group';
 import { describe, expect, test, vi } from 'vitest';
-import { normalizeRouteSources } from './normalize-route-sources';
+import { Get } from '#koala/routing/declaration/http-verb-helpers';
+import { RouteGroup } from '#koala/routing/declaration/route-group';
+import { normalizeRouteSources } from '#koala/routing/normalization/normalize-route-sources';
 
 describe('normalize route sources', () => {
   test('it composes group prefixes and middleware into child routes', () => {

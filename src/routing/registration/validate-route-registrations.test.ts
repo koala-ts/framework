@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { validateRouteRegistrations } from './validate-route-registrations';
+import { validateRouteRegistrations } from '#koala/routing/registration/validate-route-registrations';
 
 describe('validate route registrations', () => {
   test('it rejects duplicate route signatures', () => {

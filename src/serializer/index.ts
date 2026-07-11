@@ -1,2 +1,2 @@
-export * from './normalizer/types';
-export * from './normalizer/normalizer';
+export * from '#koala/serializer/normalizer/normalizer';
+export * from '#koala/serializer/normalizer/types';

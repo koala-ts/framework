@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createArrayNormalizer } from '@/serializer/normalizer/array-normalizer';
+import { createArrayNormalizer } from '#koala/serializer/normalizer/array-normalizer';
 
 describe('Array normalizer', () => {
   it('should normalize array recursively', () => {

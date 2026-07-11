@@ -1,11 +1,10 @@
-import path from 'path';
+import path from 'node:path';
 import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@Tests': path.resolve(__dirname, './tests'),
+      '#koala': path.resolve(__dirname, './src'),
     },
   },
   test: {
