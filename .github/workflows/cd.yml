@@ -46,6 +46,11 @@ jobs:
             echo "tag=$INPUT_RELEASE_TAG" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Apply release version
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: npm pkg set "version=$RELEASE_TAG"
+
       - name: Check code
         run: npm run lint
 

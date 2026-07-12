@@ -7,6 +7,10 @@ on:
         description: Framework branch containing the release templates
         required: true
         type: string
+      release_tag:
+        description: Component tag that provides the package version
+        required: true
+        type: string
       dry_run:
         description: Validate the package without publishing it
         required: false
@@ -39,6 +43,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install --package-lock=false
+
+      - name: Apply release version
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: npm pkg set "version=$RELEASE_TAG"
 
       - name: Apply release TypeScript configuration
         run: cp framework/templates/component-release/tsconfig.json tsconfig.json
