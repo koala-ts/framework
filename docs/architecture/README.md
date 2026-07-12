@@ -45,6 +45,13 @@ flowchart TD
 
 The bundle assembles an application from its manifest and the selected components and bridges.
 
+### Bridge examples
+
+| Bridge              | Connects                         |
+|---------------------|----------------------------------|
+| Fastify bridge      | HTTP component ↔ Fastify         |
+| Node console bridge | Console component ↔ Node process |
+
 ## Application behavior
 
 An application can expose multiple entry points, such as HTTP, console, or MCP. Each entry point is supported by a
