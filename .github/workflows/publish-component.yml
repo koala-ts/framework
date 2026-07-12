@@ -1,0 +1,58 @@
+name: Publish component
+
+on:
+  workflow_call:
+    inputs:
+      framework_ref:
+        description: Framework branch containing the release templates
+        required: true
+        type: string
+      dry_run:
+        description: Validate the package without publishing it
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout component
+        uses: actions/checkout@v4
+
+      - name: Checkout release templates
+        uses: actions/checkout@v4
+        with:
+          repository: koala-ts/framework
+          ref: ${{ inputs.framework_ref }}
+          path: framework
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install --package-lock=false
+
+      - name: Apply release TypeScript configuration
+        run: cp framework/templates/component-release/tsconfig.json tsconfig.json
+
+      - name: Check types
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Check package
+        run: npm run publint
+
+      - name: Publish package
+        if: ${{ !inputs.dry_run }}
+        run: npm publish

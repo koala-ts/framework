@@ -1,0 +1,25 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Validate the package without publishing it
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    uses: koala-ts/framework/.github/workflows/publish-component.yml@2.x
+    with:
+      framework_ref: 2.x
+      dry_run: ${{ inputs.dry_run || false }}
+    secrets: inherit

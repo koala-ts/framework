@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - 2.x
-    tags:
-      - '*'
   workflow_dispatch:
     inputs:
       source_branch:
@@ -17,6 +15,24 @@ on:
         description: Push the split branch to the component repository
         required: true
         default: false
+        type: boolean
+  workflow_call:
+    inputs:
+      source_ref:
+        description: Source Git reference to split
+        required: true
+        type: string
+      source_branch:
+        description: Destination branch or tag name
+        required: true
+        type: string
+      source_type:
+        description: Type of destination Git reference
+        required: true
+        type: string
+      sync:
+        description: Push the split reference to component repositories
+        required: true
         type: boolean
 
 jobs:
@@ -31,7 +47,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref }}
+          ref: ${{ github.event_name == 'workflow_call' && inputs.source_ref || github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref }}
 
       - name: Install splitsh-lite
         run: |
@@ -49,7 +65,7 @@ jobs:
       - name: Split components
         env:
           SPLITTER_TOKEN: ${{ steps.app-token.outputs.token }}
-          SOURCE_BRANCH: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
-          SOURCE_TYPE: ${{ github.event_name == 'workflow_dispatch' && 'branch' || github.ref_type }}
-          SYNC: ${{ github.event_name != 'workflow_dispatch' || inputs.sync }}
+          SOURCE_BRANCH: ${{ github.event_name == 'workflow_call' && inputs.source_branch || github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
+          SOURCE_TYPE: ${{ github.event_name == 'workflow_call' && inputs.source_type || github.event_name == 'workflow_dispatch' && 'branch' || github.ref_type }}
+          SYNC: ${{ github.event_name == 'workflow_call' && inputs.sync || github.event_name != 'workflow_dispatch' || inputs.sync }}
         run: bash scripts/split/split-components.sh

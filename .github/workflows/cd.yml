@@ -9,14 +9,6 @@ on:
         description: Canonical release tag to publish
         required: true
         type: string
-      release_mode:
-        description: Select changed packages or every package
-        default: changed
-        required: true
-        type: choice
-        options:
-          - changed
-          - all
 
 jobs:
   cd:
@@ -39,43 +31,18 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Configure release
+      - name: Select release tag
         id: release
         env:
           EVENT_NAME: ${{ github.event_name }}
-          RELEASE_BODY: ${{ github.event.release.body }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
-          INPUT_RELEASE_MODE: ${{ inputs.release_mode }}
           INPUT_RELEASE_TAG: ${{ inputs.release_tag }}
         run: |
           if [ "$EVENT_NAME" = 'release' ]; then
             echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
-            if printf '%s\n' "$RELEASE_BODY" | grep -Eq '(^|[[:space:]])release-mode:[[:space:]]*all([[:space:]]|$)'; then
-              echo 'mode=all' >> "$GITHUB_OUTPUT"
-            else
-              echo 'mode=changed' >> "$GITHUB_OUTPUT"
-            fi
           else
             echo "tag=$INPUT_RELEASE_TAG" >> "$GITHUB_OUTPUT"
-            echo "mode=$INPUT_RELEASE_MODE" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Generate release plan
-        id: release_plan
-        env:
-          RELEASE_MODE: ${{ steps.release.outputs.mode }}
-          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
-        run: |
-          node scripts/release/generate-release-plan.ts "${{ steps.release.outputs.tag }}" > "$RELEASE_PLAN_PATH"
-          package_count=$(node -e 'const { packageNames } = JSON.parse(require("node:fs").readFileSync(process.env.RELEASE_PLAN_PATH)); process.stdout.write(String(packageNames.length));')
-          echo "package_count=$package_count" >> "$GITHUB_OUTPUT"
-
-      - name: Stage release manifests
-        env:
-          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
-        run: |
-          node scripts/release/stage-release.ts "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"
-          npm install
 
       - name: Check code
         run: npm run lint
@@ -95,10 +62,17 @@ jobs:
       - name: Check packages
         run: npm run publint
 
-      - name: Publish packages
-        if: steps.release_plan.outputs.package_count != '0'
+      - name: Publish framework
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
-        run: |
-          node scripts/release/publish-release.ts "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"
+        run: npm publish
+
+  split_components:
+    needs: cd
+    uses: ./.github/workflows/split-components.yml
+    with:
+      source_ref: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.release_tag }}
+      source_branch: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.release_tag }}
+      source_type: tag
+      sync: true
+    secrets: inherit
