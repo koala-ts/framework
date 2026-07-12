@@ -25,11 +25,13 @@ jobs:
           ref: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.release_tag }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Select release tag
         id: release
