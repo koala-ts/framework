@@ -22,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout component
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checkout release templates
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: koala-ts/framework
           ref: ${{ inputs.framework_ref }}
