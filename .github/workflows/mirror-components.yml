@@ -21,7 +21,7 @@ jobs:
           PREVIOUS_COMMIT: ${{ github.event.before }}
           SOURCE_COMMIT: ${{ github.sha }}
         run: |
-          mapfile -t component_directories < <(node scripts/mirror/changed-component-directories.js "$PREVIOUS_COMMIT" "$SOURCE_COMMIT")
+          mapfile -t component_directories < <(node scripts/mirror/changed-component-directories.ts "$PREVIOUS_COMMIT" "$SOURCE_COMMIT")
 
           for component_directory in "${component_directories[@]}"; do
             if [ ! -f "$component_directory/package.json" ]; then

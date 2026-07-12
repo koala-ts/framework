@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { type PackageManifest, stagePackageManifests } from './release-staging.js';
+import { type PackageManifest, stagePackageManifests } from './release-staging.ts';
 
 describe('release staging', () => {
   it('applies the release version to selected packages', () => {

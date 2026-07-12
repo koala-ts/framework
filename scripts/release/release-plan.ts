@@ -1,4 +1,4 @@
-import { selectChangedPackages, sortPackagesForPublishing } from './package-selection.js';
+import { selectChangedPackages, sortPackagesForPublishing } from './package-selection.ts';
 
 /**
  * @typedef {object} Package

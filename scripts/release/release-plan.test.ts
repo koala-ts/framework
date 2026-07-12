@@ -6,7 +6,7 @@ import {
   getChangedFiles,
   getUnpublishedPackageNames,
   type Package,
-} from './release-plan.js';
+} from './release-plan.ts';
 
 describe('release plan', () => {
   it('uses the tag before the release tag as the comparison point', () => {

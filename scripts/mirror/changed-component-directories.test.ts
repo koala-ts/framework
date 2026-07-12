@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getChangedComponentDirectories } from './changed-component-directories.js';
+import { getChangedComponentDirectories } from './changed-component-directories.ts';
 
 describe('changed component directories', () => {
   it('returns each changed component directory once', () => {

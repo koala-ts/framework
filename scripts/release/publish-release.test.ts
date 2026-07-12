@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { selectPackagesToPublish } from './publish-release.js';
+import { selectPackagesToPublish } from './publish-release.ts';
 
 describe('release publishing', () => {
   it('selects the root package and every selected component that is not published at the release version', () => {

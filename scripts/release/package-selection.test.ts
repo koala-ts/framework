@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { type Package, selectChangedPackages, sortPackagesForPublishing } from './package-selection.js';
+import { type Package, selectChangedPackages, sortPackagesForPublishing } from './package-selection.ts';
 
 describe('release package selection', () => {
   it('includes the component whose source changed', () => {

@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { stagePackageManifests } from './release-staging.js';
+import { stagePackageManifests } from './release-staging.ts';
 
 const [releaseTag, releasePlanPath] = process.argv.slice(2);
 
