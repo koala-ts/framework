@@ -101,33 +101,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          node -e "const { packageNames } = JSON.parse(require('node:fs').readFileSync(process.env.RELEASE_PLAN_PATH)); process.stdout.write(packageNames.join('\\n'));" | while IFS= read -r package_name; do
-            if [ "$package_name" = '@koala-ts/framework' ]; then
-              npm publish --provenance --access public
-            else
-              npm publish --workspace="$package_name" --provenance --access public
-            fi
-          done
-
-      - name: Mirror released components
-        if: steps.release_plan.outputs.package_count != '0'
-        env:
-          KOALA_TS_MIRROR_TOKEN: ${{ secrets.KOALA_TS_MIRROR_TOKEN }}
-          RELEASE_TAG: ${{ steps.release.outputs.tag }}
-          RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
-        run: |
-          if node -e "const { packageNames } = JSON.parse(require('node:fs').readFileSync(process.env.RELEASE_PLAN_PATH)); process.exit(packageNames.includes('@koala-ts/contracts') ? 0 : 1);"; then
-            mirror_directory=$(mktemp -d)
-            git clone "https://x-access-token:${KOALA_TS_MIRROR_TOKEN}@github.com/koala-ts/contracts.git" "$mirror_directory"
-            git -C "$mirror_directory" checkout -B main
-            rsync -a --delete --exclude .git --exclude dist --exclude node_modules src/packages/contracts/ "$mirror_directory/"
-            git -C "$mirror_directory" config user.name 'koala-ts-release-bot'
-            git -C "$mirror_directory" config user.email 'release-bot@koala-ts.dev'
-            git -C "$mirror_directory" add --all
-            if ! git -C "$mirror_directory" diff --cached --quiet; then
-              git -C "$mirror_directory" commit -m "chore(release): mirror ${RELEASE_TAG}"
-            fi
-            git -C "$mirror_directory" tag -fa "$RELEASE_TAG" -m "Release ${RELEASE_TAG}"
-            git -C "$mirror_directory" push --force origin main
-            git -C "$mirror_directory" push --force origin "refs/tags/${RELEASE_TAG}"
-          fi
+          node scripts/release/publish-release.js "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"
