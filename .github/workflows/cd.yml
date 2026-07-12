@@ -66,7 +66,7 @@ jobs:
           RELEASE_MODE: ${{ steps.release.outputs.mode }}
           RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          node scripts/release/generate-release-plan.js "${{ steps.release.outputs.tag }}" > "$RELEASE_PLAN_PATH"
+          node scripts/release/generate-release-plan.ts "${{ steps.release.outputs.tag }}" > "$RELEASE_PLAN_PATH"
           package_count=$(node -e 'const { packageNames } = JSON.parse(require("node:fs").readFileSync(process.env.RELEASE_PLAN_PATH)); process.stdout.write(String(packageNames.length));')
           echo "package_count=$package_count" >> "$GITHUB_OUTPUT"
 
@@ -74,17 +74,17 @@ jobs:
         env:
           RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          node scripts/release/stage-release.js "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"
+          node scripts/release/stage-release.ts "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"
           npm install
 
       - name: Check code
-        run: npm run check:code
+        run: npm run lint
 
       - name: Check types
-        run: npm run check:type
+        run: npm run typecheck
 
       - name: Check boundaries
-        run: npm run check:boundaries
+        run: npm run depcruise
 
       - name: Run tests
         run: npm run test
@@ -93,7 +93,7 @@ jobs:
         run: npm run build
 
       - name: Check packages
-        run: npm run check:packages
+        run: npm run publint
 
       - name: Publish packages
         if: steps.release_plan.outputs.package_count != '0'
@@ -101,4 +101,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           RELEASE_PLAN_PATH: ${{ runner.temp }}/release-plan.json
         run: |
-          node scripts/release/publish-release.js "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"
+          node scripts/release/publish-release.ts "${{ steps.release.outputs.tag }}" "$RELEASE_PLAN_PATH"

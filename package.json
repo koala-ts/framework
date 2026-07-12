@@ -73,18 +73,16 @@
     "npm": ">=11"
   },
   "scripts": {
+    "lint": "biome check .",
+    "format": "biome check --write .",
     "test": "vitest run --coverage",
-    "build": "npm run build:packages && tsc",
-    "build:packages": "npm run build --workspaces --if-present",
-    "start": "tsx watch playground/main.ts",
-    "check:code": "biome check .",
-    "fix:code": "biome check --write .",
-    "check:type": "npm run check:type:packages && tsc -p tsconfig.check.json",
-    "check:type:packages": "npm run check:type --workspaces --if-present",
-    "check:boundaries": "depcruise --validate .dependency-cruiser.cjs src",
-    "check:packages": "npm run build:packages && publint src/packages/contracts && node scripts/verify-package-artifact.js src/packages/contracts",
-    "watch:test": "vitest watch",
-    "watch:build": "tsc --noEmit --watch"
+    "build": "npm run each:build && tsc",
+    "typecheck": "npm run each:typecheck && tsc -p tsconfig.check.json",
+    "depcruise": "depcruise --validate .dependency-cruiser.cjs src",
+    "publint": "npm run each:build && npm run each:publint",
+    "each:build": "npm run build --workspaces --if-present",
+    "each:publint": "npm run publint --workspaces --if-present",
+    "each:typecheck": "npm run typecheck --workspaces --if-present"
   },
   "dependencies": {
     "@koa/router": "^15.1.1",

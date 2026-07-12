@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { createReleasePlan, findPreviousTag, getChangedFiles, getUnpublishedPackageNames } from './release-plan.js';
+import { createReleasePlan, findPreviousTag, getChangedFiles, getUnpublishedPackageNames } from './release-plan.ts';
 
 const releaseTag = process.argv[2];
 
