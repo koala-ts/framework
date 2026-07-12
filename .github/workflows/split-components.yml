@@ -1,0 +1,54 @@
+name: Split components
+
+on:
+  push:
+    branches:
+      - 2.x
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: Source branch to split
+        required: true
+        default: 2.x
+        type: string
+      sync:
+        description: Push the split branch to the component repository
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref }}
+
+      - name: Install splitsh-lite
+        run: |
+          curl -sL https://github.com/splitsh/lite/releases/download/v1.0.1/lite_linux_amd64.tar.gz | tar xz
+          sudo mv splitsh-lite /usr/local/bin/splitsh-lite
+
+      - name: Create component repository token
+        uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          app-id: ${{ secrets.SPLITTER_APP_ID }}
+          private-key: ${{ secrets.SPLITTER_PRIVATE_KEY }}
+          owner: koala-ts
+
+      - name: Split components
+        env:
+          SPLITTER_TOKEN: ${{ steps.app-token.outputs.token }}
+          SOURCE_BRANCH: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
+          SOURCE_TYPE: ${{ github.event_name == 'workflow_dispatch' && 'branch' || github.ref_type }}
+          SYNC: ${{ github.event_name != 'workflow_dispatch' || inputs.sync }}
+        run: bash scripts/split/split-components.sh
