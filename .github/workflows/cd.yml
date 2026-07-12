@@ -78,13 +78,13 @@ jobs:
           npm install
 
       - name: Check code
-        run: npm run check:code
+        run: npm run lint
 
       - name: Check types
-        run: npm run check:type
+        run: npm run typecheck
 
       - name: Check boundaries
-        run: npm run check:boundaries
+        run: npm run depcruise
 
       - name: Run tests
         run: npm run test
@@ -93,7 +93,7 @@ jobs:
         run: npm run build
 
       - name: Check packages
-        run: npm run check:packages
+        run: npm run publint
 
       - name: Publish packages
         if: steps.release_plan.outputs.package_count != '0'

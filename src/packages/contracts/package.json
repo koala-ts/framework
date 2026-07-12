@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check:type": "tsc -p tsconfig.json --noEmit"
+    "publint": "publint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "author": {
     "name": "Dhemy",
