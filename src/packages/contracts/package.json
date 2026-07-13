@@ -15,6 +15,12 @@
       "import": "./dist/index.js"
     }
   },
+  "imports": {
+    "#contracts/*": {
+      "types": "./*.ts",
+      "default": "./dist/*.js"
+    }
+  },
   "files": [
     "dist"
   ],
