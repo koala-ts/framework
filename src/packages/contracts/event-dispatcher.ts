@@ -1,10 +1,10 @@
 /**
  * An event is a message produced by an emitter.
  *
- * @typeParam Name - The event name.
  * @typeParam Payload - The payload carried by the event.
+ * @typeParam Name - The event name.
  */
-export type Event<Name extends string = string, Payload = unknown> = {
+export type Event<Payload = unknown, Name extends string = string> = {
   /** Identifies the event type. */
   name: Name;
   /** Carries the event-specific data. */
