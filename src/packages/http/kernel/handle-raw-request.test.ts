@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import type { HttpRequestMessage } from '#http/foundation/http-request';
 import type { HttpResponse } from '#http/foundation/http-response';
 import { type Controller, handleRawRequest, type RawRequest } from '#http/kernel/handle-raw-request';
 
@@ -10,9 +11,15 @@ describe('Handle raw request', () => {
       headers: {},
       body: 'Hello, world!',
     };
+    const message: HttpRequestMessage = {
+      method: 'GET',
+      url: '/user/123',
+      headers: {},
+      body: (async function* () {})(),
+    };
 
     const rawRequest: RawRequest = {
-      message: new Request('https://koala.test.user/123'),
+      message,
       context: { params: { userId: '123' } },
       controller: vi.fn<Controller>().mockResolvedValue(response),
     };

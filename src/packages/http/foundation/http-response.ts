@@ -1,13 +1,16 @@
 /**
- * A declarative HTTP header value.
+ * A declarative HTTP response header value.
  */
-export type HttpHeaderValue = string | readonly string[];
+type HttpResponseHeaderValue = string | readonly string[];
 
 /**
  * Declarative HTTP response headers.
  * Header names are normalized to lowercase by HTTP bridges.
  */
-export type HttpHeaders = Readonly<Record<string, HttpHeaderValue>>;
+type HttpResponseHeaders = {
+  /** A response header value indexed by its normalized lowercase name. */
+  readonly [name: string]: HttpResponseHeaderValue;
+};
 
 /**
  * A declarative HTTP response returned by a controller.
@@ -19,8 +22,8 @@ export type HttpResponse<Body = unknown> = Readonly<{
   status: number;
   /** The optional HTTP reason phrase. */
   statusText?: string;
-  /** Declarative response headers. */
-  headers: HttpHeaders;
+  /** Response headers. */
+  headers: HttpResponseHeaders;
   /** The response body. */
   body: Body;
 }>;
