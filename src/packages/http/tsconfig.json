@@ -2,7 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "#contracts/*": ["./*.ts"]
+      "#http/*": ["./*.ts"]
     },
     "rootDir": ".",
     "outDir": "./dist"

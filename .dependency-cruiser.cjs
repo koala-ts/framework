@@ -23,6 +23,7 @@ module.exports = {
       severity: 'error',
       from: {
         path: '^src/packages/',
+        pathNot: '^src/packages/fastify-bridge/',
       },
       to: {
         path: '^node_modules/(?:@koa/router|koa|express|fastify)(?:/|$)',
@@ -30,6 +31,9 @@ module.exports = {
     },
   ],
   options: {
+    exclude: {
+      path: '(^|/)dist/',
+    },
     doNotFollow: {
       path: 'node_modules',
     },

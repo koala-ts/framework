@@ -1,22 +1,22 @@
 {
-  "name": "@koala-ts/contracts",
+  "name": "@koala-ts/fastify-bridge",
   "version": "2.0.0",
-  "description": "Shared contracts for KoalaTs packages",
+  "description": "Fastify bridge for KoalaTs",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/koala-ts/contracts.git"
+    "url": "git+https://github.com/koala-ts/framework.git"
   },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    "./http-bridge": {
-      "types": "./dist/http-bridge.d.ts",
-      "import": "./dist/http-bridge.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "imports": {
-    "#contracts/*": {
+    "#fastify-bridge/*": {
       "types": "./*.ts",
       "default": "./dist/*.js"
     }
@@ -43,9 +43,13 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "dependencies": {
+    "@koala-ts/contracts": "*"
+  },
+  "peerDependencies": {
+    "fastify": "^5"
+  },
   "devDependencies": {
-    "@types/node": "^24.13.3",
-    "publint": "^0.3.21",
-    "typescript": "^7.0.2"
+    "fastify": "^5"
   }
 }

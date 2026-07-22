@@ -2,7 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "#contracts/*": ["./*.ts"]
+      "#fastify-bridge/*": ["./*.ts"]
     },
     "rootDir": ".",
     "outDir": "./dist"

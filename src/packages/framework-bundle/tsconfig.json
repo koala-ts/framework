@@ -2,11 +2,11 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "#contracts/*": ["./*.ts"]
+      "#framework-bundle/*": ["./*.ts"]
     },
     "rootDir": ".",
     "outDir": "./dist"
   },
-  "include": ["./*.ts"],
-  "exclude": ["./*.test.ts", "./dist"]
+  "include": ["./**/*.ts"],
+  "exclude": ["./**/*.test.ts", "./dist"]
 }
