@@ -10,9 +10,9 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+    "./http-bridge": {
+      "types": "./dist/http-bridge.d.ts",
+      "import": "./dist/http-bridge.js"
     }
   },
   "imports": {
