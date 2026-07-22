@@ -27,6 +27,9 @@ jobs:
       - name: Check code
         run: npm run lint
 
+      - name: Build
+        run: npm run build
+
       - name: Check types
         run: npm run typecheck
 
@@ -35,9 +38,6 @@ jobs:
 
       - name: Run tests
         run: npm run test
-
-      - name: Build
-        run: npm run build
 
       - name: Check packages
         run: npm run publint
