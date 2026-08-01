@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.3",
-    "@types/node": "24.13.3",
+    "@types/node": "26.1.2",
     "@vitest/coverage-v8": "^4.0.12",
     "dependency-cruiser": "^18.0.0",
     "publint": "^0.3.21",

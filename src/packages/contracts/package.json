@@ -38,7 +38,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.1.2",
     "publint": "^0.3.21",
     "typescript": "^7.0.2"
   }
